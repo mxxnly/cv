@@ -1,0 +1,50 @@
+# syntax=docker/dockerfile:1
+
+# ========== BASE ==========
+FROM python:3.13-slim AS base
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+WORKDIR /app
+
+# psycopg[binary] and Pillow ship wheels, so no compilers or system libraries are needed.
+COPY backend/requirements.txt .
+RUN pip install -r requirements.txt
+
+# ========== DEVELOPMENT ==========
+FROM base AS development
+
+# gettext powers `make messages` (compilemessages).
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends gettext \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY backend/requirements-dev.txt .
+RUN pip install -r requirements-dev.txt
+
+COPY backend/ .
+
+EXPOSE 8000
+ENTRYPOINT ["sh", "/app/entrypoint.sh"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+
+# ========== PRODUCTION ==========
+FROM base AS production
+
+COPY backend/ .
+
+# Static files are baked into the image and served by WhiteNoise.
+RUN SECRET_KEY=collectstatic-only python manage.py collectstatic --noinput
+
+RUN useradd --create-home --uid 1000 appuser \
+    && mkdir -p /app/media \
+    && chown -R appuser:appuser /app
+
+# No `USER` here on purpose: entrypoint.sh fixes media volume ownership as root
+# and then drops to appuser with setpriv before running anything else.
+EXPOSE 8000
+ENTRYPOINT ["sh", "/app/entrypoint.sh"]
+CMD ["gunicorn", "config.wsgi:application", "--config", "gunicorn.conf.py"]

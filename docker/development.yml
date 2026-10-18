@@ -1,0 +1,46 @@
+# Local development: hot reload for Django and Vite, everything behind nginx on http://localhost.
+services:
+  postgres:
+    ports:
+      - "${POSTGRES_PORT_HOST:-5432}:5432"
+
+  backend:
+    image: portfolio-backend:dev
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.backend
+      target: development
+    command: python manage.py runserver 0.0.0.0:8000
+    environment:
+      DEBUG: "1"
+      NUM_PROXIES: "1"
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    stdin_open: true
+    tty: true
+
+  frontend:
+    image: portfolio-frontend:dev
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.frontend
+      target: development
+    environment:
+      VITE_PORT: "8080"
+      VITE_HMR_CLIENT_PORT: "${HTTP_PORT:-80}"
+      # File events don't cross the Docker Desktop boundary on Windows/macOS.
+      VITE_USE_POLLING: "true"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+  nginx:
+    image: nginx:stable-alpine
+    ports:
+      - "${HTTP_PORT:-80}:80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/fragments:/etc/nginx/fragments:ro
+      - ./backend/media:/app/media:ro

@@ -1,0 +1,253 @@
+name: 🚀 Production CI/CD
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "**.md"
+      - ".gitignore"
+      - ".editorconfig"
+  workflow_dispatch:
+    inputs:
+      component:
+        description: "Which image to rebuild"
+        type: choice
+        options: [all, backend, frontend, nginx]
+        default: all
+
+permissions:
+  contents: read
+  packages: write
+
+# Never cancel a deploy halfway; queue the next one instead.
+concurrency:
+  group: production
+  cancel-in-progress: false
+
+jobs:
+  ci:
+    name: 🧪 CI
+    uses: ./.github/workflows/ci.yml
+
+  build:
+    name: 🐳 Images | Build & push (${{ matrix.component }})
+    runs-on: ubuntu-latest
+    needs: ci
+    timeout-minutes: 30
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - component: backend
+            dockerfile: docker/Dockerfile.backend
+            target: production
+          - component: frontend
+            dockerfile: docker/Dockerfile.frontend
+            target: production
+          - component: nginx
+            dockerfile: docker/Dockerfile.nginx
+            target: ""
+
+    steps:
+      - name: 🧭 Filter | Pick component
+        id: pick
+        run: |
+          wanted="${{ github.event.inputs.component || 'all' }}"
+          if [ "$wanted" = "all" ] || [ "$wanted" = "${{ matrix.component }}" ]; then
+            echo "build=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "build=false" >> "$GITHUB_OUTPUT"
+            echo "ℹ️ Skipping ${{ matrix.component }} (requested: $wanted)"
+          fi
+
+      - name: 📥 Repo | Checkout
+        if: steps.pick.outputs.build == 'true'
+        uses: actions/checkout@v7
+
+      - name: 🏷️ Registry | Resolve name
+        if: steps.pick.outputs.build == 'true'
+        # GHCR requires lowercase image names.
+        run: echo "REGISTRY=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}" >> "$GITHUB_ENV"
+
+      - name: ⚙️ Docker | Set up Buildx
+        if: steps.pick.outputs.build == 'true'
+        uses: docker/setup-buildx-action@v4
+
+      - name: 🔐 Registry | Log in to GHCR
+        if: steps.pick.outputs.build == 'true'
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🏷️ Image | Generate metadata
+        if: steps.pick.outputs.build == 'true'
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: ${{ env.REGISTRY }}/portfolio-${{ matrix.component }}
+          tags: |
+            type=sha,prefix=prod-
+            type=raw,value=latest
+          labels: |
+            org.opencontainers.image.title=Portfolio ${{ matrix.component }}
+
+      - name: 🧱 Image | Build & push
+        if: steps.pick.outputs.build == 'true'
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ${{ matrix.dockerfile }}
+          target: ${{ matrix.target }}
+          push: true
+          platforms: linux/amd64
+          provenance: false
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha,scope=${{ matrix.component }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.component }}
+
+  scan:
+    name: 🔍 Security | Trivy (${{ matrix.component }})
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'push'
+    permissions:
+      contents: read
+      packages: read
+
+    strategy:
+      fail-fast: false
+      matrix:
+        component: [backend, frontend, nginx]
+
+    steps:
+      - name: 🏷️ Registry | Resolve name
+        run: echo "REGISTRY=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}" >> "$GITHUB_ENV"
+
+      - name: 🔐 Registry | Log in to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🧪 Trivy | Scan image (report only)
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          image-ref: ${{ env.REGISTRY }}/portfolio-${{ matrix.component }}:latest
+          format: sarif
+          output: trivy-${{ matrix.component }}.sarif
+          ignore-unfixed: true
+          severity: CRITICAL,HIGH
+          limit-severities-for-sarif: true
+
+      - name: 📎 Trivy | Upload report
+        uses: actions/upload-artifact@v7
+        with:
+          name: trivy-${{ matrix.component }}
+          path: trivy-${{ matrix.component }}.sarif
+          if-no-files-found: warn
+
+  deploy:
+    name: 🚀 Deploy | Production
+    runs-on: ubuntu-latest
+    needs: build
+    timeout-minutes: 15
+
+    environment:
+      name: production
+      url: https://${{ vars.DOMAIN }}
+
+    env:
+      PROJECT_DIR: ${{ vars.PROD_PROJECT_DIR || '/opt/portfolio' }}
+      PROD_ENV_FILE: ${{ secrets.PROD_ENV_FILE }}
+
+    steps:
+      - name: 📥 Repo | Checkout
+        uses: actions/checkout@v7
+
+      - name: 🔑 Env | Render .env from secret (optional)
+        if: env.PROD_ENV_FILE != ''
+        run: printf '%s\n' "$PROD_ENV_FILE" > .env
+
+      - name: 📦 Server | Copy deploy files
+        uses: appleboy/scp-action@ff85246acaad7bdce478db94a363cd2bf7c90345 # v1.0.0
+        with:
+          host: ${{ secrets.PROD_SERVER_HOST }}
+          username: ${{ secrets.PROD_SERVER_USER }}
+          key: ${{ secrets.PROD_SERVER_SSH_KEY }}
+          port: ${{ secrets.PROD_SERVER_PORT || 22 }}
+          source: ${{ env.PROD_ENV_FILE != '' && 'docker-compose.yml,docker/production.yml,Makefile,.env' || 'docker-compose.yml,docker/production.yml,Makefile' }}
+          target: ${{ env.PROJECT_DIR }}
+
+      - name: 🚢 Server | Pull images & restart
+        uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2 # v1.2.5
+        env:
+          GHCR_USER: ${{ github.actor }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO_OWNER: ${{ github.repository_owner }}
+        with:
+          host: ${{ secrets.PROD_SERVER_HOST }}
+          username: ${{ secrets.PROD_SERVER_USER }}
+          key: ${{ secrets.PROD_SERVER_SSH_KEY }}
+          port: ${{ secrets.PROD_SERVER_PORT || 22 }}
+          envs: GHCR_USER,GHCR_TOKEN,REPO_OWNER,PROJECT_DIR
+          script: |
+            set -Eeuo pipefail
+            cd "$PROJECT_DIR"
+
+            echo "🧪 Pre-flight | Checking files..."
+            for file in .env docker-compose.yml docker/production.yml Makefile; do
+              test -f "$file" || { echo "❌ $file is missing in $PROJECT_DIR"; exit 1; }
+            done
+
+            echo "🔐 Registry | Logging in to GHCR..."
+            echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
+            trap 'docker logout ghcr.io >/dev/null 2>&1 || true' EXIT
+
+            export REGISTRY="ghcr.io/${REPO_OWNER,,}"
+            export IMAGE_TAG=latest
+
+            echo "🚢 Make | Deploying..."
+            make deploy-prod
+
+            echo "📋 Stack | Status"
+            make ps-prod
+
+      - name: 🩺 Health | Wait for the site
+        if: vars.DOMAIN != ''
+        run: |
+          for attempt in $(seq 1 30); do
+            if curl -fsS "https://${{ vars.DOMAIN }}/api/health/" > /dev/null; then
+              echo "✅ https://${{ vars.DOMAIN }} is healthy"
+              exit 0
+            fi
+            echo "⏳ Attempt $attempt: not ready yet"
+            sleep 5
+          done
+          echo "❌ Health check failed"
+          exit 1
+
+  cleanup:
+    name: 🧹 Registry | Keep the last 15 images (${{ matrix.component }})
+    runs-on: ubuntu-latest
+    needs: deploy
+    if: github.event_name == 'push'
+    permissions:
+      packages: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        component: [backend, frontend, nginx]
+
+    steps:
+      - name: 🧹 GHCR | Delete old versions
+        uses: actions/delete-package-versions@v5
+        with:
+          package-name: portfolio-${{ matrix.component }}
+          package-type: container
+          min-versions-to-keep: 15

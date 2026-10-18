@@ -1,0 +1,59 @@
+# Production: prebuilt images from GHCR behind Traefik with automatic Let's Encrypt certificates.
+services:
+  traefik:
+    image: traefik:v3.6
+    command:
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+      - --entrypoints.web.http.redirections.entrypoint.to=websecure
+      - --entrypoints.web.http.redirections.entrypoint.scheme=https
+      - --entrypoints.websecure.address=:443
+      - --certificatesresolvers.letsencrypt.acme.email=${ACME_EMAIL:?set ACME_EMAIL in .env}
+      - --certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
+      - --certificatesresolvers.letsencrypt.acme.httpchallenge=true
+      - --certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik_letsencrypt:/letsencrypt
+    restart: unless-stopped
+
+  postgres:
+    restart: unless-stopped
+
+  backend:
+    image: ${REGISTRY:-ghcr.io/mxxnly}/portfolio-backend:${IMAGE_TAG:-latest}
+    environment:
+      DEBUG: "0"
+      DJANGO_SECURE: "1"
+      # Traefik + nginx in front of Django.
+      NUM_PROXIES: "2"
+    volumes:
+      - media_data:/app/media
+    restart: unless-stopped
+
+  frontend:
+    image: ${REGISTRY:-ghcr.io/mxxnly}/portfolio-frontend:${IMAGE_TAG:-latest}
+    restart: unless-stopped
+
+  nginx:
+    image: ${REGISTRY:-ghcr.io/mxxnly}/portfolio-nginx:${IMAGE_TAG:-latest}
+    volumes:
+      - media_data:/app/media:ro
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.portfolio.rule=Host(`${DOMAIN:?set DOMAIN in .env}`) || Host(`www.${DOMAIN}`)
+      - traefik.http.routers.portfolio.entrypoints=websecure
+      - traefik.http.routers.portfolio.tls.certresolver=letsencrypt
+      - traefik.http.routers.portfolio.middlewares=portfolio-www
+      - traefik.http.middlewares.portfolio-www.redirectregex.regex=^https://www\.(.+)
+      - traefik.http.middlewares.portfolio-www.redirectregex.replacement=https://$${1}
+      - traefik.http.middlewares.portfolio-www.redirectregex.permanent=true
+      - traefik.http.services.portfolio.loadbalancer.server.port=80
+    restart: unless-stopped
+
+volumes:
+  traefik_letsencrypt:

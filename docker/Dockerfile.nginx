@@ -1,0 +1,15 @@
+# syntax=docker/dockerfile:1
+
+# Gateway: routes /api, /admin, /static to Django, serves /media, everything else → frontend.
+FROM nginx:stable-alpine
+
+RUN rm /etc/nginx/conf.d/default.conf
+
+COPY nginx/conf.d /etc/nginx/conf.d
+COPY nginx/fragments /etc/nginx/fragments
+
+RUN mkdir -p /app/media
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]

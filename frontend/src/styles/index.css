@@ -1,0 +1,504 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+@custom-variant light (&:where([data-theme='light'], [data-theme='light'] *));
+
+@theme {
+  --font-sans: 'Manrope Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Cormorant Garamond Variable', ui-serif, Georgia, serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, monospace;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-circ: cubic-bezier(0.85, 0, 0.15, 1);
+
+  --animate-marquee: marquee var(--marquee-duration, 45s) linear infinite;
+  --animate-marquee-reverse: marquee-reverse var(--marquee-duration, 45s) linear infinite;
+  --animate-orbit: orbit var(--orbit-duration, 24s) linear infinite;
+  --animate-orbit-reverse: orbit var(--orbit-duration, 24s) linear infinite reverse;
+  --animate-pulse-soft: pulse-soft 2.6s ease-in-out infinite;
+  --animate-drift: drift var(--drift-duration, 30s) ease-in-out infinite alternate;
+  --animate-shimmer: shimmer 9s linear infinite;
+  --animate-float: float 7s ease-in-out infinite;
+}
+
+@keyframes marquee {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+@keyframes marquee-reverse {
+  from {
+    transform: translate3d(-50%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+@keyframes orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.8);
+  }
+}
+@keyframes drift {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(var(--drift-x, 6%), var(--drift-y, 4%), 0) scale(1.12);
+  }
+}
+@keyframes shimmer {
+  to {
+    background-position: -200% center;
+  }
+}
+@keyframes float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -10px, 0);
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-elevated: var(--bg-elevated);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-subtle: var(--subtle);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-card: var(--card);
+  --color-card-hover: var(--card-hover);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-fg: var(--accent-fg);
+  --color-gold: var(--gold);
+}
+
+/* ========== THEMES ========== */
+:root,
+[data-theme='dark'] {
+  --bg: #05060b;
+  --bg-elevated: #0c0e18;
+  --fg: #eeedf7;
+  --muted: #a09fb4;
+  --subtle: #66657a;
+  --line: rgb(255 255 255 / 0.075);
+  --line-strong: rgb(255 255 255 / 0.15);
+  --card: rgb(255 255 255 / 0.028);
+  --card-hover: rgb(255 255 255 / 0.05);
+  --accent: #c8c1ff;
+  --accent-strong: #a89cff;
+  --accent-fg: #0b0a14;
+  --gold: #f2dcae;
+  --glow: rgb(200 193 255 / 0.32);
+  --shadow: 0 30px 80px -30px rgb(0 0 0 / 0.75);
+  --selection: rgb(200 193 255 / 0.28);
+  --grain-opacity: 0.045;
+}
+
+[data-theme='light'] {
+  --bg: #f3f2f8;
+  --bg-elevated: #ffffff;
+  --fg: #16151f;
+  --muted: #5b596d;
+  --subtle: #8f8da2;
+  --line: rgb(22 20 45 / 0.085);
+  --line-strong: rgb(22 20 45 / 0.16);
+  --card: rgb(255 255 255 / 0.55);
+  --card-hover: rgb(255 255 255 / 0.85);
+  --accent: #5145c9;
+  --accent-strong: #3e32b3;
+  --accent-fg: #ffffff;
+  /* In daylight the warm counterpart is a dawn rose rather than moonlit gold. */
+  --gold: #c8487e;
+  --glow: rgb(81 69 201 / 0.2);
+  --shadow: 0 30px 70px -35px rgb(40 30 110 / 0.35);
+  --selection: rgb(81 69 201 / 0.18);
+  --grain-opacity: 0.06;
+}
+
+/* ========== BASE ========== */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    min-height: 100svh;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    font-feature-settings: 'ss01', 'cv11';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition:
+      background-color 0.6s var(--ease-out-expo),
+      color 0.6s var(--ease-out-expo);
+    overflow-x: clip;
+  }
+
+  ::selection {
+    background: var(--selection);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--line-strong) transparent;
+  }
+
+  img {
+    user-select: none;
+  }
+}
+
+/* Theme switch: circular reveal driven from ThemeProvider. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* ========== UTILITIES ========== */
+@utility container-page {
+  width: 100%;
+  max-width: 78rem;
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 4vw, 2.5rem);
+}
+
+@utility glass {
+  background: var(--card);
+  border: 1px solid var(--line);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+}
+
+@utility text-moonlight {
+  background: linear-gradient(
+    180deg,
+    var(--fg) 25%,
+    color-mix(in oklab, var(--fg) 42%, transparent) 115%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility text-aurora {
+  background: linear-gradient(
+    100deg,
+    var(--accent) 0%,
+    var(--gold) 35%,
+    var(--accent) 70%,
+    var(--gold) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* Italic glyphs overhang their box; padding keeps them inside the gradient. */
+  padding-inline: 0.08em;
+  margin-inline: -0.08em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+@utility eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+@utility mask-fade-x {
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+
+@utility mask-fade-b {
+  mask-image: linear-gradient(180deg, #000 60%, transparent);
+}
+
+@utility shadow-moon {
+  box-shadow: var(--shadow);
+}
+
+@utility glow-accent {
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--accent) 35%, transparent),
+    0 10px 40px -10px var(--glow);
+}
+
+/* ========== SKY ========== */
+[data-theme='dark'] .sky {
+  background:
+    radial-gradient(ellipse 70% 55% at 78% 8%, rgb(86 78 180 / 0.2), transparent 62%),
+    radial-gradient(ellipse 55% 45% at 8% 35%, rgb(40 64 150 / 0.13), transparent 70%),
+    radial-gradient(ellipse 90% 60% at 50% 115%, rgb(96 64 150 / 0.14), transparent 70%),
+    linear-gradient(180deg, #080914 0%, #05060b 55%, #04050a 100%);
+}
+
+[data-theme='light'] .sky {
+  background:
+    radial-gradient(ellipse 65% 55% at 80% 5%, rgb(178 188 255 / 0.55), transparent 65%),
+    radial-gradient(ellipse 55% 45% at 0% 45%, rgb(255 210 186 / 0.38), transparent 70%),
+    radial-gradient(ellipse 90% 55% at 50% 115%, rgb(200 186 255 / 0.4), transparent 70%),
+    linear-gradient(180deg, #e7e9f8 0%, #f3f2f8 45%, #f7f1ec 100%);
+}
+
+.nebula {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  will-change: transform;
+  animation: drift var(--drift-duration, 30s) ease-in-out infinite alternate;
+}
+
+.nebula-a {
+  width: 60vmax;
+  height: 60vmax;
+  left: -22vmax;
+  top: 28vh;
+  --drift-x: 10%;
+  --drift-y: 6%;
+  --drift-duration: 36s;
+}
+
+.nebula-b {
+  width: 46vmax;
+  height: 46vmax;
+  right: -14vmax;
+  top: -18vh;
+  --drift-x: -8%;
+  --drift-y: 10%;
+  --drift-duration: 44s;
+}
+
+[data-theme='dark'] .nebula-a {
+  background: rgb(96 80 214 / 0.13);
+}
+[data-theme='dark'] .nebula-b {
+  background: rgb(52 96 210 / 0.1);
+}
+[data-theme='light'] .nebula-a {
+  background: rgb(160 150 255 / 0.3);
+}
+[data-theme='light'] .nebula-b {
+  background: rgb(255 196 170 / 0.32);
+}
+
+/*
+ * Moon position is pure CSS: JS only feeds --t (0 = hero, 1 = resting in the corner).
+ * --size is the canvas size; the lunar disc takes 70% of it, the rest is halo.
+ */
+.moon-stage {
+  --size: min(88vh, 58vw, 1040px);
+  --cx0: 73vw;
+  --cy0: 50vh;
+  --s1: 0.34;
+  /* Resting moon peeks in from the right edge, clear of section headings. */
+  --cx1: calc(100vw - var(--size) * 0.09);
+  --cy1: calc(var(--size) * 0.2 + 7vh);
+  --cx: calc(var(--cx0) + (var(--cx1) - var(--cx0)) * var(--t, 0));
+  --cy: calc(var(--cy0) + (var(--cy1) - var(--cy0)) * var(--t, 0));
+  --s: calc(1 + (var(--s1) - 1) * var(--t, 0));
+
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--size);
+  height: var(--size);
+  transform: translate3d(calc(var(--cx) - var(--size) / 2), calc(var(--cy) - var(--size) / 2), 0)
+    scale(var(--s));
+  will-change: transform, opacity;
+}
+
+@media (max-width: 1023px) {
+  .moon-stage {
+    --size: min(120vw, 80vh);
+    --cx0: 78vw;
+    --cy0: 30vh;
+    --s1: 0.42;
+    --cx1: calc(100vw + var(--size) * 0.02);
+    --cy1: calc(var(--size) * 0.3 + 2vh);
+  }
+}
+
+.moon-fallback {
+  position: absolute;
+  inset: 15%;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 62% 40%, #f4f1ff 0%, #c9c4e6 45%, #6f6a92 75%, #2a2840 100%);
+  box-shadow:
+    0 0 80px 10px rgb(200 193 255 / 0.25),
+    inset -40px -20px 80px rgb(0 0 0 / 0.6);
+}
+
+/* ========== SPOTLIGHT CARD ========== */
+.spotlight-card {
+  --mx: 50%;
+  --my: -20%;
+  isolation: isolate;
+  transition:
+    background-color 0.4s,
+    border-color 0.4s,
+    transform 0.5s var(--ease-out-expo);
+}
+
+.spotlight-glow,
+.spotlight-border {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.spotlight-glow {
+  background: radial-gradient(
+    480px circle at var(--mx) var(--my),
+    color-mix(in oklab, var(--spot) 14%, transparent),
+    transparent 62%
+  );
+}
+
+.spotlight-border {
+  z-index: 1;
+  padding: 1px;
+  background: radial-gradient(
+    320px circle at var(--mx) var(--my),
+    color-mix(in oklab, var(--spot) 75%, transparent),
+    transparent 60%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+.spotlight-card:hover .spotlight-glow,
+.spotlight-card:hover .spotlight-border,
+.spotlight-card:focus-visible .spotlight-glow {
+  opacity: 1;
+}
+
+/* ========== FOOTER: LUNAR HORIZON ========== */
+/* No overflow clipping here: the footer clips sideways/below, the rim glow stays intact. */
+.lunar-horizon {
+  position: absolute;
+  inset: 0;
+}
+
+.lunar-surface {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 220vw;
+  height: 220vw;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  z-index: 1;
+}
+
+[data-theme='dark'] .lunar-surface {
+  background: radial-gradient(ellipse 50% 9% at 50% 0%, #34324a 0%, #191825 45%, #0a0a11 100%);
+  box-shadow:
+    0 -1px 0 rgb(255 255 255 / 0.3),
+    0 -30px 90px -20px rgb(200 193 255 / 0.4),
+    inset 0 2px 1px -1px rgb(255 255 255 / 0.35),
+    inset 0 40px 80px -40px rgb(200 193 255 / 0.25);
+}
+
+[data-theme='light'] .lunar-surface {
+  background: radial-gradient(ellipse 50% 9% at 50% 0%, #ffffff 0%, #e2e0ee 40%, #cfcce0 100%);
+  box-shadow:
+    0 -1px 0 rgb(255 255 255 / 0.9),
+    0 -30px 80px -24px rgb(81 69 201 / 0.28),
+    inset 0 2px 1px -1px rgb(255 255 255 / 1),
+    inset 0 40px 80px -40px rgb(81 69 201 / 0.12);
+}
+
+.crater {
+  position: absolute;
+  aspect-ratio: 4.2 / 1;
+  transform: translateX(-50%);
+  border-radius: 50%;
+}
+
+[data-theme='dark'] .crater {
+  background: radial-gradient(ellipse at 50% 35%, rgb(0 0 0 / 0.55), rgb(0 0 0 / 0.2) 55%, transparent 72%);
+  box-shadow: 0 1.5px 0 -0.5px rgb(255 255 255 / 0.07);
+}
+
+[data-theme='light'] .crater {
+  background: radial-gradient(ellipse at 50% 35%, rgb(60 50 120 / 0.22), rgb(60 50 120 / 0.08) 55%, transparent 72%);
+  box-shadow: 0 1.5px 0 -0.5px rgb(255 255 255 / 0.9);
+}
+
+.earth {
+  position: absolute;
+  z-index: 0;
+  width: clamp(44px, 4.6vw, 76px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  /* `translate` composes with the float animation's `transform`. */
+  translate: -50% 0;
+  background:
+    radial-gradient(circle at 62% 38%, rgb(255 255 255 / 0.55) 0 6%, transparent 14%),
+    radial-gradient(circle at 34% 58%, rgb(98 168 104 / 0.9) 0 12%, transparent 22%),
+    radial-gradient(circle at 30% 30%, #bfe4ff 0%, #4f9be8 30%, #2462b6 55%, #0f2f66 78%, #061128 100%);
+  box-shadow:
+    0 0 26px 4px rgb(90 160 255 / 0.35),
+    inset -12px -8px 18px rgb(0 0 0 / 0.65);
+  animation: float 9s ease-in-out infinite;
+}
+
+/* Film grain on top of everything — very subtle, adds depth to flat gradients. */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+
+[data-theme='light'] .grain {
+  mix-blend-mode: multiply;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

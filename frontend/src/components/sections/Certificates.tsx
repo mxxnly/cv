@@ -16,7 +16,7 @@ export function Certificates({ items, index, total }: CertificatesProps) {
   const { t, lang } = useI18n()
 
   return (
-    <section id="certificates" className="relative py-28 md:py-36">
+    <section id="certificates" className="relative py-20 md:py-36">
       <div className="container-page">
         <SectionHeading
           index={index}

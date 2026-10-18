@@ -32,9 +32,8 @@ function StatusScreen({ fraction, title, text, action }: StatusScreenProps) {
   )
 }
 
-// Shown before the profile (and its language) is known, so the browser language decides.
-const lang = navigator.language.toLowerCase().startsWith('uk') ? 'uk' : 'en'
-const t = dictionaries[lang]
+// Shown before the profile (and its language) is known, so the site default (English) is used.
+const t = dictionaries.en
 
 export function ErrorScreen({ onRetry }: { onRetry: () => void }) {
   return (

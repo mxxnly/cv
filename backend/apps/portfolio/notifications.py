@@ -12,14 +12,14 @@ logger = logging.getLogger(__name__)
 
 
 def _format(message: ContactMessage) -> str:
-    subject = f"\nТема: {message.subject}" if message.subject else ""
+    subject = f"\nSubject: {message.subject}" if message.subject else ""
     sender = f"{message.name} <{message.email}>"
-    return f"Нове повідомлення з портфоліо\n\nВід: {sender}{subject}\n\n{message.message}"
+    return f"New message from the portfolio\n\nFrom: {sender}{subject}\n\n{message.message}"
 
 
 def _send_email(message: ContactMessage) -> None:
     send_mail(
-        subject=f"Портфоліо: повідомлення від {message.name}",
+        subject=f"Portfolio: message from {message.name}",
         message=_format(message),
         from_email=settings.DEFAULT_FROM_EMAIL,
         recipient_list=[settings.CONTACT_NOTIFY_EMAIL],

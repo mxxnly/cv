@@ -109,14 +109,16 @@
   --shadow: 0 30px 80px -30px rgb(0 0 0 / 0.75);
   --selection: rgb(200 193 255 / 0.28);
   --grain-opacity: 0.045;
+  /* How much of the foreground the bottom of "moonlight" headings keeps. */
+  --moonlight-fade: 42%;
 }
 
 [data-theme='light'] {
   --bg: #f3f2f8;
   --bg-elevated: #ffffff;
   --fg: #16151f;
-  --muted: #5b596d;
-  --subtle: #8f8da2;
+  --muted: #4b4960;
+  --subtle: #716f87;
   --line: rgb(22 20 45 / 0.085);
   --line-strong: rgb(22 20 45 / 0.16);
   --card: rgb(255 255 255 / 0.55);
@@ -130,6 +132,7 @@
   --shadow: 0 30px 70px -35px rgb(40 30 110 / 0.35);
   --selection: rgb(81 69 201 / 0.18);
   --grain-opacity: 0.06;
+  --moonlight-fade: 78%;
 }
 
 /* ========== BASE ========== */
@@ -137,6 +140,9 @@
   html {
     -webkit-text-size-adjust: 100%;
     text-rendering: optimizeLegibility;
+    /* Decorative layers (moon, nebulae) extend past the edge; without this, mobile browsers
+       widen the layout viewport to fit them and fixed elements overflow the screen. */
+    overflow-x: clip;
   }
 
   body {
@@ -199,7 +205,7 @@
   background: linear-gradient(
     180deg,
     var(--fg) 25%,
-    color-mix(in oklab, var(--fg) 42%, transparent) 115%
+    color-mix(in oklab, var(--fg) var(--moonlight-fade), transparent) 115%
   );
   -webkit-background-clip: text;
   background-clip: text;
@@ -338,11 +344,11 @@
 @media (max-width: 1023px) {
   .moon-stage {
     --size: min(120vw, 80vh);
-    --cx0: 78vw;
-    --cy0: 30vh;
-    --s1: 0.42;
-    --cx1: calc(100vw + var(--size) * 0.02);
-    --cy1: calc(var(--size) * 0.3 + 2vh);
+    --cx0: 84vw;
+    --cy0: 25vh;
+    --s1: 0.3;
+    --cx1: calc(100vw + var(--size) * 0.03);
+    --cy1: calc(var(--size) * 0.22 + 2vh);
   }
 }
 

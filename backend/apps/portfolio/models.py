@@ -5,15 +5,15 @@ from django.utils.text import slugify
 
 from .images import optimize_image
 
-HEX_COLOR_VALIDATOR = RegexValidator(r"^#[0-9A-Fa-f]{6}$", "Колір у форматі #RRGGBB")
-LINES_HELP = "Кожен пункт з нового рядка"
-PARAGRAPHS_HELP = "Абзаци розділяйте порожнім рядком"
+HEX_COLOR_VALIDATOR = RegexValidator(r"^#[0-9A-Fa-f]{6}$", "Color in #RRGGBB format")
+LINES_HELP = "One item per line"
+PARAGRAPHS_HELP = "Separate paragraphs with a blank line"
 
 
 def validate_link(value: str) -> None:
     allowed = ("http://", "https://", "mailto:", "tel:", "tg://")
     if not value.startswith(allowed):
-        raise ValidationError("Посилання має починатися з http(s)://, mailto:, tel: або tg://")
+        raise ValidationError("The link must start with http(s)://, mailto:, tel: or tg://")
 
 
 def split_lines(text: str) -> list[str]:
@@ -21,7 +21,7 @@ def split_lines(text: str) -> list[str]:
 
 
 class OrderedModel(models.Model):
-    order = models.PositiveIntegerField("Порядок", default=0, db_index=True)
+    order = models.PositiveIntegerField("Order", default=0, db_index=True)
 
     class Meta:
         abstract = True
@@ -47,74 +47,74 @@ class Profile(OptimizedImagesMixin, models.Model):
     """Singleton with personal data. Always stored with pk=1."""
 
     class Language(models.TextChoices):
-        UK = "uk", "Українська"
         EN = "en", "English"
+        UK = "uk", "Ukrainian"
 
-    full_name = models.CharField("Повне ім'я", max_length=120)
+    full_name = models.CharField("Full name", max_length=120)
     brand = models.CharField(
-        "Підпис у шапці",
+        "Header signature",
         max_length=40,
         blank=True,
-        help_text="Короткий логотип-текст у навігації. Якщо порожньо — перше слово імені.",
+        help_text="Short text logo in the navigation. Empty — the first word of the name.",
     )
     headline = models.CharField(
-        "Спеціалізація", max_length=160, help_text="Напр.: Full-stack розробник"
+        "Specialization", max_length=160, help_text="E.g.: Full-stack developer"
     )
     roles = models.TextField(
-        "Ролі (анімація в hero)",
+        "Roles (hero animation)",
         blank=True,
-        help_text="Змінюються по черзі під іменем. " + LINES_HELP,
+        help_text="Rotate one after another under the name. " + LINES_HELP,
     )
-    tagline = models.CharField("Короткий опис у hero", max_length=320, blank=True)
-    about = models.TextField("Про мене", blank=True, help_text=PARAGRAPHS_HELP)
-    avatar = models.ImageField("Фото", upload_to="profile/", blank=True)
+    tagline = models.CharField("Short hero description", max_length=320, blank=True)
+    about = models.TextField("About me", blank=True, help_text=PARAGRAPHS_HELP)
+    avatar = models.ImageField("Photo", upload_to="profile/", blank=True)
 
-    location = models.CharField("Локація", max_length=120, blank=True)
+    location = models.CharField("Location", max_length=120, blank=True)
     timezone = models.CharField(
-        "Часовий пояс",
+        "Time zone",
         max_length=64,
         default="Europe/Kyiv",
-        help_text="IANA-формат (Europe/Kyiv) — для живого годинника на сайті",
+        help_text="IANA format (Europe/Kyiv) — for the live clock on the site",
     )
     email = models.EmailField("Email", blank=True)
-    phone = models.CharField("Телефон", max_length=40, blank=True)
+    phone = models.CharField("Phone", max_length=40, blank=True)
 
-    is_available = models.BooleanField("Відкритий до пропозицій", default=True)
+    is_available = models.BooleanField("Open to offers", default=True)
     availability_text = models.CharField(
-        "Текст статусу", max_length=80, blank=True, help_text="Напр.: Відкритий до нових проєктів"
+        "Status text", max_length=80, blank=True, help_text="E.g.: Open to new projects"
     )
     resume = models.FileField(
-        "Резюме (CV)",
+        "Resume (CV)",
         upload_to="resume/",
         blank=True,
         validators=[FileExtensionValidator(["pdf", "doc", "docx"])],
     )
 
     contact_text = models.CharField(
-        "Текст у блоці контактів",
+        "Contact section text",
         max_length=300,
         blank=True,
-        help_text="Короткий заклик під заголовком секції контактів",
+        help_text="Short call to action under the contact section heading",
     )
-    footer_text = models.CharField("Текст у футері", max_length=200, blank=True)
+    footer_text = models.CharField("Footer text", max_length=200, blank=True)
     language = models.CharField(
-        "Мова інтерфейсу сайту",
+        "Site interface language",
         max_length=2,
         choices=Language.choices,
-        default=Language.UK,
-        help_text="Мова заголовків секцій, кнопок і форми",
+        default=Language.EN,
+        help_text="Language of section headings, buttons and the form",
     )
 
-    seo_title = models.CharField("SEO заголовок", max_length=70, blank=True)
-    seo_description = models.CharField("SEO опис", max_length=170, blank=True)
+    seo_title = models.CharField("SEO title", max_length=70, blank=True)
+    seo_description = models.CharField("SEO description", max_length=170, blank=True)
 
-    updated_at = models.DateTimeField("Оновлено", auto_now=True)
+    updated_at = models.DateTimeField("Updated", auto_now=True)
 
     optimized_images = {"avatar": 1200}
 
     class Meta:
-        verbose_name = "Профіль"
-        verbose_name_plural = "Профіль"
+        verbose_name = "Profile"
+        verbose_name_plural = "Profile"
 
     def __str__(self) -> str:
         return self.full_name
@@ -124,12 +124,12 @@ class Profile(OptimizedImagesMixin, models.Model):
         super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        raise ValidationError("Профіль не можна видалити — його можна лише редагувати.")
+        raise ValidationError("The profile cannot be deleted — it can only be edited.")
 
     @classmethod
     def load(cls) -> "Profile":
         profile, _ = cls.objects.get_or_create(
-            pk=1, defaults={"full_name": "Ваше ім'я", "headline": "Розробник"}
+            pk=1, defaults={"full_name": "Your name", "headline": "Developer"}
         )
         return profile
 
@@ -140,12 +140,12 @@ class Profile(OptimizedImagesMixin, models.Model):
 
 class Stat(OrderedModel):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="stats")
-    value = models.CharField("Значення", max_length=20, help_text="Напр.: 5+, 40, 100%")
-    label = models.CharField("Підпис", max_length=60, help_text="Напр.: років досвіду")
+    value = models.CharField("Value", max_length=20, help_text="E.g.: 5+, 40, 100%")
+    label = models.CharField("Label", max_length=60, help_text="E.g.: years of experience")
 
     class Meta(OrderedModel.Meta):
-        verbose_name = "Цифра"
-        verbose_name_plural = "Цифри (статистика)"
+        verbose_name = "Number"
+        verbose_name_plural = "Numbers (stats)"
 
     def __str__(self) -> str:
         return f"{self.value} {self.label}"
@@ -169,20 +169,20 @@ class SocialLink(OrderedModel):
         LEETCODE = "leetcode", "LeetCode"
         DISCORD = "discord", "Discord"
         EMAIL = "email", "Email"
-        WEBSITE = "website", "Сайт"
-        OTHER = "other", "Інше"
+        WEBSITE = "website", "Website"
+        OTHER = "other", "Other"
 
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="socials")
-    platform = models.CharField("Платформа", max_length=20, choices=Platform.choices)
-    url = models.CharField("Посилання", max_length=300, validators=[validate_link])
+    platform = models.CharField("Platform", max_length=20, choices=Platform.choices)
+    url = models.CharField("Link", max_length=300, validators=[validate_link])
     label = models.CharField(
-        "Підпис", max_length=60, blank=True, help_text="Напр.: @username. Якщо порожньо — назва."
+        "Label", max_length=60, blank=True, help_text="E.g.: @username. Empty — the platform name."
     )
-    is_visible = models.BooleanField("Показувати", default=True)
+    is_visible = models.BooleanField("Visible", default=True)
 
     class Meta(OrderedModel.Meta):
-        verbose_name = "Соцмережа"
-        verbose_name_plural = "Соцмережі"
+        verbose_name = "Social link"
+        verbose_name_plural = "Social links"
 
     def __str__(self) -> str:
         return self.label or self.get_platform_display()
@@ -191,27 +191,27 @@ class SocialLink(OrderedModel):
 # ========== SERVICES ==========
 class Service(OrderedModel):
     class Icon(models.TextChoices):
-        CODE = "code", "Код"
-        LAYOUT = "layout", "Інтерфейси"
-        SERVER = "server", "Сервер / API"
-        DATABASE = "database", "Бази даних"
-        SMARTPHONE = "smartphone", "Мобільні"
-        CLOUD = "cloud", "Хмара / DevOps"
-        BOT = "bot", "Боти / автоматизація"
-        PALETTE = "palette", "Дизайн"
-        SHIELD = "shield", "Безпека"
+        CODE = "code", "Code"
+        LAYOUT = "layout", "Interfaces"
+        SERVER = "server", "Server / API"
+        DATABASE = "database", "Databases"
+        SMARTPHONE = "smartphone", "Mobile"
+        CLOUD = "cloud", "Cloud / DevOps"
+        BOT = "bot", "Bots / automation"
+        PALETTE = "palette", "Design"
+        SHIELD = "shield", "Security"
         CPU = "cpu", "AI / ML"
-        ROCKET = "rocket", "Запуск продукту"
-        SPARKLES = "sparkles", "Інше"
+        ROCKET = "rocket", "Product launch"
+        SPARKLES = "sparkles", "Other"
 
-    title = models.CharField("Назва", max_length=80)
-    description = models.TextField("Опис", max_length=400)
-    icon = models.CharField("Іконка", max_length=20, choices=Icon.choices, default=Icon.CODE)
-    is_visible = models.BooleanField("Показувати", default=True)
+    title = models.CharField("Title", max_length=80)
+    description = models.TextField("Description", max_length=400)
+    icon = models.CharField("Icon", max_length=20, choices=Icon.choices, default=Icon.CODE)
+    is_visible = models.BooleanField("Visible", default=True)
 
     class Meta(OrderedModel.Meta):
-        verbose_name = "Послуга"
-        verbose_name_plural = "Послуги"
+        verbose_name = "Service"
+        verbose_name_plural = "Services"
 
     def __str__(self) -> str:
         return self.title
@@ -219,12 +219,12 @@ class Service(OrderedModel):
 
 # ========== SKILLS ==========
 class SkillCategory(OrderedModel):
-    name = models.CharField("Назва", max_length=60, unique=True)
-    description = models.CharField("Опис", max_length=200, blank=True)
+    name = models.CharField("Name", max_length=60, unique=True)
+    description = models.CharField("Description", max_length=200, blank=True)
 
     class Meta(OrderedModel.Meta):
-        verbose_name = "Категорія навичок"
-        verbose_name_plural = "Категорії навичок"
+        verbose_name = "Skill category"
+        verbose_name_plural = "Skill categories"
 
     def __str__(self) -> str:
         return self.name
@@ -232,11 +232,11 @@ class SkillCategory(OrderedModel):
 
 class Skill(OrderedModel):
     class Level(models.IntegerChoices):
-        NEW = 1, "🌑 Вивчаю"
-        CRESCENT = 2, "🌒 Базовий"
-        QUARTER = 3, "🌓 Впевнений"
-        GIBBOUS = 4, "🌔 Просунутий"
-        FULL = 5, "🌕 Експерт"
+        NEW = 1, "🌑 Learning"
+        CRESCENT = 2, "🌒 Basic"
+        QUARTER = 3, "🌓 Confident"
+        GIBBOUS = 4, "🌔 Advanced"
+        FULL = 5, "🌕 Expert"
 
     category = models.ForeignKey(
         SkillCategory,
@@ -244,22 +244,22 @@ class Skill(OrderedModel):
         null=True,
         blank=True,
         related_name="skills",
-        verbose_name="Категорія",
+        verbose_name="Category",
     )
-    name = models.CharField("Назва", max_length=60, unique=True)
-    level = models.PositiveSmallIntegerField("Рівень", choices=Level.choices, default=Level.QUARTER)
+    name = models.CharField("Name", max_length=60, unique=True)
+    level = models.PositiveSmallIntegerField("Level", choices=Level.choices, default=Level.QUARTER)
     is_featured = models.BooleanField(
-        "У біжучому рядку", default=False, help_text="Показувати в анімованій стрічці навичок"
+        "In the marquee", default=False, help_text="Show in the animated skills ticker"
     )
     is_visible = models.BooleanField(
-        "Показувати в секції навичок",
+        "Show in the skills section",
         default=True,
-        help_text="Вимкніть, якщо технологія потрібна лише як тег проєкту/досвіду",
+        help_text="Turn off if the technology is only needed as a project/experience tag",
     )
 
     class Meta(OrderedModel.Meta):
-        verbose_name = "Навичка"
-        verbose_name_plural = "Навички"
+        verbose_name = "Skill"
+        verbose_name_plural = "Skills"
 
     def __str__(self) -> str:
         return self.name
@@ -268,34 +268,34 @@ class Skill(OrderedModel):
 # ========== EXPERIENCE ==========
 class Experience(OptimizedImagesMixin, models.Model):
     class Kind(models.TextChoices):
-        WORK = "work", "Робота"
-        FREELANCE = "freelance", "Фриланс"
-        EDUCATION = "education", "Освіта"
-        VOLUNTEER = "volunteer", "Волонтерство"
+        WORK = "work", "Work"
+        FREELANCE = "freelance", "Freelance"
+        EDUCATION = "education", "Education"
+        VOLUNTEER = "volunteer", "Volunteering"
 
-    kind = models.CharField("Тип", max_length=12, choices=Kind.choices, default=Kind.WORK)
-    title = models.CharField("Посада / спеціальність", max_length=120)
-    organization = models.CharField("Компанія / заклад", max_length=120)
-    organization_url = models.URLField("Сайт компанії", blank=True)
-    logo = models.ImageField("Логотип", upload_to="experience/", blank=True)
-    location = models.CharField("Локація", max_length=120, blank=True)
+    kind = models.CharField("Type", max_length=12, choices=Kind.choices, default=Kind.WORK)
+    title = models.CharField("Position / degree", max_length=120)
+    organization = models.CharField("Company / institution", max_length=120)
+    organization_url = models.URLField("Company website", blank=True)
+    logo = models.ImageField("Logo", upload_to="experience/", blank=True)
+    location = models.CharField("Location", max_length=120, blank=True)
     employment_type = models.CharField(
-        "Формат", max_length=60, blank=True, help_text="Напр.: Full-time · Remote"
+        "Format", max_length=60, blank=True, help_text="E.g.: Full-time · Remote"
     )
-    start_date = models.DateField("Початок")
-    end_date = models.DateField("Завершення", null=True, blank=True, help_text="Порожньо — досі")
-    description = models.TextField("Опис", blank=True, help_text=PARAGRAPHS_HELP)
-    achievements = models.TextField("Досягнення", blank=True, help_text=LINES_HELP)
+    start_date = models.DateField("Start")
+    end_date = models.DateField("End", null=True, blank=True, help_text="Empty — present")
+    description = models.TextField("Description", blank=True, help_text=PARAGRAPHS_HELP)
+    achievements = models.TextField("Achievements", blank=True, help_text=LINES_HELP)
     technologies = models.ManyToManyField(
-        Skill, blank=True, related_name="experiences", verbose_name="Технології"
+        Skill, blank=True, related_name="experiences", verbose_name="Technologies"
     )
-    is_visible = models.BooleanField("Показувати", default=True)
+    is_visible = models.BooleanField("Visible", default=True)
 
     optimized_images = {"logo": 400}
 
     class Meta:
-        verbose_name = "Досвід / освіта"
-        verbose_name_plural = "Досвід та освіта"
+        verbose_name = "Experience / education"
+        verbose_name_plural = "Experience & education"
         ordering = ("-start_date", "-pk")
 
     def __str__(self) -> str:
@@ -303,7 +303,7 @@ class Experience(OptimizedImagesMixin, models.Model):
 
     def clean(self):
         if self.end_date and self.start_date and self.end_date < self.start_date:
-            raise ValidationError({"end_date": "Дата завершення раніше за дату початку."})
+            raise ValidationError({"end_date": "The end date is earlier than the start date."})
 
     @property
     def achievements_list(self) -> list[str]:
@@ -312,12 +312,12 @@ class Experience(OptimizedImagesMixin, models.Model):
 
 # ========== PROJECTS ==========
 class ProjectCategory(OrderedModel):
-    name = models.CharField("Назва", max_length=60, unique=True)
+    name = models.CharField("Name", max_length=60, unique=True)
     slug = models.SlugField("Slug", max_length=60, unique=True)
 
     class Meta(OrderedModel.Meta):
-        verbose_name = "Категорія проєктів"
-        verbose_name_plural = "Категорії проєктів"
+        verbose_name = "Project category"
+        verbose_name_plural = "Project categories"
 
     def __str__(self) -> str:
         return self.name
@@ -325,12 +325,12 @@ class ProjectCategory(OrderedModel):
 
 class Project(OrderedModel, OptimizedImagesMixin):
     class Status(models.TextChoices):
-        LIVE = "live", "Працює (live)"
-        IN_PROGRESS = "in_progress", "В розробці"
-        COMPLETED = "completed", "Завершено"
-        ARCHIVED = "archived", "Архів"
+        LIVE = "live", "Live"
+        IN_PROGRESS = "in_progress", "In progress"
+        COMPLETED = "completed", "Completed"
+        ARCHIVED = "archived", "Archived"
 
-    title = models.CharField("Назва", max_length=120)
+    title = models.CharField("Title", max_length=120)
     slug = models.SlugField("Slug", max_length=140, unique=True, blank=True)
     category = models.ForeignKey(
         ProjectCategory,
@@ -338,41 +338,41 @@ class Project(OrderedModel, OptimizedImagesMixin):
         null=True,
         blank=True,
         related_name="projects",
-        verbose_name="Категорія",
+        verbose_name="Category",
     )
-    summary = models.CharField("Короткий опис (картка)", max_length=280)
-    description = models.TextField("Повний опис", blank=True, help_text=PARAGRAPHS_HELP)
-    highlights = models.TextField("Ключові моменти", blank=True, help_text=LINES_HELP)
+    summary = models.CharField("Short description (card)", max_length=280)
+    description = models.TextField("Full description", blank=True, help_text=PARAGRAPHS_HELP)
+    highlights = models.TextField("Highlights", blank=True, help_text=LINES_HELP)
     cover = models.ImageField(
-        "Обкладинка", upload_to="projects/", blank=True, help_text="Рекомендовано 16:10"
+        "Cover", upload_to="projects/", blank=True, help_text="Recommended 16:10"
     )
-    role = models.CharField("Моя роль", max_length=120, blank=True)
-    year = models.PositiveSmallIntegerField("Рік", null=True, blank=True)
+    role = models.CharField("My role", max_length=120, blank=True)
+    year = models.PositiveSmallIntegerField("Year", null=True, blank=True)
     status = models.CharField(
-        "Статус", max_length=12, choices=Status.choices, default=Status.COMPLETED
+        "Status", max_length=12, choices=Status.choices, default=Status.COMPLETED
     )
-    live_url = models.URLField("Посилання на сайт", blank=True)
-    repo_url = models.URLField("Репозиторій", blank=True)
+    live_url = models.URLField("Live URL", blank=True)
+    repo_url = models.URLField("Repository", blank=True)
     technologies = models.ManyToManyField(
-        Skill, blank=True, related_name="projects", verbose_name="Технології"
+        Skill, blank=True, related_name="projects", verbose_name="Technologies"
     )
     accent_color = models.CharField(
-        "Акцентний колір",
+        "Accent color",
         max_length=7,
         blank=True,
         validators=[HEX_COLOR_VALIDATOR],
-        help_text="Колір світіння картки. Порожньо — місячне срібло.",
+        help_text="Card glow color. Empty — moon silver.",
     )
-    is_featured = models.BooleanField("Головний (велика картка)", default=False)
-    is_visible = models.BooleanField("Показувати", default=True)
-    created_at = models.DateTimeField("Створено", auto_now_add=True)
-    updated_at = models.DateTimeField("Оновлено", auto_now=True)
+    is_featured = models.BooleanField("Featured (large card)", default=False)
+    is_visible = models.BooleanField("Visible", default=True)
+    created_at = models.DateTimeField("Created", auto_now_add=True)
+    updated_at = models.DateTimeField("Updated", auto_now=True)
 
     optimized_images = {"cover": 2000}
 
     class Meta(OrderedModel.Meta):
-        verbose_name = "Проєкт"
-        verbose_name_plural = "Проєкти"
+        verbose_name = "Project"
+        verbose_name_plural = "Projects"
 
     def __str__(self) -> str:
         return self.title
@@ -393,14 +393,14 @@ class Project(OrderedModel, OptimizedImagesMixin):
 
 class ProjectImage(OrderedModel, OptimizedImagesMixin):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="images")
-    image = models.ImageField("Зображення", upload_to="projects/gallery/")
-    caption = models.CharField("Підпис", max_length=160, blank=True)
+    image = models.ImageField("Image", upload_to="projects/gallery/")
+    caption = models.CharField("Caption", max_length=160, blank=True)
 
     optimized_images = {"image": 2200}
 
     class Meta(OrderedModel.Meta):
-        verbose_name = "Зображення"
-        verbose_name_plural = "Галерея"
+        verbose_name = "Image"
+        verbose_name_plural = "Gallery"
 
     def __str__(self) -> str:
         return self.caption or f"{self.project} #{self.pk}"
@@ -408,37 +408,37 @@ class ProjectImage(OrderedModel, OptimizedImagesMixin):
 
 # ========== CERTIFICATES & TESTIMONIALS ==========
 class Certificate(OrderedModel, OptimizedImagesMixin):
-    title = models.CharField("Назва", max_length=160)
-    issuer = models.CharField("Видавець", max_length=120)
-    issued_at = models.DateField("Дата видачі", null=True, blank=True)
-    credential_url = models.URLField("Посилання на сертифікат", blank=True)
-    image = models.ImageField("Зображення", upload_to="certificates/", blank=True)
-    is_visible = models.BooleanField("Показувати", default=True)
+    title = models.CharField("Title", max_length=160)
+    issuer = models.CharField("Issuer", max_length=120)
+    issued_at = models.DateField("Issue date", null=True, blank=True)
+    credential_url = models.URLField("Credential URL", blank=True)
+    image = models.ImageField("Image", upload_to="certificates/", blank=True)
+    is_visible = models.BooleanField("Visible", default=True)
 
     optimized_images = {"image": 1600}
 
     class Meta(OrderedModel.Meta):
-        verbose_name = "Сертифікат"
-        verbose_name_plural = "Сертифікати"
+        verbose_name = "Certificate"
+        verbose_name_plural = "Certificates"
 
     def __str__(self) -> str:
         return self.title
 
 
 class Testimonial(OrderedModel, OptimizedImagesMixin):
-    author = models.CharField("Автор", max_length=100)
-    role = models.CharField("Посада", max_length=120, blank=True)
-    company = models.CharField("Компанія", max_length=120, blank=True)
-    avatar = models.ImageField("Фото", upload_to="testimonials/", blank=True)
-    text = models.TextField("Відгук", max_length=1200)
-    url = models.URLField("Посилання (LinkedIn тощо)", blank=True)
-    is_visible = models.BooleanField("Показувати", default=True)
+    author = models.CharField("Author", max_length=100)
+    role = models.CharField("Position", max_length=120, blank=True)
+    company = models.CharField("Company", max_length=120, blank=True)
+    avatar = models.ImageField("Photo", upload_to="testimonials/", blank=True)
+    text = models.TextField("Testimonial", max_length=1200)
+    url = models.URLField("Link (LinkedIn, etc.)", blank=True)
+    is_visible = models.BooleanField("Visible", default=True)
 
     optimized_images = {"avatar": 400}
 
     class Meta(OrderedModel.Meta):
-        verbose_name = "Відгук"
-        verbose_name_plural = "Відгуки"
+        verbose_name = "Testimonial"
+        verbose_name_plural = "Testimonials"
 
     def __str__(self) -> str:
         return f"{self.author}: {self.text[:40]}"
@@ -446,18 +446,18 @@ class Testimonial(OrderedModel, OptimizedImagesMixin):
 
 # ========== CONTACT ==========
 class ContactMessage(models.Model):
-    name = models.CharField("Ім'я", max_length=100)
+    name = models.CharField("Name", max_length=100)
     email = models.EmailField("Email")
-    subject = models.CharField("Тема", max_length=160, blank=True)
-    message = models.TextField("Повідомлення", max_length=5000)
-    is_read = models.BooleanField("Прочитано", default=False, db_index=True)
+    subject = models.CharField("Subject", max_length=160, blank=True)
+    message = models.TextField("Message", max_length=5000)
+    is_read = models.BooleanField("Read", default=False, db_index=True)
     ip_address = models.GenericIPAddressField("IP", null=True, blank=True)
     user_agent = models.CharField("User-Agent", max_length=300, blank=True)
-    created_at = models.DateTimeField("Отримано", auto_now_add=True)
+    created_at = models.DateTimeField("Received", auto_now_add=True)
 
     class Meta:
-        verbose_name = "Повідомлення"
-        verbose_name_plural = "Повідомлення"
+        verbose_name = "Message"
+        verbose_name_plural = "Messages"
         ordering = ("is_read", "-created_at")
 
     def __str__(self) -> str:

@@ -1,0 +1,38 @@
+# Production without a domain: images are built on the server and nginx listens straight on
+# port 80 (no Traefik, no HTTPS). Switch to docker/production.yml once a domain points here.
+services:
+  postgres:
+    restart: unless-stopped
+
+  backend:
+    image: portfolio-backend:prod
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.backend
+      target: production
+    environment:
+      DEBUG: "0"
+      # Only nginx in front of Django.
+      NUM_PROXIES: "1"
+    volumes:
+      - media_data:/app/media
+    restart: unless-stopped
+
+  frontend:
+    image: portfolio-frontend:prod
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.frontend
+      target: production
+    restart: unless-stopped
+
+  nginx:
+    image: portfolio-nginx:prod
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.nginx
+    ports:
+      - "${HTTP_PORT:-80}:80"
+    volumes:
+      - media_data:/app/media:ro
+    restart: unless-stopped

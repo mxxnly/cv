@@ -12,7 +12,13 @@ COMPOSE ?= docker compose
 # ========== COMPOSE FILES ==========
 BASE_COMPOSE := -f docker-compose.yml
 DEV_COMPOSE  := $(BASE_COMPOSE) -f docker/development.yml
-PROD_COMPOSE := $(BASE_COMPOSE) -f docker/production.yml
+# Without DOMAIN in .env the stack runs on a bare IP: images are built on the server and nginx
+# listens on :80 directly (docker/production-ip.yml). With DOMAIN set: GHCR images behind
+# Traefik with Let's Encrypt (docker/production.yml).
+PROD_OVERRIDE := $(if $(shell grep -E '^DOMAIN=.+' .env 2>/dev/null),docker/production.yml,docker/production-ip.yml)
+PROD_COMPOSE := $(BASE_COMPOSE) -f $(PROD_OVERRIDE)
+PROD_HAS_DOMAIN := $(filter docker/production.yml,$(PROD_OVERRIDE))
+PROD_UP_FLAGS := $(if $(PROD_HAS_DOMAIN),--no-build,--build)
 
 ENV_FILE := .env
 ENV_ARG  := --env-file $(ENV_FILE)
@@ -46,7 +52,7 @@ TAG_OK     := $(FG_GREEN)[OK]$(RESET)
 
 .PHONY: help env check test lint format \
         up down build rebuild nuke ps logs restart shell dbshell \
-        migrate makemigrations createsuperuser seed messages \
+        migrate makemigrations createsuperuser seed \
         test-backend test-frontend lint-backend lint-frontend \
         up-prod down-prod pull-prod deploy-prod build-prod restart-prod ps-prod logs-prod \
         migrate-prod createsuperuser-prod shell-prod backup-prod restore-prod prune-prod
@@ -163,13 +169,10 @@ seed: $(ENV_FILE) ## [DEV] 🌕 Fill the database with demo content (replaces ex
 	@printf "$(TAG_DEV) 🌕 Seeding demo content...\n"
 	@$(DEV) exec backend python manage.py seed_demo --force
 
-messages: $(ENV_FILE) ## [DEV] 🌐 Compile admin translations (locale/*.po → .mo)
-	@$(DEV) exec backend python manage.py compilemessages --ignore "*/site-packages/*"
-
 # ========== PROD ==========
 up-prod: $(ENV_FILE) ## [PROD] 🚀 Start PROD stack
-	@printf "$(TAG_PROD) 🚀 Starting PROD environment...\n"
-	@$(PROD) up -d --no-build
+	@printf "$(TAG_PROD) 🚀 Starting PROD environment ($(PROD_OVERRIDE))...\n"
+	@$(PROD) up -d $(PROD_UP_FLAGS)
 
 down-prod: $(ENV_FILE) ## [PROD] 🛑 Stop PROD stack
 	@$(PROD) down
@@ -178,10 +181,10 @@ pull-prod: $(ENV_FILE) ## [PROD] 📥 Pull images from GHCR
 	@printf "$(TAG_PROD) 📥 Pulling images...\n"
 	@$(PROD) pull
 
-deploy-prod: $(ENV_FILE) ## [PROD] 🚢 Pull & restart PROD from GHCR (migrations run on start)
-	@printf "$(TAG_PROD) 🚢 Deploying...\n"
-	@$(MAKE) --no-print-directory pull-prod
-	@$(PROD) up -d --no-build --remove-orphans
+deploy-prod: $(ENV_FILE) ## [PROD] 🚢 Deploy: pull from GHCR (domain) or build locally (bare IP); migrations run on start
+	@printf "$(TAG_PROD) 🚢 Deploying ($(PROD_OVERRIDE))...\n"
+	@$(if $(PROD_HAS_DOMAIN),$(MAKE) --no-print-directory pull-prod,true)
+	@$(PROD) up -d $(PROD_UP_FLAGS) --remove-orphans
 	@$(MAKE) --no-print-directory prune-prod
 	@printf "$(TAG_OK) PROD deploy finished\n"
 

@@ -7,8 +7,8 @@ import { Tag } from './Tag'
 
 describe('MoonPhase', () => {
   it('is exposed as an image when titled', () => {
-    render(<MoonPhase fraction={0.5} title="Впевнений" />)
-    expect(screen.getByRole('img', { name: 'Впевнений' })).toBeInTheDocument()
+    render(<MoonPhase fraction={0.5} title="Confident" />)
+    expect(screen.getByRole('img', { name: 'Confident' })).toBeInTheDocument()
   })
 
   it('renders only the outline for a new moon', () => {

@@ -120,9 +120,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # ========== I18N ==========
-LANGUAGE_CODE = "uk"
-LANGUAGES = [("uk", "Українська")]
-LOCALE_PATHS = [BASE_DIR / "locale"]
+LANGUAGE_CODE = "en"
+LANGUAGES = [("en", "English")]
 TIME_ZONE = env("TIME_ZONE", "Europe/Kyiv")
 USE_I18N = True
 USE_TZ = True
@@ -208,7 +207,7 @@ def environment_callback(request):
 UNFOLD = {
     "SITE_TITLE": "Portfolio",
     "SITE_HEADER": "Portfolio",
-    "SITE_SUBHEADER": "Місячна адмінка",
+    "SITE_SUBHEADER": "Moonlit admin",
     "SITE_SYMBOL": "dark_mode",
     "SITE_URL": "/",
     "SHOW_HISTORY": True,
@@ -248,79 +247,79 @@ UNFOLD = {
         "show_all_applications": False,
         "navigation": [
             {
-                "title": "Про мене",
+                "title": "About",
                 "items": [
                     {
-                        "title": "Профіль",
+                        "title": "Profile",
                         "icon": "person",
                         "link": reverse_lazy("admin:portfolio_profile_changelist"),
                     },
                     {
-                        "title": "Послуги",
+                        "title": "Services",
                         "icon": "auto_awesome",
                         "link": reverse_lazy("admin:portfolio_service_changelist"),
                     },
                 ],
             },
             {
-                "title": "Навички",
+                "title": "Skills",
                 "separator": True,
                 "items": [
                     {
-                        "title": "Навички",
+                        "title": "Skills",
                         "icon": "bolt",
                         "link": reverse_lazy("admin:portfolio_skill_changelist"),
                     },
                     {
-                        "title": "Категорії навичок",
+                        "title": "Skill categories",
                         "icon": "category",
                         "link": reverse_lazy("admin:portfolio_skillcategory_changelist"),
                     },
                 ],
             },
             {
-                "title": "Проєкти",
+                "title": "Projects",
                 "separator": True,
                 "items": [
                     {
-                        "title": "Проєкти",
+                        "title": "Projects",
                         "icon": "rocket_launch",
                         "link": reverse_lazy("admin:portfolio_project_changelist"),
                     },
                     {
-                        "title": "Категорії проєктів",
+                        "title": "Project categories",
                         "icon": "folder_open",
                         "link": reverse_lazy("admin:portfolio_projectcategory_changelist"),
                     },
                 ],
             },
             {
-                "title": "Кар'єра",
+                "title": "Career",
                 "separator": True,
                 "items": [
                     {
-                        "title": "Досвід та освіта",
+                        "title": "Experience & education",
                         "icon": "work_history",
                         "link": reverse_lazy("admin:portfolio_experience_changelist"),
                     },
                     {
-                        "title": "Сертифікати",
+                        "title": "Certificates",
                         "icon": "workspace_premium",
                         "link": reverse_lazy("admin:portfolio_certificate_changelist"),
                     },
                     {
-                        "title": "Відгуки",
+                        "title": "Testimonials",
                         "icon": "format_quote",
                         "link": reverse_lazy("admin:portfolio_testimonial_changelist"),
                     },
                 ],
             },
             {
-                "title": "Вхідні",
+                "title": "Inbox",
                 "separator": True,
                 "items": [
                     {
-                        "title": "Повідомлення",
+                        "title": "Messages",
                         "icon": "mail",
                         "link": reverse_lazy("admin:portfolio_contactmessage_changelist"),
                         "badge": "apps.portfolio.admin.unread_messages_badge",
@@ -328,17 +327,17 @@ UNFOLD = {
                 ],
             },
             {
-                "title": "Доступ",
+                "title": "Access",
                 "separator": True,
                 "collapsible": True,
                 "items": [
                     {
-                        "title": "Користувачі",
+                        "title": "Users",
                         "icon": "people",
                         "link": reverse_lazy("admin:auth_user_changelist"),
                     },
                     {
-                        "title": "Групи",
+                        "title": "Groups",
                         "icon": "group",
                         "link": reverse_lazy("admin:auth_group_changelist"),
                     },

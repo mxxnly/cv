@@ -15,7 +15,7 @@ export function Testimonials({ items, index, total }: TestimonialsProps) {
   const { t } = useI18n()
 
   return (
-    <section id="testimonials" className="relative py-28 md:py-36">
+    <section id="testimonials" className="relative py-20 md:py-36">
       <div className="container-page">
         <SectionHeading
           index={index}

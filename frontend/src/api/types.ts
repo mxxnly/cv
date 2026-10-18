@@ -1,4 +1,4 @@
-export type Language = 'uk' | 'en'
+export type Language = 'en' | 'uk'
 
 export type Platform =
   | 'github'

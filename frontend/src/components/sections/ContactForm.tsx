@@ -176,7 +176,7 @@ export function ContactForm() {
             />
 
             <div className="flex flex-col-reverse items-start gap-4 sm:col-span-2 sm:flex-row sm:items-center sm:justify-between">
-              <p role="alert" className="min-h-5 text-sm text-rose-400">
+              <p role="alert" className="min-h-5 text-sm text-rose-400 light:text-rose-600">
                 {failure}
               </p>
               <Button

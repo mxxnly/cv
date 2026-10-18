@@ -14,7 +14,7 @@ export function StatusBadge({ status, className }: { status: ProjectStatus; clas
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/35 px-3 py-1 text-[0.7rem] font-medium text-white backdrop-blur-md',
+        'inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/35 px-3 py-1 text-[0.7rem] font-medium text-white backdrop-blur-md light:border-black/10 light:bg-white/75 light:text-fg',
         className,
       )}
     >

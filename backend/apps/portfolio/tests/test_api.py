@@ -33,8 +33,8 @@ def test_portfolio_returns_seeded_content(client, seeded):
     data = client.get(reverse("portfolio")).json()
 
     profile = data["profile"]
-    assert profile["full_name"] == "Олекса Місяць"
-    assert profile["brand"] == "olexa"
+    assert profile["full_name"] == "Alex Moon"
+    assert profile["brand"] == "alex"
     assert len(profile["roles"]) == 4
     assert len(profile["stats"]) == 4
     assert {link["platform"] for link in profile["socials"]} >= {"github", "telegram"}
@@ -70,10 +70,10 @@ def test_uncategorized_skills_are_grouped(client):
 
 def test_contact_creates_message(client):
     payload = {
-        "name": "Тарас",
+        "name": "Taras",
         "email": "taras@example.com",
-        "subject": "Проєкт",
-        "message": "Привіт! Хочу обговорити співпрацю.",
+        "subject": "Project",
+        "message": "Hi! I would like to discuss a collaboration.",
     }
     response = client.post(
         reverse("contact"), payload, format="json", HTTP_X_FORWARDED_FOR="203.0.113.7"

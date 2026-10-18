@@ -6,7 +6,7 @@ const LOCALES: Record<Language, string> = { uk: 'uk-UA', en: 'en-US' }
 export function formatMonthYear(isoDate: string, lang: Language): string {
   const formatted = new Intl.DateTimeFormat(LOCALES[lang], { month: 'short', year: 'numeric' })
     .format(new Date(`${isoDate}T00:00:00`))
-  // "бер. 2024 р." → "бер. 2024"
+  // Ukrainian locale appends "р." (year): "бер. 2024 р." → "бер. 2024"
   return formatted.replace(/\s?р\.$/, '')
 }
 
@@ -16,7 +16,7 @@ export function formatDate(isoDate: string, lang: Language): string {
     .replace(/\s?р\.$/, '')
 }
 
-/** Human duration between two dates, inclusive of the starting month: "2 р. 3 міс." */
+/** Human duration between two dates, inclusive of the starting month: "2 yr 3 mo" */
 export function formatDuration(
   start: string,
   end: string | null,

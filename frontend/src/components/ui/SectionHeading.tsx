@@ -18,7 +18,7 @@ interface SectionHeadingProps {
 export function SectionHeading({ index, total, eyebrow, title, aside, className }: SectionHeadingProps) {
   const number = String(index).padStart(2, '0')
   return (
-    <div className={cn('mb-14 grid items-end gap-8 md:mb-20 lg:grid-cols-[1fr_auto]', className)}>
+    <div className={cn('mb-10 grid items-end gap-6 md:mb-20 md:gap-8 lg:grid-cols-[1fr_auto]', className)}>
       <div>
         <Reveal>
           <div className="eyebrow flex items-center gap-3">

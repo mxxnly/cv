@@ -28,7 +28,7 @@ from .models import (
 
 admin.site.site_header = "Portfolio"
 admin.site.site_title = "Portfolio"
-admin.site.index_title = "Керування портфоліо"
+admin.site.index_title = "Portfolio management"
 
 
 def unread_messages_badge(request: HttpRequest) -> int | None:
@@ -66,7 +66,7 @@ class StatInline(TabularInline):
     ordering_field = "order"
     hide_ordering_field = True
     tab = True
-    verbose_name_plural = "Цифри"
+    verbose_name_plural = "Numbers"
 
 
 class SocialLinkInline(TabularInline):
@@ -84,7 +84,7 @@ class ProfileAdmin(ModelAdmin):
     warn_unsaved_form = True
     fieldsets = (
         (
-            "Основне",
+            "General",
             {
                 "classes": ("tab",),
                 "fields": (
@@ -99,7 +99,7 @@ class ProfileAdmin(ModelAdmin):
             },
         ),
         (
-            "Контакти",
+            "Contacts",
             {
                 "classes": ("tab",),
                 "fields": (
@@ -112,7 +112,7 @@ class ProfileAdmin(ModelAdmin):
             },
         ),
         (
-            "Сайт і SEO",
+            "Site & SEO",
             {
                 "classes": ("tab",),
                 "fields": ("language", "footer_text", "seo_title", "seo_description"),
@@ -133,7 +133,7 @@ class ProfileAdmin(ModelAdmin):
 
     def response_change(self, request: HttpRequest, obj):
         if "_continue" not in request.POST and "_addanother" not in request.POST:
-            self.message_user(request, "Профіль збережено ✨", messages.SUCCESS)
+            self.message_user(request, "Profile saved ✨", messages.SUCCESS)
             return HttpResponseRedirect(request.path)
         return super().response_change(request, obj)
 
@@ -165,7 +165,7 @@ class SkillCategoryAdmin(ModelAdmin):
     ordering_field = "order"
     hide_ordering_field = True
 
-    @display(description="Навичок")
+    @display(description="Skills")
     def skills_count(self, obj: SkillCategory) -> int:
         return obj.skills.count()
 
@@ -223,7 +223,7 @@ class ProjectAdmin(ModelAdmin):
     warn_unsaved_form = True
     fieldsets = (
         (
-            "Основне",
+            "General",
             {
                 "classes": ("tab",),
                 "fields": (
@@ -238,24 +238,24 @@ class ProjectAdmin(ModelAdmin):
             },
         ),
         (
-            "Медіа та посилання",
+            "Media & links",
             {
                 "classes": ("tab",),
                 "fields": ("cover", "accent_color", ("live_url", "repo_url")),
             },
         ),
         (
-            "Відображення",
+            "Display",
             {"classes": ("tab",), "fields": ("is_featured", "is_visible")},
         ),
     )
 
-    @display(description="Проєкт", header=True)
+    @display(description="Project", header=True)
     def project_header(self, obj: Project) -> list:
         return image_header(obj.title, obj.summary[:70], obj.cover)
 
     @display(
-        description="Статус",
+        description="Status",
         label={
             Project.Status.LIVE: "success",
             Project.Status.IN_PROGRESS: "warning",
@@ -280,7 +280,7 @@ class ExperienceAdmin(ModelAdmin):
     warn_unsaved_form = True
     fieldsets = (
         (
-            "Основне",
+            "General",
             {
                 "classes": ("tab",),
                 "fields": (
@@ -294,17 +294,17 @@ class ExperienceAdmin(ModelAdmin):
             },
         ),
         (
-            "Опис",
+            "Description",
             {"classes": ("tab",), "fields": ("description", "achievements", "technologies")},
         ),
     )
 
-    @display(description="Позиція", header=True)
+    @display(description="Position", header=True)
     def experience_header(self, obj: Experience) -> list:
         return image_header(obj.title, obj.organization, obj.logo)
 
     @display(
-        description="Тип",
+        description="Type",
         label={
             Experience.Kind.WORK: "info",
             Experience.Kind.FREELANCE: "success",
@@ -315,9 +315,9 @@ class ExperienceAdmin(ModelAdmin):
     def kind_label(self, obj: Experience) -> tuple[str, str]:
         return obj.kind, obj.get_kind_display()
 
-    @display(description="Період", ordering="start_date")
+    @display(description="Period", ordering="start_date")
     def period(self, obj: Experience) -> str:
-        end = obj.end_date.strftime("%m.%Y") if obj.end_date else "досі"
+        end = obj.end_date.strftime("%m.%Y") if obj.end_date else "present"
         return f"{obj.start_date:%m.%Y} — {end}"
 
 
@@ -331,7 +331,7 @@ class CertificateAdmin(ModelAdmin):
     ordering_field = "order"
     hide_ordering_field = True
 
-    @display(description="Сертифікат", header=True)
+    @display(description="Certificate", header=True)
     def certificate_header(self, obj: Certificate) -> list:
         return image_header(obj.title, obj.issuer, obj.image)
 
@@ -345,12 +345,12 @@ class TestimonialAdmin(ModelAdmin):
     ordering_field = "order"
     hide_ordering_field = True
 
-    @display(description="Автор", header=True)
+    @display(description="Author", header=True)
     def author_header(self, obj: Testimonial) -> list:
         subtitle = " · ".join(part for part in (obj.role, obj.company) if part)
         return image_header(obj.author, subtitle, obj.avatar, squared=False)
 
-    @display(description="Відгук")
+    @display(description="Testimonial")
     def short_text(self, obj: Testimonial) -> str:
         return obj.text[:90] + ("…" if len(obj.text) > 90 else "")
 
@@ -382,22 +382,22 @@ class ContactMessageAdmin(ModelAdmin):
         ContactMessage.objects.filter(pk=object_id, is_read=False).update(is_read=True)
         return super().change_view(request, object_id, form_url, extra_context)
 
-    @display(description="Відправник", header=True)
+    @display(description="Sender", header=True)
     def sender_header(self, obj: ContactMessage) -> list:
         title = obj.name if obj.is_read else f"● {obj.name}"
         return [title, obj.email, obj.name[:1].upper(), None]
 
     @display(description="Email")
     def email_link(self, obj: ContactMessage) -> str:
-        subject = f"Re: {obj.subject}" if obj.subject else "Re: ваше повідомлення"
+        subject = f"Re: {obj.subject}" if obj.subject else "Re: your message"
         return format_html('<a href="mailto:{}?subject={}">{}</a>', obj.email, subject, obj.email)
 
-    @action(description="Позначити прочитаними")
+    @action(description="Mark as read")
     def mark_read(self, request: HttpRequest, queryset: QuerySet) -> None:
         updated = queryset.update(is_read=True)
-        self.message_user(request, f"Позначено прочитаними: {updated}", messages.SUCCESS)
+        self.message_user(request, f"Marked as read: {updated}", messages.SUCCESS)
 
-    @action(description="Позначити непрочитаними")
+    @action(description="Mark as unread")
     def mark_unread(self, request: HttpRequest, queryset: QuerySet) -> None:
         updated = queryset.update(is_read=False)
-        self.message_user(request, f"Позначено непрочитаними: {updated}", messages.SUCCESS)
+        self.message_user(request, f"Marked as unread: {updated}", messages.SUCCESS)

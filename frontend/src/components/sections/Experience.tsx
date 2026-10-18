@@ -25,7 +25,7 @@ function TimelineItem({ item }: { item: ExperienceItem }) {
   return (
     <motion.li
       ref={ref}
-      className="relative pb-16 pl-12 last:pb-0 md:pl-16"
+      className="relative pb-12 pl-9 last:pb-0 sm:pl-12 md:pb-16 md:pl-16"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '0px 0px -15% 0px' }}
@@ -49,8 +49,8 @@ function TimelineItem({ item }: { item: ExperienceItem }) {
           )}
         </div>
 
-        <div className="glass rounded-3xl p-6 md:p-8">
-          <div className="flex items-start gap-4">
+        <div className="glass rounded-3xl p-5 sm:p-6 md:p-8">
+          <div className="flex flex-col items-start gap-4 sm:flex-row">
             {item.logo && (
               <img
                 src={item.logo}
@@ -60,7 +60,7 @@ function TimelineItem({ item }: { item: ExperienceItem }) {
               />
             )}
             <div>
-              <h3 className="text-2xl font-semibold tracking-tight md:text-[1.7rem]">{item.title}</h3>
+              <h3 className="text-xl font-semibold tracking-tight sm:text-2xl md:text-[1.7rem]">{item.title}</h3>
               <p className="mt-1 text-muted">
                 {item.organization_url ? (
                   <a
@@ -172,7 +172,7 @@ export function Experience({ items, index, total }: ExperienceProps) {
   ) : undefined
 
   return (
-    <section id="experience" className="relative py-28 md:py-40">
+    <section id="experience" className="relative py-20 md:py-40">
       <div className="container-page">
         <SectionHeading
           index={index}

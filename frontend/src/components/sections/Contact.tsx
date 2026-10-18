@@ -85,7 +85,7 @@ export function Contact({ profile, index, total }: ContactProps) {
   const socials = profile.socials.filter((social) => social.platform !== 'email')
 
   return (
-    <section id="contact" className="relative py-28 md:py-40">
+    <section id="contact" className="relative py-20 md:py-40">
       <div className="container-page">
         <SectionHeading
           index={index}

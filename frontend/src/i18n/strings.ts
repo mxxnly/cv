@@ -256,4 +256,4 @@ const en: Dictionary = {
   duration: { years: (n) => `${n} yr`, months: (n) => `${n} mo` },
 }
 
-export const dictionaries: Record<Language, Dictionary> = { uk, en }
+export const dictionaries: Record<Language, Dictionary> = { en, uk }

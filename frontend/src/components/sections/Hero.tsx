@@ -64,10 +64,15 @@ export function Hero({ profile }: { profile: Profile }) {
 
   return (
     <section id="top" className="relative flex min-h-svh flex-col justify-center pt-32 pb-36">
+      {/* Phones: the moon sits right behind the copy, so haze the lower sky for legibility. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(180deg,transparent_16%,color-mix(in_oklab,var(--bg)_70%,transparent)_42%,color-mix(in_oklab,var(--bg)_55%,transparent)_100%)] lg:hidden"
+      />
       <motion.div className="container-page" initial="hidden" animate="show" variants={stagger(0.5, 0.12)}>
         <motion.div variants={fadeUp} className="flex flex-wrap items-center gap-3">
           {profile.is_available && profile.availability_text && (
-            <span className="glass inline-flex items-center gap-2.5 rounded-full py-1.5 pr-4 pl-3 text-sm font-medium">
+            <span className="inline-flex items-center gap-2.5 rounded-full border border-line bg-bg/60 py-1.5 pr-4 pl-3 text-sm font-medium backdrop-blur-md lg:bg-card">
               <span className="relative flex size-2">
                 <span className="animate-pulse-soft absolute inset-0 rounded-full bg-emerald-400" />
                 <span className="relative size-2 rounded-full bg-emerald-400 shadow-[0_0_12px] shadow-emerald-400" />
@@ -76,7 +81,7 @@ export function Hero({ profile }: { profile: Profile }) {
             </span>
           )}
           {profile.location && (
-            <span className="inline-flex items-center gap-1.5 text-sm text-muted">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-bg/60 px-3 py-1.5 text-sm text-fg backdrop-blur-md lg:border-transparent lg:bg-transparent lg:px-0 lg:text-muted lg:backdrop-blur-none">
               <MapPin className="size-3.5" />
               {profile.location}
             </span>
@@ -88,7 +93,7 @@ export function Hero({ profile }: { profile: Profile }) {
           text={nameMarkup}
           immediate
           delay={0.6}
-          className="mt-8 max-w-[14ch] text-[clamp(3.4rem,10.5vw,9.6rem)] leading-[0.9] font-semibold tracking-[-0.055em]"
+          className="mt-7 max-w-[14ch] text-[clamp(3.1rem,10.5vw,9.6rem)] leading-[0.9] font-semibold tracking-[-0.055em] md:mt-8"
         />
 
         <motion.p

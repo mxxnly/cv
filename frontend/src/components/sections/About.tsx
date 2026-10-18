@@ -42,7 +42,7 @@ const SERVICE_ICONS: Record<ServiceIcon, LucideIcon> = {
 
 function Portrait({ profile }: { profile: Profile }) {
   return (
-    <div className="relative mx-auto aspect-square w-full max-w-[22rem]">
+    <div className="relative mx-auto aspect-square w-[min(100%_-_2rem,22rem)]">
       <div className="animate-orbit absolute -inset-[9%] rounded-full border border-line [--orbit-duration:40s]">
         <span className="absolute top-1/2 -left-1.5 size-3 rounded-full bg-accent shadow-[0_0_20px_4px_var(--glow)]" />
       </div>
@@ -107,8 +107,8 @@ function ScrollRevealText({ text }: { text: string }) {
 function Services({ services }: { services: Service[] }) {
   const { t } = useI18n()
   return (
-    <div className="mt-28 md:mt-36">
-      <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
+    <div className="mt-20 md:mt-36">
+      <div className="mb-8 flex flex-wrap items-end justify-between gap-4 md:mb-10">
         <SplitHeading
           as="h3"
           text={t.sections.services.title}
@@ -153,7 +153,7 @@ export function About({ profile, services, index, total }: AboutProps) {
   const [lead, ...rest] = paragraphs(profile.about)
 
   return (
-    <section id="about" className="relative py-28 md:py-40">
+    <section id="about" className="relative py-20 md:py-40">
       <div className="container-page">
         <SectionHeading
           index={index}
@@ -162,7 +162,7 @@ export function About({ profile, services, index, total }: AboutProps) {
           title={t.sections.about.title}
         />
 
-        <div className="grid items-center gap-16 lg:grid-cols-12 lg:gap-20">
+        <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-20">
           <Reveal className="lg:col-span-5">
             <Portrait profile={profile} />
           </Reveal>
@@ -177,13 +177,13 @@ export function About({ profile, services, index, total }: AboutProps) {
         </div>
 
         {profile.stats.length > 0 && (
-          <div className="mt-24 grid grid-cols-2 gap-px overflow-hidden rounded-3xl border border-line bg-line lg:grid-cols-4">
+          <div className="mt-16 grid grid-cols-2 gap-px md:mt-24 overflow-hidden rounded-3xl border border-line bg-line lg:grid-cols-4">
             {profile.stats.map((stat, i) => (
               <Reveal key={stat.label} delay={i * 0.08} className="h-full">
-                <div className="flex h-full flex-col justify-between gap-6 bg-bg/80 p-6 backdrop-blur-xl md:p-8">
+                <div className="flex h-full flex-col justify-between gap-5 bg-bg/80 p-5 backdrop-blur-xl md:p-8">
                   <Counter
                     value={stat.value}
-                    className="text-moonlight text-5xl font-semibold tracking-[-0.05em] tabular-nums md:text-6xl"
+                    className="text-moonlight text-4xl font-semibold tracking-[-0.05em] tabular-nums sm:text-5xl md:text-6xl"
                   />
                   <span className="text-sm text-muted">{stat.label}</span>
                 </div>

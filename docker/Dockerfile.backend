@@ -17,11 +17,6 @@ RUN pip install -r requirements.txt
 # ========== DEVELOPMENT ==========
 FROM base AS development
 
-# gettext powers `make messages` (compilemessages).
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends gettext \
-    && rm -rf /var/lib/apt/lists/*
-
 COPY backend/requirements-dev.txt .
 RUN pip install -r requirements-dev.txt
 

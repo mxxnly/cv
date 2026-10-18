@@ -4,8 +4,8 @@ import type { Language } from '../api/types'
 import { dictionaries, type Dictionary } from './strings'
 
 export const I18nContext = createContext<{ lang: Language; t: Dictionary }>({
-  lang: 'uk',
-  t: dictionaries.uk,
+  lang: 'en',
+  t: dictionaries.en,
 })
 
 export function useI18n() {

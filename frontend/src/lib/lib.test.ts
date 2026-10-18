@@ -25,18 +25,22 @@ describe('moonPhasePath', () => {
 })
 
 describe('formatDuration', () => {
-  const t = dictionaries.uk
+  const t = dictionaries.en
 
   it('counts the starting month inclusively', () => {
-    expect(formatDuration('2024-01-01', '2024-01-31', t)).toBe('1 міс.')
+    expect(formatDuration('2024-01-01', '2024-01-31', t)).toBe('1 mo')
   })
 
   it('combines years and months', () => {
-    expect(formatDuration('2022-06-01', '2024-08-01', t)).toBe('2 р. 3 міс.')
+    expect(formatDuration('2022-06-01', '2024-08-01', t)).toBe('2 yr 3 mo')
   })
 
   it('uses "now" for ongoing positions', () => {
-    expect(formatDuration('2025-01-01', null, dictionaries.en, new Date('2026-01-15'))).toBe('1 yr 1 mo')
+    expect(formatDuration('2025-01-01', null, t, new Date('2026-01-15'))).toBe('1 yr 1 mo')
+  })
+
+  it('uses the Ukrainian dictionary when selected', () => {
+    expect(formatDuration('2022-06-01', '2024-08-01', dictionaries.uk)).toBe('2 р. 3 міс.')
   })
 })
 
@@ -46,7 +50,7 @@ describe('text helpers', () => {
   })
 
   it('builds initials from the first two words', () => {
-    expect(initials('Олекса Місяць Третій')).toBe('ОМ')
+    expect(initials('Alex Moon Junior')).toBe('AM')
   })
 
   it('tokenizes emphasised words', () => {

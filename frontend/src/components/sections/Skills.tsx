@@ -40,7 +40,7 @@ export function Skills({ categories, featured, index, total }: SkillsProps) {
   const secondRow = featured.length > 6 ? featured.slice(half) : [...featured].reverse()
 
   return (
-    <section id="skills" className="relative py-28 md:py-40">
+    <section id="skills" className="relative py-20 md:py-40">
       <div className="container-page">
         <SectionHeading
           index={index}
@@ -52,7 +52,7 @@ export function Skills({ categories, featured, index, total }: SkillsProps) {
       </div>
 
       {featured.length > 0 && (
-        <Reveal className="mb-20 space-y-3 md:mb-24">
+        <Reveal className="mb-14 space-y-3 md:mb-24">
           <Marquee items={firstRow} duration={55} />
           <Marquee items={secondRow} duration={65} reverse />
         </Reveal>
@@ -61,7 +61,7 @@ export function Skills({ categories, featured, index, total }: SkillsProps) {
       <div className="container-page grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {categories.map((category, i) => (
           <Reveal key={category.id} delay={(i % 3) * 0.08} className="h-full">
-            <SpotlightCard className="h-full p-7 md:p-8">
+            <SpotlightCard className="h-full p-6 md:p-8">
               <div className="flex items-baseline justify-between gap-4">
                 <h3 className="text-2xl font-semibold tracking-tight">{category.name || t.skills.other}</h3>
                 <span className="font-mono text-xs text-subtle">{String(category.skills.length).padStart(2, '0')}</span>

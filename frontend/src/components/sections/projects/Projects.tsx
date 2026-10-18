@@ -28,7 +28,7 @@ export function Projects({ projects, categories, index, total }: ProjectsProps) 
 
   const filters =
     categories.length > 1 ? (
-      <div role="tablist" className="glass flex flex-wrap gap-1 rounded-full p-1">
+      <div role="tablist" className="glass flex flex-wrap gap-1 rounded-[1.6rem] p-1 sm:rounded-full">
         {options.map((option) => (
           <button
             key={option.slug}
@@ -55,7 +55,7 @@ export function Projects({ projects, categories, index, total }: ProjectsProps) 
     ) : undefined
 
   return (
-    <section id="projects" className="relative py-28 md:py-40">
+    <section id="projects" className="relative py-20 md:py-40">
       <div className="container-page">
         <SectionHeading
           index={index}

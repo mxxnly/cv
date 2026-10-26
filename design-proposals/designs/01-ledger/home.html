@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="uk" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MXXNLY Labs — розробляємо й підтримуємо програмні продукти</title>
+  <meta name="description" content="MXXNLY Labs: команда розробників. Каталог продуктів із прозорими цінами, підтримка та контакти продавця.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="../../logos/01-lattice/favicon.svg">
+  <link rel="stylesheet" href="style.css">
+  <script src="../../shared/theme.js"></script>
+</head>
+<body>
+<a class="test-badge" href="#" title="Показується лише у dev і staging: у конфігу є поля placeholder: true">Тестові дані<small>dev / staging</small></a>
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="home.html" aria-label="MXXNLY Labs — на головну">
+      <img class="logo-on-light" src="../../logos/01-lattice/logo-on-light.svg" alt="MXXNLY LABS">
+      <img class="logo-on-dark" src="../../logos/01-lattice/logo-on-dark.svg" alt="MXXNLY LABS">
+    </a>
+    <nav class="nav" aria-label="Головна навігація">
+      <a href="catalog.html">Продукти</a>
+      <a href="#">Прайс</a>
+      <a href="#">Підтримка</a>
+      <a href="#">Про нас</a>
+      <a href="home.html#contact">Контакти</a>
+    </nav>
+    <div class="tools">
+      <a class="lang" href="#" title="Окрема адреса для кожної мови: /uk/… та /en/…"><b>UA</b><i>|</i><span>EN</span></a>
+      <button class="icon-btn" type="button" data-theme-toggle aria-label="Перемкнути тему">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <button class="icon-btn menu-btn" type="button" aria-label="Меню">Меню</button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero">
+    <div class="wrap">
+      <p class="mono kicker">MXXNLY Labs · Львів · з 2026</p>
+      <h1>Розробляємо й підтримуємо <em>програмні</em> продукти</h1>
+      <p class="lead">Невелика команда, яка робить власні продукти і веде їх після запуску: оновлення, підтримка, документація. Усі продукти, ціни й посилання зібрані на цьому сайті.</p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href="catalog.html">Каталог продуктів</a>
+        <a class="btn btn-outline" href="#contact">Зв'язатися</a>
+      </div>
+      <dl class="hero-meta">
+        <div><dt>Продуктів у каталозі</dt><dd class="num">2 <span class="muted" style="font-size:1rem">+ 1 у розробці</span></dd></div>
+        <div><dt>Ціни</dt><dd>Публічні, в USD</dd></div>
+        <div><dt>Продавець</dt><dd>ФОП Складан М. Я.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="section" id="products">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="mono">01 Продукти</span>
+        <h2>Ключові продукти з цінами «від»</h2>
+      </div>
+      <ul class="ledger">
+        <li class="row">
+  <span class="idx">01</span>
+  <div>
+    <h3>MXXNLY VPN</h3>
+    <p class="desc">Шифроване з'єднання для публічних Wi-Fi і невеликих команд. Один застосунок, спільне адміністрування пристроїв.</p>
+  </div>
+  <div>
+    <div class="price num"><span class="from">від</span>5 USD<small>за місяць <span class="ex">приклад</span></small></div>
+    <span class="status ok" style="margin-top:10px">Доступний</span>
+  </div>
+  <div class="actions btn-row">
+    <a class="btn btn-outline btn-sm" href="#">Детальніше</a>
+    <a class="btn btn-primary btn-sm" href="#">Купити</a>
+  </div>
+</li>
+<li class="row">
+  <span class="idx">02</span>
+  <div>
+    <h3>MXXNLY Invoice</h3>
+    <p class="desc">Парсер паперових накладних із перевіркою за довідниками. Фото або скан → структуровані рядки з позначеними розбіжностями.</p>
+  </div>
+  <div>
+    <div class="price num"><span class="from">від</span>49 USD<small>за місяць <span class="ex">приклад</span></small></div>
+    <span class="status beta" style="margin-top:10px">Бета</span>
+  </div>
+  <div class="actions btn-row">
+    <a class="btn btn-outline btn-sm" href="product.html">Детальніше</a>
+    <a class="btn btn-primary btn-sm" href="#">Запросити демо</a>
+  </div>
+</li>
+      </ul>
+      <ul class="price-note">
+  <li><b>Валюта</b><span>Ціни в USD, ПДВ не нараховується (уточнити)</span></li>
+  <li><b>Повернення</b><span>Повернення коштів: 14 днів (чернетка)</span></li>
+  <li><b>Термін</b><span>Ціна дійсна до 31.12.2026 (приклад)</span></li>
+</ul>
+    </div>
+  </section>
+
+  <section class="section" id="services">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="mono">02 Як працюємо</span>
+        <h2>Розробляємо й підтримуємо</h2>
+      </div>
+      <div class="cols">
+        <div class="col">
+          <span class="idx">I</span>
+          <h3>Розробка</h3>
+          <p>Проєктуємо й пишемо продукт від бекенду до інтерфейсу. Невеликі релізи, зрозумілий план, без зайвих обіцянок.</p>
+        </div>
+        <div class="col">
+          <span class="idx">II</span>
+          <h3>Підтримка та оновлення</h3>
+          <p>Оновлення входять у тариф. На звернення відповідаємо протягом одного робочого дня через email або Telegram.</p>
+        </div>
+        <div class="col">
+          <span class="idx">III</span>
+          <h3>Документація й навчання</h3>
+          <p>До кожного продукту — документація, короткі інструкції та демо. Допомагаємо з впровадженням у команді.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Відгуки: блок прихований, доки немає справжніх відгуків -->
+
+  <section class="section" id="contact">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="mono">03 Контакти</span>
+        <h2>Напишіть нам</h2>
+      </div>
+      <div class="contact">
+        <form class="form" action="#" method="post">
+          <div class="field"><label for="c-name">Ім'я</label><input id="c-name" name="name" type="text" autocomplete="name" required></div>
+          <div class="field"><label for="c-email">Email</label><input id="c-email" name="email" type="email" autocomplete="email" required></div>
+          <div class="field"><label for="c-msg">Повідомлення</label><textarea id="c-msg" name="message" required></textarea></div>
+          <div class="hp" aria-hidden="true"><label for="c-website">Website</label><input id="c-website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+          <p class="muted" style="font-size:.9rem;margin:0">Надсилаючи форму, ви погоджуєтесь із політикою конфіденційності. Ми не зберігаємо зайвих персональних даних.</p>
+          <button class="btn btn-primary" type="submit" style="justify-self:start">Надіслати</button>
+        </form>
+        <dl class="contact-list">
+          <div><dt>Email</dt><dd><a href="mailto:hello@example.com">hello@example.com</a></dd></div>
+          <div><dt>Telegram</dt><dd><a href="#">@mxxnly_placeholder</a></dd></div>
+          <div><dt>Телефон</dt><dd class="num"><a href="tel:+380000000000">+380 00 000 00 00</a></dd></div>
+          <div><dt>Адреса</dt><dd>м. Львів, вул. Приклад, 1</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <h4>Продавець</h4>
+        <div class="seller">
+          <span>Торгова назва: <b>MXXNLY Labs</b></span>
+          <span>Продавець: <b>ФОП Складан М. Я.</b></span>
+          <span>РНОКПП: <b class="num">0000000000</b></span>
+          <span>м. Львів, вул. Приклад, 1</span>
+          <span><a href="mailto:hello@example.com">hello@example.com</a> · <span class="num">+380 00 000 00 00</span></span>
+          <span>Telegram: @mxxnly_placeholder</span>
+        </div>
+      </div>
+      <div>
+        <h4>Юридичне</h4>
+        <ul>
+          <li><a href="#">Публічна оферта</a></li>
+          <li><a href="#">Політика конфіденційності</a></li>
+          <li><a href="#">Умови використання</a></li>
+          <li><a href="#">Політика повернення</a></li>
+          <li><a href="#">Cookie-політика</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Сайт</h4>
+        <ul>
+          <li><a href="catalog.html">Каталог продуктів</a></li>
+          <li><a href="#">Прайс-листи</a></li>
+          <li><a href="#">Підтримка</a></li>
+          <li><a href="#">Про нас</a></li>
+          <li><a href="home.html#contact">Контакти</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 MXXNLY Labs · ФОП Складан М. Я.</span>
+      <span>Ціни в USD, ПДВ не нараховується (уточнити)</span>
+    </div>
+  </div>
+</footer>
+
+<div class="cookie" role="region" aria-label="Згода на cookie">
+  <div class="wrap">
+    <p>Ми використовуємо cookie для аналітики лише після вашої згоди. Детальніше — у <a href="#" style="border-bottom:1px solid var(--rule)">Cookie-політиці</a>.</p>
+    <div class="btn-row">
+      <button class="btn btn-primary btn-sm" type="button">Прийняти</button>
+      <button class="btn btn-outline btn-sm" type="button">Відхилити</button>
+      <button class="btn btn-outline btn-sm" type="button">Налаштувати</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

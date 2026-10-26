@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MXXNLY Labs: варіанти дизайну і логотипа</title>
+<meta name="description" content="Три напрямки логотипа і три напрямки дизайну сайту MXXNLY Labs поряд: живі макети, скриншоти, плюси й мінуси для Google Ads.">
+<style>
+  :root{--bg:#f3f2ef;--fg:#1a1917;--muted:#66645e;--panel:#ffffff;--line:#dedcd6;--accent:#1f5fbf;--ok:#1d7a4e;--warn:#9a5b00}
+  :root[data-theme="dark"]{--bg:#121314;--fg:#ecebe6;--muted:#9b9992;--panel:#1b1d1f;--line:#2d3033;--accent:#7fb0ff;--ok:#7fd1a4;--warn:#f0b35a}
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 -apple-system,"Helvetica Neue",Arial,sans-serif}
+  a{color:var(--accent)}
+  header{position:sticky;top:0;z-index:5;background:var(--panel);border-bottom:1px solid var(--line);padding:12px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  header h1{font-size:17px;margin:0 auto 0 0}
+  header nav{display:flex;gap:4px;flex-wrap:wrap}
+  header nav a,button,.btn{display:inline-flex;align-items:center;min-height:36px;padding:0 12px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--fg);font:inherit;font-size:14px;text-decoration:none;cursor:pointer}
+  header nav a:hover,button:hover,.btn:hover{border-color:var(--fg)}
+  main{max-width:1500px;margin:0 auto;padding:24px 16px 80px}
+  h2{font-size:26px;margin:40px 0 8px;letter-spacing:-.01em}
+  h3{font-size:18px;margin:24px 0 8px}
+  p.lead{color:var(--muted);max-width:70ch;margin:0 0 16px}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px}
+  /* compare */
+  .controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:0 0 14px}
+  .controls .group{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+  .controls .group button{border:0;border-radius:0;border-right:1px solid var(--line)}
+  .controls .group button:last-child{border-right:0}
+  .controls .group button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+  .frames{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .frames figure{margin:0;display:grid;gap:8px}
+  .frames figcaption{font-size:14px;color:var(--muted);display:flex;justify-content:space-between;align-items:center}
+  .frames iframe{width:100%;height:720px;border:1px solid var(--line);border-radius:8px;background:#fff}
+  .frames.mobile{grid-template-columns:repeat(3,minmax(0,1fr));justify-items:center}
+  .frames.mobile iframe{width:390px;max-width:100%;height:760px}
+  @media (max-width:1100px){.frames{grid-template-columns:1fr}.frames iframe{height:640px}}
+  /* logos */
+  .logos{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+  .logo-card{display:grid;gap:14px;align-content:start}
+  .logo-card img.lockup{height:44px;width:auto;max-width:100%}
+  .logo-card .row{display:flex;gap:18px;align-items:center}
+  .logo-card img.mark{height:64px;width:auto}
+  .logo-card img.fav{height:32px;width:auto}
+  .logo-card img.fav16{height:16px;width:auto}
+  .logo-card .swatch{display:grid;place-items:center;padding:14px;border-radius:8px}
+  :root[data-theme="light"] .on-dark,:root[data-theme="dark"] .on-light{display:none}
+  .logo-card p{margin:0;color:var(--muted);font-size:14px}
+  /* design sections */
+  .design{margin-top:36px}
+  .design .meta{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:16px}
+  @media (max-width:900px){.design .meta{grid-template-columns:1fr}}
+  .palette{display:flex;flex-wrap:wrap;gap:6px}
+  .palette span{display:grid;gap:2px;font-size:11px;color:var(--muted);text-align:center}
+  .palette i{display:block;width:44px;height:28px;border-radius:4px;border:1px solid var(--line)}
+  ul.pro{padding-left:18px;margin:6px 0}
+  ul.pro li{margin:3px 0}
+  .pros li::marker{color:var(--ok)} .cons li::marker{color:var(--warn)}
+  .links{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 0}
+  .shots{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin-top:14px}
+  .shots a{display:block;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--panel)}
+  .shots img{display:block;width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;object-position:top}
+  .shots.mobile{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
+  .shots.mobile img{aspect-ratio:430/884}
+  .shots small{display:block;padding:6px 8px;font-size:12px;color:var(--muted)}
+  details.sheet{margin-top:10px}
+  details.sheet summary{cursor:pointer;color:var(--accent)}
+  table{border-collapse:collapse;width:100%;font-size:14px;margin-top:10px}
+  td,th{border-top:1px solid var(--line);padding:8px 6px;text-align:left;vertical-align:top}
+  th{color:var(--muted);font-weight:600}
+  .badge{display:inline-block;font-size:12px;padding:2px 8px;border-radius:999px;background:var(--line);color:var(--fg);margin-left:6px}
+</style>
+<script src="shared/theme.js"></script>
+</head>
+<body>
+<header>
+  <h1>MXXNLY Labs · варіанти дизайну і логотипа</h1>
+  <nav>
+    <a href="#compare">Порівняти поряд</a>
+    <a href="#logos">Логотипи</a>
+    <a href="#d1">01 Ledger</a>
+    <a href="#d2">02 Workshop</a>
+    <a href="#d3">03 Soft</a>
+    <a href="#ads">Google Ads</a>
+    <a href="README.md">README</a>
+  </nav>
+  <button data-theme-toggle aria-label="Перемкнути тему сторінки">Тема сторінки</button>
+</header>
+
+<main>
+  <p class="lead">Усе тут статичне: відкривається з диска без сервера. Логотип і дизайн обираються незалежно: кожен дизайн показано з «рідним» логотипом, але будь-який знак перефарбовується під будь-яку палітру (три значення в <code>tools/make_logos.py</code>).</p>
+
+  <!-- ================= COMPARE ================= -->
+  <h2 id="compare">Живі макети поряд</h2>
+  <p class="lead">Оберіть сторінку, тему й розмір екрана: усі три напрямки перемкнуться одночасно. Усередині кожного макета працюють переходи між сторінками й власна кнопка теми.</p>
+  <div class="panel">
+    <div class="controls">
+      <span class="group" data-ctl="page">
+        <button aria-pressed="true" data-v="home">Головна</button>
+        <button aria-pressed="false" data-v="catalog">Каталог</button>
+        <button aria-pressed="false" data-v="product">Продукт</button>
+      </span>
+      <span class="group" data-ctl="theme">
+        <button aria-pressed="true" data-v="light">Світла</button>
+        <button aria-pressed="false" data-v="dark">Темна</button>
+      </span>
+      <span class="group" data-ctl="vp">
+        <button aria-pressed="true" data-v="desktop">Десктоп</button>
+        <button aria-pressed="false" data-v="mobile">Мобільний</button>
+      </span>
+    </div>
+    <div class="frames" id="frames">
+      <figure><figcaption><span>01 Ledger</span><a target="_blank" data-open="01-ledger" href="designs/01-ledger/home.html">відкрити у вкладці ↗</a></figcaption><iframe data-d="01-ledger" title="01 Ledger" loading="lazy"></iframe></figure>
+      <figure><figcaption><span>02 Workshop</span><a target="_blank" data-open="02-workshop" href="designs/02-workshop/home.html">відкрити у вкладці ↗</a></figcaption><iframe data-d="02-workshop" title="02 Workshop" loading="lazy"></iframe></figure>
+      <figure><figcaption><span>03 Soft</span><a target="_blank" data-open="03-soft" href="designs/03-soft/home.html">відкрити у вкладці ↗</a></figcaption><iframe data-d="03-soft" title="03 Soft" loading="lazy"></iframe></figure>
+    </div>
+  </div>
+
+  <!-- ================= LOGOS ================= -->
+  <h2 id="logos">Три напрямки логотипа</h2>
+  <p class="lead">Літери побудовано з ліній на сітці, без шрифтів. Повний аркуш з усіма файлами: <a href="logos/sheet.html">logos/sheet.html</a>, пояснення: <a href="logos/README.md">logos/README.md</a>.</p>
+  <div class="logos">
+    <section class="panel logo-card">
+      <h3 style="margin:0">01 · Lattice (Ґратка)</h3>
+      <img class="lockup on-light" src="logos/01-lattice/logo-on-light.svg" alt="MXXNLY LABS, Lattice">
+      <img class="lockup on-dark" src="logos/01-lattice/logo-on-dark.svg" alt="">
+      <div class="row">
+        <img class="mark on-light" src="logos/01-lattice/mark-on-light.svg" alt="знак"><img class="mark on-dark" src="logos/01-lattice/mark-on-dark.svg" alt="">
+        <span class="swatch" style="background:#F6F3EC"><img class="fav" src="logos/01-lattice/favicon.svg" alt="favicon"></span>
+        <span class="swatch" style="background:#141210"><img class="fav" src="logos/01-lattice/favicon-dark.svg" alt=""></span>
+        <img class="fav16" src="logos/01-lattice/favicon.svg" alt="16 px">
+      </div>
+      <p>Два X ділять діагоналі; у перетині з'являється ромб, єдина кольорова пляма. Тонка монолінія, редакційний характер. Рідний для дизайну 01.</p>
+    </section>
+    <section class="panel logo-card">
+      <h3 style="margin:0">02 · Stitch (Стібок)</h3>
+      <img class="lockup on-light" src="logos/02-stitch/logo-on-light.svg" alt="mxxnly.labs, Stitch">
+      <img class="lockup on-dark" src="logos/02-stitch/logo-on-dark.svg" alt="">
+      <div class="row">
+        <img class="mark on-light" src="logos/02-stitch/mark-on-light.svg" alt="знак"><img class="mark on-dark" src="logos/02-stitch/mark-on-dark.svg" alt="">
+        <span class="swatch" style="background:#F7F8F6"><img class="fav" src="logos/02-stitch/favicon.svg" alt="favicon"></span>
+        <span class="swatch" style="background:#141A18"><img class="fav" src="logos/02-stitch/favicon-dark.svg" alt=""></span>
+        <img class="fav16" src="logos/02-stitch/favicon.svg" alt="16 px">
+      </div>
+      <p>Округлі рядкові літери, два x зшиті в один стібок, l з ніжкою (не сплутати з I чи 1). Дружній характер. Рідний для дизайну 03.</p>
+    </section>
+    <section class="panel logo-card">
+      <h3 style="margin:0">03 · Plate (Пластина)</h3>
+      <img class="lockup on-light" src="logos/03-plate/logo-on-light.svg" alt="MXXNLY LABS, Plate">
+      <img class="lockup on-dark" src="logos/03-plate/logo-on-dark.svg" alt="">
+      <div class="row">
+        <img class="mark on-light" src="logos/03-plate/mark-on-light.svg" alt="знак"><img class="mark on-dark" src="logos/03-plate/mark-on-dark.svg" alt="">
+        <span class="swatch" style="background:#EDEDEA"><img class="fav" src="logos/03-plate/favicon.svg" alt="favicon"></span>
+        <span class="swatch" style="background:#121415"><img class="fav" src="logos/03-plate/favicon-dark.svg" alt=""></span>
+        <img class="fav16" src="logos/03-plate/favicon.svg" alt="16 px">
+      </div>
+      <p>Трафаретна пластина з вибитими X і жовтою смужкою. Найкраще читається на малих розмірах і здалека. Рідний для дизайну 02.</p>
+    </section>
+  </div>
+
+  <!-- ================= DESIGN 01 ================= -->
+  <section class="design" id="d1">
+    <h2>01 · Ledger <span class="badge">логотип: 01 Lattice</span></h2>
+    <p class="lead">Чесний прайс-лист. Папір і чорнило, один цегляний акцент, серифні заголовки, тонкі лінійки замість рамок, ціни в таблиці-реєстрі з табличними цифрами. Відчуття редакції або бухгалтерської книги, що пасує й парсеру накладних.</p>
+    <div class="meta">
+      <div class="panel">
+        <h3 style="margin-top:0">Палітра</h3>
+        <div class="palette">
+          <span><i style="background:#F6F3EC"></i>папір</span><span><i style="background:#141210"></i>чорнило</span><span><i style="background:#6B655C"></i>muted</span><span><i style="background:#D9D3C7"></i>лінійка</span><span><i style="background:#C8381B"></i>акцент</span>
+          <span><i style="background:#141210"></i>bg dark</span><span><i style="background:#ECE7DC"></i>fg dark</span><span><i style="background:#E8603F"></i>акцент dark</span>
+        </div>
+        <h3>Типографіка</h3>
+        <p style="margin:0;font-size:14px">Заголовки: Newsreader (серif), текст: Inter, цифри табличні. У макеті: системні Iowan Old Style / Charter і Helvetica.</p>
+        <h3>Кнопки й картки</h3>
+        <p style="margin:0;font-size:14px">Прямокутні кнопки, радіус 2 px: заливка чорнилом або контур 1 px. Картки без заливки, розділені лінійками, нумеровані секції.</p>
+      </div>
+      <div class="panel">
+        <h3 style="margin-top:0">Плюси для Google Ads</h3>
+        <ul class="pro pros"><li>Найвища читабельність цін і умов: таблиця, табличні цифри, високий контраст.</li><li>Виглядає як документ, а не реклама: довіра до продавця й реквізитів.</li><li>Найлегша сторінка: майже без декору, один шрифт-сериф + системний гротеск.</li></ul>
+      </div>
+      <div class="panel">
+        <h3 style="margin-top:0">Мінуси</h3>
+        <ul class="pro cons"><li>Стриманість може виглядати «сухо» для VPN-аудиторії, що звикла до яскравих лендингів.</li><li>Серифний шрифт потребує самохостингу (~40–60 кБ, 2 накреслення).</li><li>Темна тема слабше передає «паперовий» характер.</li></ul>
+      </div>
+    </div>
+    <div class="links">
+      <a class="btn" href="designs/01-ledger/home.html">Головна</a><a class="btn" href="designs/01-ledger/catalog.html">Каталог</a><a class="btn" href="designs/01-ledger/product.html">Продукт</a><a class="btn" href="designs/01-ledger/README.md">README напрямку</a>
+    </div>
+    <div class="shots" data-shots="01-ledger"></div>
+  </section>
+
+  <!-- ================= DESIGN 02 ================= -->
+  <section class="design" id="d2">
+    <h2>02 · Workshop <span class="badge">логотип: 03 Plate</span></h2>
+    <p class="lead">Майстерня, де продукти роблять і підтримують. Бетонний сірий, графіт і сигнальний жовтий, ледь помітна точкова сітка, моноширинні підписи-штампи, кнопки з жорсткою тінню. Впевнено й без неону.</p>
+    <div class="meta">
+      <div class="panel">
+        <h3 style="margin-top:0">Палітра</h3>
+        <div class="palette">
+          <span><i style="background:#EDEDEA"></i>бетон</span><span><i style="background:#1B1D1F"></i>графіт</span><span><i style="background:#5A5E63"></i>muted</span><span><i style="background:#C9CAC6"></i>лінійка</span><span><i style="background:#F2B705"></i>жовтий</span>
+          <span><i style="background:#121415"></i>bg dark</span><span><i style="background:#E8E6E1"></i>fg dark</span>
+        </div>
+        <h3>Типографіка</h3>
+        <p style="margin:0;font-size:14px">Space Grotesk для заголовків і тексту, JetBrains Mono (уже в проєкті) для підписів. У макеті: Avenir Next / Helvetica і Menlo.</p>
+        <h3>Кнопки й картки</h3>
+        <p style="margin:0;font-size:14px">Радіус 0, рамка 2 px, зміщена тінь 3 px, що «втискається» при натисканні. Картки з рамкою 2 px, статус як штамп, кутові мітки.</p>
+      </div>
+      <div class="panel">
+        <h3 style="margin-top:0">Плюси для Google Ads</h3>
+        <ul class="pro pros"><li>Найпомітніші кнопки й статуси: жовта заливка з чорним текстом добре працює для CTA.</li><li>Запам'ятовується: сильно відрізняється від типових SaaS-лендингів конкурентів.</li><li>Без розмиття і тіней-ореолів: швидкий рендер, стабільний CLS.</li></ul>
+      </div>
+      <div class="panel">
+        <h3 style="margin-top:0">Мінуси</h3>
+        <ul class="pro cons"><li>Жорсткий стиль може здаватися менш «надійним» для бухгалтерської аудиторії Invoice.</li><li>Жовтий припустимий лише як заливка з темним текстом: обмежує дизайн-систему.</li><li>Два шрифти для самохостингу (~70–90 кБ).</li></ul>
+      </div>
+    </div>
+    <div class="links">
+      <a class="btn" href="designs/02-workshop/home.html">Головна</a><a class="btn" href="designs/02-workshop/catalog.html">Каталог</a><a class="btn" href="designs/02-workshop/product.html">Продукт</a><a class="btn" href="designs/02-workshop/README.md">README напрямку</a>
+    </div>
+    <div class="shots" data-shots="02-workshop"></div>
+  </section>
+
+  <!-- ================= DESIGN 03 ================= -->
+  <section class="design" id="d3">
+    <h2>03 · Soft <span class="badge">логотип: 02 Stitch</span></h2>
+    <p class="lead">Спокійна продуктова компанія. Світла основа і пласкі тоновані поверхні (шавлія, небо, пісок) замість рамок і тіней, глибокий бірюзовий як головний колір, великі радіуси, pill-кнопки. У кожного продукту свій відтінок.</p>
+    <div class="meta">
+      <div class="panel">
+        <h3 style="margin-top:0">Палітра</h3>
+        <div class="palette">
+          <span><i style="background:#F7F8F6"></i>фон</span><span><i style="background:#E6EFE8"></i>шавлія</span><span><i style="background:#E4ECF5"></i>небо</span><span><i style="background:#F3EBDD"></i>пісок</span><span><i style="background:#1E2A26"></i>чорнило</span><span><i style="background:#176B5A"></i>бірюза</span>
+          <span><i style="background:#141A18"></i>bg dark</span><span><i style="background:#7FD1B9"></i>бірюза dark</span>
+        </div>
+        <h3>Типографіка</h3>
+        <p style="margin:0;font-size:14px">Manrope для всього (уже самохоститься в проєкті). У макеті: Avenir Next / системний.</p>
+        <h3>Кнопки й картки</h3>
+        <p style="margin:0;font-size:14px">Pill-кнопки 48 px: бірюзова заливка або тонована. Картки радіус 20–24 px, пласка тонована заливка, без рамок, тіней і градієнтів.</p>
+      </div>
+      <div class="panel">
+        <h3 style="margin-top:0">Плюси для Google Ads</h3>
+        <ul class="pro pros"><li>Найширша аудиторія: дружній і нейтральний, не відлякує ні бізнес, ні приватних користувачів VPN.</li><li>Один шрифт, який уже є в проєкті: мінімум нових кілобайтів.</li><li>Великі кнопки й тонові блоки добре працюють на мобільному, де йде більшість кліків з реклами.</li></ul>
+      </div>
+      <div class="panel">
+        <h3 style="margin-top:0">Мінуси</h3>
+        <ul class="pro cons"><li>Найближчий до «звичайного SaaS»: менше впізнаваності, ніж у 01 та 02.</li><li>Тоновані поверхні вимагають уважно тримати контраст muted-тексту (AA).</li><li>У темній темі тони зближуються, різниця між продуктами слабшає.</li></ul>
+      </div>
+    </div>
+    <div class="links">
+      <a class="btn" href="designs/03-soft/home.html">Головна</a><a class="btn" href="designs/03-soft/catalog.html">Каталог</a><a class="btn" href="designs/03-soft/product.html">Продукт</a><a class="btn" href="designs/03-soft/README.md">README напрямку</a>
+    </div>
+    <div class="shots" data-shots="03-soft"></div>
+  </section>
+
+  <!-- ================= ADS SUMMARY ================= -->
+  <h2 id="ads">Підсумок для Google Ads</h2>
+  <div class="panel">
+    <table>
+      <thead><tr><th>Критерій</th><th>01 Ledger</th><th>02 Workshop</th><th>03 Soft</th></tr></thead>
+      <tbody>
+        <tr><td>Читабельність цін і умов</td><td>найвища (таблиця, табличні цифри)</td><td>висока (моно-підписи, штампи)</td><td>висока (великі цифри в картках)</td></tr>
+        <tr><td>Довіра до продавця</td><td>документальний вигляд, реквізити органічні</td><td>впевнений, але «гучний»</td><td>нейтральний, звичний для SaaS</td></tr>
+        <tr><td>Вага шрифтів у продакшні</td><td>~40–60 кБ (1 новий сериф)</td><td>~70–90 кБ (2 шрифти, один уже є)</td><td>~0 нових (Manrope уже є)</td></tr>
+        <tr><td>Швидкість / CWV</td><td>зелена: нуль декору</td><td>зелена: лише CSS-сітка</td><td>зелена: пласкі заливки</td></tr>
+        <tr><td>Впізнаваність</td><td>висока</td><td>найвища</td><td>середня</td></tr>
+        <tr><td>Пасує продуктам</td><td>Invoice: ідеально; VPN: стримано</td><td>обидва, з ухилом в «інструмент»</td><td>обидва, найбільш універсально</td></tr>
+      </tbody>
+    </table>
+    <p style="margin:14px 0 0;color:var(--muted);font-size:14px">Усі три напрямки без градієнтів, розмиття та анімацій, що впливають на LCP/CLS; шрифти самохостяться, як і зараз у проєкті (fontsource).</p>
+  </div>
+</main>
+
+<script>
+  // Compare panel: one state drives all three iframes and the "open in tab" links.
+  var state = { page: 'home', theme: 'light', vp: 'desktop' }
+  var frames = document.getElementById('frames')
+  function apply() {
+    frames.classList.toggle('mobile', state.vp === 'mobile')
+    frames.querySelectorAll('iframe').forEach(function (frame) {
+      var src = 'designs/' + frame.dataset.d + '/' + state.page + '.html?theme=' + state.theme
+      if (frame.getAttribute('src') !== src) frame.setAttribute('src', src)
+    })
+    frames.querySelectorAll('a[data-open]').forEach(function (link) {
+      link.href = 'designs/' + link.dataset.open + '/' + state.page + '.html?theme=' + state.theme
+    })
+  }
+  document.querySelectorAll('.controls [data-ctl]').forEach(function (group) {
+    group.addEventListener('click', function (event) {
+      var button = event.target.closest('button')
+      if (!button) return
+      state[group.dataset.ctl] = button.dataset.v
+      group.querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', String(b === button)) })
+      apply()
+    })
+  })
+  apply()
+
+  // Screenshot grids: generated by tools/screenshots.sh into screenshots/.
+  var pages = [['home', 'Головна'], ['catalog', 'Каталог'], ['product', 'Продукт']]
+  document.querySelectorAll('[data-shots]').forEach(function (grid) {
+    var d = grid.dataset.shots, html = ''
+    ;[['light', 'світла'], ['dark', 'темна']].forEach(function (t) {
+      pages.forEach(function (p) {
+        var base = 'screenshots/' + d + '-' + p[0] + '-' + t[0]
+        html += '<a href="' + base + '-desktop-full.png" target="_blank"><img loading="lazy" src="' + base + '-desktop.png" alt="' + d + ' ' + p[1] + ' ' + t[1] + ' десктоп"><small>' + p[1] + ' · ' + t[1] + ' · десктоп (клік: вся сторінка)</small></a>'
+      })
+    })
+    var mobile = ''
+    ;[['light', 'світла'], ['dark', 'темна']].forEach(function (t) {
+      pages.forEach(function (p) {
+        var base = 'screenshots/' + d + '-' + p[0] + '-' + t[0]
+        mobile += '<a href="' + base + '-mobile.png" target="_blank"><img loading="lazy" src="' + base + '-mobile.png" alt="' + d + ' ' + p[1] + ' ' + t[1] + ' мобільний"><small>' + p[1] + ' · ' + t[1] + ' · 390 px</small></a>'
+      })
+    })
+    grid.innerHTML = html
+    var mobileGrid = document.createElement('div')
+    mobileGrid.className = 'shots mobile'
+    mobileGrid.innerHTML = mobile
+    grid.after(mobileGrid)
+  })
+</script>
+</body>
+</html>

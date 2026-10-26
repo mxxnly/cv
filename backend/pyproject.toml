@@ -12,6 +12,13 @@ extend-exclude = ["apps/*/migrations"]
 select = ["E", "F", "W", "I", "B", "UP", "DJ", "SIM", "RUF"]
 ignore = ["RUF012", "RUF001", "RUF002", "RUF003"]
 
+[tool.ruff.lint.per-file-ignores]
+# Content and configuration data: long human-readable strings are clearer unwrapped.
+"apps/*/management/commands/seed_demo.py" = ["E501"]
+"apps/catalog/admin.py" = ["E501"]
+"apps/catalog/models.py" = ["E501"]
+"config/settings.py" = ["E501"]
+
 [tool.ruff.lint.isort]
 known-first-party = ["apps", "config"]
 

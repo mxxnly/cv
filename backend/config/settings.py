@@ -59,7 +59,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "apps.core",
-    "apps.portfolio",
+    "apps.catalog",
     "django_cleanup.apps.CleanupConfig",
 ]
 
@@ -182,7 +182,7 @@ REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"]
     + (["rest_framework.renderers.BrowsableAPIRenderer"] if DEBUG else []),
     "DEFAULT_PARSER_CLASSES": ["rest_framework.parsers.JSONParser"],
-    "DEFAULT_THROTTLE_RATES": {"contact": env("CONTACT_THROTTLE_RATE", "5/hour")},
+    "DEFAULT_THROTTLE_RATES": {"forms": env("FORMS_THROTTLE_RATE", "5/hour")},
     # Number of reverse proxies in front of Django (nginx = 1, traefik + nginx = 2).
     "NUM_PROXIES": int(env("NUM_PROXIES", "1")),
 }
@@ -198,8 +198,14 @@ EMAIL_PORT = int(env("EMAIL_PORT", "587"))
 EMAIL_HOST_USER = env("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 EMAIL_USE_TLS = env_bool("EMAIL_USE_TLS", True)
-DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", EMAIL_HOST_USER or f"noreply@{COMPANY.get('site.domain', 'localhost')}")
+DEFAULT_FROM_EMAIL = env(
+    "DEFAULT_FROM_EMAIL", EMAIL_HOST_USER or f"noreply@{COMPANY.get('site.domain', 'localhost')}"
+)
 CONTACT_NOTIFY_EMAIL = env("CONTACT_NOTIFY_EMAIL")
+
+# Cloudflare Turnstile (optional; the honeypot and the rate limit always apply).
+TURNSTILE_SITE_KEY = env("TURNSTILE_SITE_KEY")
+TURNSTILE_SECRET_KEY = env("TURNSTILE_SECRET_KEY")
 TELEGRAM_BOT_TOKEN = env("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = env("TELEGRAM_CHAT_ID")
 
@@ -207,7 +213,9 @@ TELEGRAM_CHAT_ID = env("TELEGRAM_CHAT_ID")
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
-    "formatters": {"simple": {"format": "[{asctime}] mxxnly-labs {levelname} {name}: {message}", "style": "{"}},
+    "formatters": {
+        "simple": {"format": "[{asctime}] mxxnly-labs {levelname} {name}: {message}", "style": "{"}
+    },
     "handlers": {"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
     "root": {"handlers": ["console"], "level": env("LOG_LEVEL", "INFO")},
     "loggers": {"django.db.backends": {"level": "WARNING"}},
@@ -263,97 +271,76 @@ UNFOLD = {
         "show_all_applications": False,
         "navigation": [
             {
-                "title": "About",
+                "title": "Каталог",
                 "items": [
                     {
-                        "title": "Profile",
-                        "icon": "person",
-                        "link": reverse_lazy("admin:portfolio_profile_changelist"),
+                        "title": "Продукти",
+                        "icon": "inventory_2",
+                        "link": reverse_lazy("admin:catalog_product_changelist"),
                     },
                     {
-                        "title": "Services",
-                        "icon": "auto_awesome",
-                        "link": reverse_lazy("admin:portfolio_service_changelist"),
-                    },
-                ],
-            },
-            {
-                "title": "Skills",
-                "separator": True,
-                "items": [
-                    {
-                        "title": "Skills",
-                        "icon": "bolt",
-                        "link": reverse_lazy("admin:portfolio_skill_changelist"),
+                        "title": "Тарифи й ціни",
+                        "icon": "sell",
+                        "link": reverse_lazy("admin:catalog_plan_changelist"),
                     },
                     {
-                        "title": "Skill categories",
+                        "title": "Історія цін",
+                        "icon": "history",
+                        "link": reverse_lazy("admin:catalog_pricehistory_changelist"),
+                    },
+                    {
+                        "title": "Категорії",
                         "icon": "category",
-                        "link": reverse_lazy("admin:portfolio_skillcategory_changelist"),
+                        "link": reverse_lazy("admin:catalog_category_changelist"),
                     },
                 ],
             },
             {
-                "title": "Projects",
+                "title": "Вхідні",
                 "separator": True,
                 "items": [
                     {
-                        "title": "Projects",
-                        "icon": "rocket_launch",
-                        "link": reverse_lazy("admin:portfolio_project_changelist"),
-                    },
-                    {
-                        "title": "Project categories",
-                        "icon": "folder_open",
-                        "link": reverse_lazy("admin:portfolio_projectcategory_changelist"),
-                    },
-                ],
-            },
-            {
-                "title": "Career",
-                "separator": True,
-                "items": [
-                    {
-                        "title": "Experience & education",
-                        "icon": "work_history",
-                        "link": reverse_lazy("admin:portfolio_experience_changelist"),
-                    },
-                    {
-                        "title": "Certificates",
-                        "icon": "workspace_premium",
-                        "link": reverse_lazy("admin:portfolio_certificate_changelist"),
-                    },
-                    {
-                        "title": "Testimonials",
-                        "icon": "format_quote",
-                        "link": reverse_lazy("admin:portfolio_testimonial_changelist"),
-                    },
-                ],
-            },
-            {
-                "title": "Inbox",
-                "separator": True,
-                "items": [
-                    {
-                        "title": "Messages",
+                        "title": "Повідомлення",
                         "icon": "mail",
-                        "link": reverse_lazy("admin:portfolio_contactmessage_changelist"),
-                        "badge": "apps.portfolio.admin.unread_messages_badge",
+                        "link": reverse_lazy("admin:catalog_contactmessage_changelist"),
+                        "badge": "apps.catalog.admin.unread_messages_badge",
+                    },
+                    {
+                        "title": "Підтримка",
+                        "icon": "support_agent",
+                        "link": reverse_lazy("admin:catalog_supportrequest_changelist"),
+                        "badge": "apps.catalog.admin.open_support_badge",
                     },
                 ],
             },
             {
-                "title": "Access",
+                "title": "Сайт",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "Відгуки",
+                        "icon": "format_quote",
+                        "link": reverse_lazy("admin:catalog_testimonial_changelist"),
+                    },
+                    {
+                        "title": "Налаштування",
+                        "icon": "settings",
+                        "link": reverse_lazy("admin:catalog_sitesettings_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": "Доступ",
                 "separator": True,
                 "collapsible": True,
                 "items": [
                     {
-                        "title": "Users",
+                        "title": "Користувачі",
                         "icon": "people",
                         "link": reverse_lazy("admin:auth_user_changelist"),
                     },
                     {
-                        "title": "Groups",
+                        "title": "Групи",
                         "icon": "group",
                         "link": reverse_lazy("admin:auth_group_changelist"),
                     },

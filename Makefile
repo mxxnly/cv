@@ -168,9 +168,9 @@ makemigrations: $(ENV_FILE) ## [DEV] 📝 Create migrations
 createsuperuser: $(ENV_FILE) ## [DEV] 👤 Create a Django superuser
 	@$(DEV) exec backend python manage.py createsuperuser
 
-seed: $(ENV_FILE) ## [DEV] 🌕 Fill the database with demo content (replaces existing!)
-	@printf "$(TAG_DEV) 🌕 Seeding demo content...\n"
-	@$(DEV) exec backend python manage.py seed_demo --force
+seed: $(ENV_FILE) ## [DEV] 🧾 Create example products with example prices (replaces existing, published for preview)
+	@printf "$(TAG_DEV) 🧾 Seeding example products...\n"
+	@$(DEV) exec backend python manage.py seed_demo --force --publish
 
 # ========== PROD ==========
 up-prod: $(ENV_FILE) ## [PROD] 🚀 Start PROD stack

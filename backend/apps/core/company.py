@@ -38,13 +38,23 @@ class Company:
             "brand": d.get("brand", {}),
             "seller": {
                 k: d.get("seller", {}).get(k)
-                for k in ("legal_form", "legal_name", "legal_name_en", "tax_id", "address", "address_en", "country")
+                for k in (
+                    "legal_form",
+                    "legal_name",
+                    "legal_name_en",
+                    "tax_id",
+                    "address",
+                    "address_en",
+                    "country",
+                )
             },
             "contacts": d.get("contacts", {}),
             "site": d.get("site", {}),
             "payment": {
                 "provider": d.get("payment", {}).get("provider"),
-                "cards_processed_on_site": d.get("payment", {}).get("cards_processed_on_site", False),
+                "cards_processed_on_site": d.get("payment", {}).get(
+                    "cards_processed_on_site", False
+                ),
             },
             "pricing": d.get("pricing", {}),
             "analytics": d.get("analytics", {}),
@@ -74,7 +84,7 @@ def _resolve(node: Any, trail: str, found: list[str]) -> Any:
 
 
 def default_path() -> Path:
-    # backend/apps/core/company.py → repo root /config/company.json (in Docker: /config/company.json)
+    # backend/apps/core/company.py → <repo>/config/company.json (Docker: /config/company.json)
     return Path(__file__).resolve().parents[3] / "config" / "company.json"
 
 

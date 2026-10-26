@@ -1,102 +1,101 @@
-import { ArrowUp } from 'lucide-react'
-import type { CSSProperties } from 'react'
+import { Link } from 'react-router'
 
-import type { Profile } from '../../api/types'
+import { company, isPlaceholder } from '../../company'
 import { useI18n } from '../../i18n/context'
-import { scrollToTarget, useLenisInstance } from '../../lib/scroll'
-import { MoonPhase } from '../ui/MoonPhase'
-import { SocialIcon } from '../ui/SocialIcon'
+import { cn } from '../../lib/cn'
+import { openCookieSettings } from '../../lib/cookieSettings'
+import { Logo } from './Logo'
 
-const CURRENT_YEAR = new Date().getFullYear()
-const SURFACE_RADIUS_VW = 110
+const LEGAL = ['offer', 'privacy', 'terms', 'refund', 'cookies'] as const
+const NAV = ['products', 'prices', 'support', 'about', 'contacts'] as const
 
-/** Vertical drop (in vw) of the horizon curve at `x` vw from the centre. */
-const sag = (x: number) => SURFACE_RADIUS_VW - Math.sqrt(SURFACE_RADIUS_VW ** 2 - x ** 2)
-
-// x: offset from centre (vw), depth: below the horizon (px), width: px — nearer craters are bigger.
-const CRATERS = [
-  { x: -44, depth: 14, width: 70 },
-  { x: -31, depth: 46, width: 150 },
-  { x: -17, depth: 10, width: 46 },
-  { x: -6, depth: 70, width: 210 },
-  { x: 9, depth: 22, width: 90 },
-  { x: 18, depth: 96, width: 260 },
-  { x: 31, depth: 16, width: 64 },
-  { x: 42, depth: 52, width: 170 },
-  { x: -40, depth: 120, width: 300 },
-]
-
-function LunarHorizon() {
+function Placeholder({ path, children }: { path: string; children: React.ReactNode }) {
+  const { t } = useI18n()
   return (
-    <div aria-hidden className="lunar-horizon">
-      <div className="earth" style={{ left: 'calc(50% + 24vw)', top: `calc(${sag(24)}vw - 2.4rem)` }} />
-      <div className="lunar-surface">
-        {CRATERS.map((crater) => (
-          <span
-            key={crater.x}
-            className="crater"
-            style={
-              {
-                left: `calc(${SURFACE_RADIUS_VW}vw + ${crater.x}vw)`,
-                top: `calc(${sag(crater.x)}vw + ${crater.depth}px)`,
-                width: crater.width,
-              } as CSSProperties
-            }
-          />
-        ))}
-      </div>
-    </div>
+    <span className={cn(isPlaceholder(path) && 'underline decoration-dotted decoration-warning-ink/60 underline-offset-4')} title={isPlaceholder(path) ? t.testData.badge : undefined}>
+      {children}
+    </span>
   )
 }
 
-export function Footer({ profile }: { profile: Profile }) {
-  const { t } = useI18n()
-  const lenis = useLenisInstance()
-
+export function SellerBlock({ compact = false }: { compact?: boolean }) {
+  const { t, lang } = useI18n()
+  const address = lang === 'uk' ? company.seller.address : company.seller.address_en
+  const legalName = lang === 'uk' ? company.seller.legal_name : company.seller.legal_name_en
   return (
-    <footer className="relative z-10 mt-16 overflow-hidden">
-      <div className="container-page flex flex-col items-center gap-5 pt-10 text-center">
-        <MoonPhase fraction={1} size={22} />
-        {profile.footer_text && <p className="eyebrow">{profile.footer_text}</p>}
-        <button
-          type="button"
-          onClick={() => scrollToTarget(lenis, 0)}
-          className="group glass mt-2 flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium text-muted transition-colors hover:text-fg"
-        >
-          <ArrowUp className="size-4 transition-transform duration-300 group-hover:-translate-y-0.5" />
-          {t.footer.top}
-        </button>
-      </div>
+    <dl className={cn('grid gap-x-6 gap-y-1 text-sm', compact ? 'grid-cols-1' : 'sm:grid-cols-[auto_1fr]')}>
+      <dt className="text-muted">{t.footer.tradeName}</dt>
+      <dd className="font-semibold">{company.brand.name}</dd>
+      <dt className="text-muted">{t.footer.seller}</dt>
+      <dd className="font-semibold">{legalName}</dd>
+      <dt className="text-muted">{t.contacts.taxId}</dt>
+      <dd><Placeholder path="seller.tax_id">{company.seller.tax_id}</Placeholder></dd>
+      <dt className="text-muted">{t.contacts.address}</dt>
+      <dd><Placeholder path="seller.address">{address}</Placeholder></dd>
+    </dl>
+  )
+}
 
-      <div className="relative mt-6">
-        <p
-          aria-hidden
-          className="text-moonlight pointer-events-none text-center font-serif text-[clamp(6rem,26vw,24rem)] leading-[0.82] font-medium tracking-[-0.04em] italic opacity-60 select-none"
-        >
-          {profile.brand}
-        </p>
-        <div className="relative -mt-[8vw] h-[clamp(9rem,17vw,15rem)]">
-          <LunarHorizon />
-          <div className="container-page absolute inset-x-0 bottom-0 z-20 flex flex-col items-center justify-between gap-3 pb-6 text-xs text-muted sm:flex-row">
-            <span>
-              © {CURRENT_YEAR} {profile.full_name}. {t.footer.rights}
-            </span>
-            <span className="flex items-center gap-1">
-              {profile.socials.map((social) => (
-                <a
-                  key={social.url}
-                  href={social.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={social.label}
-                  className="grid size-8 place-items-center rounded-full transition-colors hover:bg-card-hover hover:text-fg"
-                >
-                  <SocialIcon platform={social.platform} className="size-3.5" />
-                </a>
-              ))}
-            </span>
-          </div>
+export function ContactLinks({ className }: { className?: string }) {
+  const { t } = useI18n()
+  const telegram = company.contacts.telegram.replace(/^@/, '')
+  return (
+    <ul className={cn('space-y-1 text-sm', className)}>
+      <li>
+        <span className="text-muted">{t.contacts.email}: </span>
+        <a className="font-semibold hover:text-primary" href={`mailto:${company.contacts.email}`}><Placeholder path="contacts.email">{company.contacts.email}</Placeholder></a>
+      </li>
+      <li>
+        <span className="text-muted">{t.contacts.phone}: </span>
+        <a className="font-semibold hover:text-primary" href={`tel:${company.contacts.phone.replace(/\s/g, '')}`}><Placeholder path="contacts.phone">{company.contacts.phone}</Placeholder></a>
+      </li>
+      <li>
+        <span className="text-muted">{t.contacts.telegram}: </span>
+        <a className="font-semibold hover:text-primary" href={`https://t.me/${telegram}`} target="_blank" rel="noopener noreferrer"><Placeholder path="contacts.telegram">{company.contacts.telegram}</Placeholder></a>
+      </li>
+    </ul>
+  )
+}
+
+export function Footer({ minimal = false }: { minimal?: boolean }) {
+  const { t, lang, href } = useI18n()
+  const year = new Date().getFullYear()
+  return (
+    <footer className="mt-auto border-t border-line bg-surface/60">
+      <div className="container-page grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+        <div className="space-y-4">
+          <Logo className="h-6 w-auto" />
+          <p className="max-w-xs text-sm text-muted">{company.brand.description[lang]}</p>
+          <SellerBlock compact />
         </div>
+        {!minimal && (
+          <div>
+            <h2 className="mb-3 text-sm font-bold">{t.footer.navigation}</h2>
+            <ul className="space-y-2 text-sm">
+              {NAV.map((key) => (
+                <li key={key}><Link className="hover:text-primary" to={href(`/${key}`)}>{t.nav[key]}</Link></li>
+              ))}
+            </ul>
+          </div>
+        )}
+        <div>
+          <h2 className="mb-3 text-sm font-bold">{t.footer.legal}</h2>
+          <ul className="space-y-2 text-sm">
+            {LEGAL.map((doc) => (
+              <li key={doc}><Link className="hover:text-primary" to={href(`/legal/${doc}`)}>{t.legal.docs[doc]}</Link></li>
+            ))}
+            <li><button type="button" className="hover:text-primary" onClick={openCookieSettings}>{t.cookie.manage}</button></li>
+          </ul>
+        </div>
+        <div>
+          <h2 className="mb-3 text-sm font-bold">{t.footer.contacts}</h2>
+          <ContactLinks />
+          <p className="mt-3 text-sm text-muted">{company.contacts.support_hours[lang]}</p>
+        </div>
+      </div>
+      <div className="container-page flex flex-col gap-2 border-t border-line py-5 text-xs text-muted sm:flex-row sm:justify-between">
+        <p>© {company.site.launch_year === year ? year : `${company.site.launch_year}–${year}`} {company.brand.name} · {lang === 'uk' ? company.seller.legal_name : company.seller.legal_name_en}. {t.footer.rights}.</p>
+        <p>{t.footer.pricesExample}</p>
       </div>
     </footer>
   )

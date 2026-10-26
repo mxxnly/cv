@@ -1,53 +1,28 @@
-import type { Language } from '../api/types'
-import type { Dictionary } from '../i18n/strings'
+import type { Language } from '../i18n/strings'
 
 const LOCALES: Record<Language, string> = { uk: 'uk-UA', en: 'en-US' }
 
-export function formatMonthYear(isoDate: string, lang: Language): string {
-  const formatted = new Intl.DateTimeFormat(LOCALES[lang], { month: 'short', year: 'numeric' })
-    .format(new Date(`${isoDate}T00:00:00`))
-  // Ukrainian locale appends "р." (year): "бер. 2024 р." → "бер. 2024"
-  return formatted.replace(/\s?р\.$/, '')
+/** `formatPrice('5.00', 'USD', 'uk')` → `5 USD`; decimals are shown only when needed. */
+export function formatPrice(amount: string | number | null, currency: string, lang: Language): string {
+  if (amount === null || amount === '') return ''
+  const value = typeof amount === 'string' ? Number(amount) : amount
+  if (Number.isNaN(value)) return ''
+  const digits = Number.isInteger(value) ? 0 : 2
+  const number = new Intl.NumberFormat(LOCALES[lang], {
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits,
+  }).format(value)
+  return `${number} ${currency}`
 }
 
-export function formatDate(isoDate: string, lang: Language): string {
-  return new Intl.DateTimeFormat(LOCALES[lang], { month: 'long', year: 'numeric' })
-    .format(new Date(`${isoDate}T00:00:00`))
-    .replace(/\s?р\.$/, '')
+export function formatDate(iso: string | null | undefined, lang: Language): string {
+  if (!iso) return ''
+  const date = new Date(iso)
+  if (Number.isNaN(date.getTime())) return ''
+  return new Intl.DateTimeFormat(LOCALES[lang], { day: '2-digit', month: '2-digit', year: 'numeric' }).format(date)
 }
 
-/** Human duration between two dates, inclusive of the starting month: "2 yr 3 mo" */
-export function formatDuration(
-  start: string,
-  end: string | null,
-  t: Dictionary,
-  now: Date = new Date(),
-): string {
-  const from = new Date(`${start}T00:00:00`)
-  const to = end ? new Date(`${end}T00:00:00`) : now
-  const totalMonths = Math.max(
-    1,
-    (to.getFullYear() - from.getFullYear()) * 12 + (to.getMonth() - from.getMonth()) + 1,
-  )
-  const years = Math.floor(totalMonths / 12)
-  const months = totalMonths % 12
-  return [years && t.duration.years(years), months && t.duration.months(months)]
-    .filter(Boolean)
-    .join(' ')
-}
-
-export function paragraphs(text: string): string[] {
-  return text
-    .split(/\n\s*\n/)
-    .map((part) => part.trim())
-    .filter(Boolean)
-}
-
-export function initials(name: string): string {
-  return name
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((word) => word[0]?.toUpperCase())
-    .join('')
+/** Replaces `{{dotted.path}}` tokens with values from a lookup function. */
+export function fillTokens(text: string, lookup: (path: string) => string): string {
+  return text.replace(/\{\{\s*([\w.]+)\s*\}\}/g, (_, path: string) => lookup(path) || `{{${path}}}`)
 }

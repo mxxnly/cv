@@ -1,155 +1,72 @@
-export type Language = 'en' | 'uk'
+export type Availability = 'available' | 'beta' | 'soon'
+export type Tint = 'lavender' | 'periwinkle' | 'mauve'
+export type ProductIcon = 'shield' | 'document' | 'box' | 'bot' | 'chart' | 'globe'
+export type Cta = 'buy' | 'demo' | 'contact'
+export type Period = 'month' | 'year' | 'once' | 'on_request'
+export type LinkKind = 'buy' | 'docs' | 'demo' | 'other'
 
-export type Platform =
-  | 'github'
-  | 'gitlab'
-  | 'linkedin'
-  | 'telegram'
-  | 'x'
-  | 'instagram'
-  | 'facebook'
-  | 'youtube'
-  | 'dribbble'
-  | 'behance'
-  | 'medium'
-  | 'devto'
-  | 'stackoverflow'
-  | 'leetcode'
-  | 'discord'
-  | 'email'
-  | 'website'
-  | 'other'
-
-export interface Stat {
-  value: string
-  label: string
+export interface MinPrice {
+  price: string | null
+  currency: string
+  period: Period
+  period_label: string
+  is_example: boolean
 }
 
-export interface SocialLink {
-  platform: Platform
+export interface Plan extends MinPrice {
+  id: number
+  slug: string
+  name: string
+  limit: string
+  includes: string[]
+  is_recommended: boolean
+  valid_until: string | null
+  buy_url: string
+}
+
+export interface ProductLink {
+  kind: LinkKind
+  label: string
   url: string
-  label: string
 }
 
-export interface Profile {
-  full_name: string
-  brand: string
-  headline: string
-  roles: string[]
+export interface FAQItem {
+  question: string
+  answer: string
+}
+
+export interface ProductSummary {
+  id: number
+  slug: string
+  name: string
   tagline: string
-  about: string
-  avatar: string | null
-  location: string
-  timezone: string
-  email: string
-  phone: string
-  is_available: boolean
-  availability_text: string
-  resume: string | null
-  contact_text: string
-  footer_text: string
-  language: Language
-  seo_title: string
-  seo_description: string
-  stats: Stat[]
-  socials: SocialLink[]
+  category: { slug: string; name: string } | null
+  availability: Availability
+  tint: Tint
+  icon: ProductIcon
+  cta: Cta
+  min_price: MinPrice | null
+  has_example_prices: boolean
+  links: ProductLink[]
+  prices_updated_at: string | null
 }
 
-export type ServiceIcon =
-  | 'code'
-  | 'layout'
-  | 'server'
-  | 'database'
-  | 'smartphone'
-  | 'cloud'
-  | 'bot'
-  | 'palette'
-  | 'shield'
-  | 'cpu'
-  | 'rocket'
-  | 'sparkles'
-
-export interface Service {
-  id: number
-  title: string
-  description: string
-  icon: ServiceIcon
+export interface Product extends ProductSummary {
+  description: string[]
+  features: string[]
+  audience: string[]
+  support_terms: string[]
+  plans: Plan[]
+  faq: FAQItem[]
+  seo: { title: string; description: string }
 }
 
-export type SkillLevel = 1 | 2 | 3 | 4 | 5
-
-export interface Skill {
-  id: number
-  name: string
-  level: SkillLevel
-}
-
-export interface SkillCategory {
-  id: number
-  name: string
-  description: string
-  skills: Skill[]
-}
-
-export type ExperienceKind = 'work' | 'freelance' | 'education' | 'volunteer'
-
-export interface Experience {
-  id: number
-  kind: ExperienceKind
-  title: string
-  organization: string
-  organization_url: string
-  logo: string | null
-  location: string
-  employment_type: string
-  start_date: string
-  end_date: string | null
-  description: string
-  achievements: string[]
-  technologies: string[]
-}
-
-export interface ProjectCategory {
-  id: number
-  name: string
-  slug: string
-}
-
-export type ProjectStatus = 'live' | 'in_progress' | 'completed' | 'archived'
-
-export interface ProjectImage {
-  id: number
-  image: string
-  caption: string
-}
-
-export interface Project {
-  id: number
-  slug: string
-  title: string
-  category: string | null
-  summary: string
-  description: string
-  highlights: string[]
-  cover: string | null
-  images: ProjectImage[]
-  role: string
-  year: number | null
-  status: ProjectStatus
-  live_url: string
-  repo_url: string
-  technologies: string[]
-  accent_color: string
-  is_featured: boolean
-}
-
-export interface Certificate {
-  id: number
-  title: string
-  issuer: string
-  issued_at: string | null
-  credential_url: string
-  image: string | null
+export interface PriceList {
+  currency: string
+  tax_note: string
+  refund_days: number
+  note: string
+  products: Product[]
 }
 
 export interface Testimonial {
@@ -157,29 +74,63 @@ export interface Testimonial {
   author: string
   role: string
   company: string
-  avatar: string | null
   text: string
+  language: string
   url: string
+  product: string | null
 }
 
-export interface Portfolio {
-  profile: Profile | null
-  services: Service[]
-  skill_categories: SkillCategory[]
-  featured_skills: string[]
-  experience: Experience[]
-  project_categories: ProjectCategory[]
-  projects: Project[]
-  certificates: Certificate[]
+export interface SiteContent {
+  settings: {
+    support_sla: string
+    price_note: string
+    about: string[]
+    about_is_placeholder: boolean
+    testimonials_enabled: boolean
+  }
   testimonials: Testimonial[]
+}
+
+export interface SiteFlags {
+  environment: string
+  has_placeholders: boolean
+  show_test_data_badge: boolean
+  indexable: boolean
+}
+
+export interface Attribution {
+  utm_source?: string
+  utm_medium?: string
+  utm_campaign?: string
+  utm_term?: string
+  utm_content?: string
+  gclid?: string
+  landing?: string
+  referrer?: string
 }
 
 export interface ContactPayload {
   name: string
   email: string
-  subject: string
+  topic: 'general' | 'sales' | 'partnership'
   message: string
+  product?: string | null
+  language: string
+  attribution: Attribution
   website: string
+  turnstile_token?: string
 }
 
-export type ContactErrors = Partial<Record<keyof ContactPayload | 'detail', string[]>>
+export interface SupportPayload {
+  name: string
+  email: string
+  subject: string
+  message: string
+  product?: string | null
+  language: string
+  attribution: Attribution
+  website: string
+  turnstile_token?: string
+}
+
+export type FormErrors = Partial<Record<string, string[]>>

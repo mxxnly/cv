@@ -1,69 +1,69 @@
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 
-import { dictionaries } from '../i18n/strings'
-import { formatDuration, initials, paragraphs } from './format'
-import { moonPhasePath } from './moon'
-import { parseStat, tokenize } from './text'
+import { makeI18n } from '../i18n/context'
+import { parseAttribution } from './attribution'
+import { CONSENT_KEY, readConsent, saveConsent } from './consent'
+import { fillTokens, formatDate, formatPrice } from './format'
 
-describe('moonPhasePath', () => {
-  it('is empty for a new moon', () => {
-    expect(moonPhasePath(0)).toBe('')
+describe('formatPrice', () => {
+  it('drops decimals for whole numbers and keeps the currency code', () => {
+    expect(formatPrice('5.00', 'USD', 'en')).toBe('5 USD')
+    expect(formatPrice('129.00', 'USD', 'uk')).toBe('129 USD')
   })
-
-  it('draws a full disc for a full moon', () => {
-    expect(moonPhasePath(1)).toContain('A 10 10 0 1 1')
-  })
-
-  it('uses a straight terminator at first quarter', () => {
-    expect(moonPhasePath(0.5)).toContain('A 0 10')
-  })
-
-  it('bulges the terminator outward for crescents and inward for gibbous phases', () => {
-    expect(moonPhasePath(0.25)).toMatch(/A 5 10 0 0 0/)
-    expect(moonPhasePath(0.75)).toMatch(/A 5 10 0 0 1/)
+  it('keeps two decimals otherwise and tolerates bad input', () => {
+    expect(formatPrice('4.50', 'USD', 'en')).toBe('4.50 USD')
+    expect(formatPrice(null, 'USD', 'en')).toBe('')
+    expect(formatPrice('abc', 'USD', 'en')).toBe('')
   })
 })
 
-describe('formatDuration', () => {
-  const t = dictionaries.en
-
-  it('counts the starting month inclusively', () => {
-    expect(formatDuration('2024-01-01', '2024-01-31', t)).toBe('1 mo')
-  })
-
-  it('combines years and months', () => {
-    expect(formatDuration('2022-06-01', '2024-08-01', t)).toBe('2 yr 3 mo')
-  })
-
-  it('uses "now" for ongoing positions', () => {
-    expect(formatDuration('2025-01-01', null, t, new Date('2026-01-15'))).toBe('1 yr 1 mo')
-  })
-
-  it('uses the Ukrainian dictionary when selected', () => {
-    expect(formatDuration('2022-06-01', '2024-08-01', dictionaries.uk)).toBe('2 р. 3 міс.')
+describe('formatDate', () => {
+  it('formats ISO dates per language', () => {
+    expect(formatDate('2026-12-31', 'uk')).toBe('31.12.2026')
+    expect(formatDate('2026-12-31', 'en')).toBe('12/31/2026')
+    expect(formatDate(null, 'en')).toBe('')
   })
 })
 
-describe('text helpers', () => {
-  it('splits paragraphs on blank lines', () => {
-    expect(paragraphs('one\n\n two \n\n\nthree')).toEqual(['one', 'two', 'three'])
+describe('fillTokens', () => {
+  it('replaces known tokens and leaves unknown ones visible', () => {
+    const lookup = (path: string) => ({ 'contacts.email': 'a@b.c' })[path] ?? ''
+    expect(fillTokens('Email: {{contacts.email}}, tax: {{ seller.tax_id }}', lookup)).toBe('Email: a@b.c, tax: {{seller.tax_id}}')
   })
+})
 
-  it('builds initials from the first two words', () => {
-    expect(initials('Alex Moon Junior')).toBe('AM')
+describe('parseAttribution', () => {
+  it('keeps only campaign parameters and records the landing page', () => {
+    const found = parseAttribution('?utm_source=google&utm_medium=cpc&gclid=abc&foo=bar', '/uk/lp/vpn', 'https://google.com/')
+    expect(found).toEqual({ utm_source: 'google', utm_medium: 'cpc', gclid: 'abc', landing: '/uk/lp/vpn', referrer: 'https://google.com/' })
   })
-
-  it('tokenizes emphasised words', () => {
-    expect(tokenize('Selected *great work*')).toEqual([
-      { word: 'Selected', emphasis: false },
-      { word: 'great', emphasis: true },
-      { word: 'work', emphasis: true },
-    ])
+  it('returns nothing without campaign parameters', () => {
+    expect(parseAttribution('?foo=bar', '/uk', '')).toEqual({})
   })
+})
 
-  it('parses numeric stats with prefixes and suffixes', () => {
-    expect(parseStat('30+')).toEqual({ prefix: '', target: 30, suffix: '+', decimals: 0 })
-    expect(parseStat('~1.5k')).toEqual({ prefix: '~', target: 1.5, suffix: 'k', decimals: 1 })
-    expect(parseStat('∞')).toBeNull()
+describe('consent', () => {
+  beforeEach(() => localStorage.clear())
+  it('is undecided by default and persists the choice', () => {
+    expect(readConsent()).toBeNull()
+    saveConsent({ analytics: true, ads: false })
+    expect(readConsent()).toMatchObject({ analytics: true, ads: false })
+    expect(JSON.parse(localStorage.getItem(CONSENT_KEY) ?? '{}').decidedAt).toBeTruthy()
+  })
+  it('pushes a Consent Mode update to the dataLayer', () => {
+    saveConsent({ analytics: false, ads: true })
+    const updates = (window.dataLayer ?? []).filter((entry) => Array.isArray(entry) && entry[0] === 'consent' && entry[1] === 'update')
+    expect(updates.at(-1)).toEqual(['consent', 'update', { ad_storage: 'granted', ad_user_data: 'granted', ad_personalization: 'granted', analytics_storage: 'denied' }])
+  })
+  it('ignores corrupted storage', () => {
+    localStorage.setItem(CONSENT_KEY, '{"analytics":"yes"}')
+    expect(readConsent()).toBeNull()
+  })
+})
+
+describe('i18n href', () => {
+  it('prefixes paths with the language', () => {
+    expect(makeI18n('uk').href('/')).toBe('/uk')
+    expect(makeI18n('en').href('/products/vpn')).toBe('/en/products/vpn')
   })
 })

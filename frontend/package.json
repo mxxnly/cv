@@ -1,7 +1,7 @@
 {
   "name": "mxxnly-labs-frontend",
   "private": true,
-  "version": "1.0.0",
+  "version": "2.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -12,16 +12,13 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@fontsource-variable/cormorant-garamond": "^5.3.0",
-    "@fontsource-variable/jetbrains-mono": "^5.3.0",
     "@fontsource-variable/manrope": "^5.3.0",
     "@tanstack/react-query": "^5.104.4",
-    "lenis": "^1.3.27",
     "lucide-react": "^1.59.0",
-    "motion": "^14.3.0",
+    "marked": "^17.0.1",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
-    "simple-icons": "^16.35.0"
+    "react-router": "^7.13.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

@@ -1,10 +1,19 @@
-import type { ContactErrors, ContactPayload, Portfolio } from './types'
+import type {
+  ContactPayload,
+  FormErrors,
+  PriceList,
+  Product,
+  ProductSummary,
+  SiteContent,
+  SiteFlags,
+  SupportPayload,
+} from './types'
 
 export class ApiError extends Error {
   readonly status: number
-  readonly errors: ContactErrors
+  readonly errors: FormErrors
 
-  constructor(status: number, errors: ContactErrors = {}) {
+  constructor(status: number, errors: FormErrors = {}) {
     super(`API request failed with status ${status}`)
     this.status = status
     this.errors = errors
@@ -17,18 +26,28 @@ async function request<T>(url: string, init?: RequestInit): Promise<T> {
     headers: { Accept: 'application/json', ...init?.headers },
   })
   const body = await response.json().catch(() => ({}))
-  if (!response.ok) throw new ApiError(response.status, body as ContactErrors)
+  if (!response.ok) throw new ApiError(response.status, body as FormErrors)
   return body as T
 }
 
-export function fetchPortfolio(): Promise<Portfolio> {
-  return request<Portfolio>('/api/portfolio/')
-}
+const withLang = (path: string, lang: string) => `${path}?lang=${lang}`
 
-export function sendContactMessage(payload: ContactPayload): Promise<{ ok: boolean }> {
-  return request('/api/contact/', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  })
+export const api = {
+  products: (lang: string) => request<ProductSummary[]>(withLang('/api/products/', lang)),
+  product: (slug: string, lang: string) => request<Product>(withLang(`/api/products/${slug}/`, lang)),
+  prices: (lang: string) => request<PriceList>(withLang('/api/prices/', lang)),
+  site: (lang: string) => request<SiteContent>(withLang('/api/site/', lang)),
+  flags: () => request<{ flags: SiteFlags }>('/api/company/').then((data) => data.flags),
+  contact: (payload: ContactPayload) =>
+    request<{ ok: boolean }>('/api/contact/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    }),
+  support: (payload: SupportPayload) =>
+    request<{ ok: boolean }>('/api/support/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    }),
 }

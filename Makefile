@@ -50,7 +50,7 @@ TAG_ERROR  := $(FG_RED)[ERROR]$(RESET)
 TAG_INIT   := $(FG_YELLOW)[INIT]$(RESET)
 TAG_OK     := $(FG_GREEN)[OK]$(RESET)
 
-.PHONY: help env check check-placeholders test lint format \
+.PHONY: help env check check-placeholders csp-hash test lint format \
         up down build rebuild nuke ps logs restart shell dbshell \
         migrate makemigrations createsuperuser seed \
         test-backend test-frontend lint-backend lint-frontend \
@@ -89,6 +89,9 @@ check: lint test ## [GLOBAL] ✅ Lint + tests for backend and frontend
 
 check-placeholders: $(ENV_FILE) ## [GLOBAL] 🧾 List placeholder fields in config/company.json (fails for production)
 	@$(DEV) exec backend python manage.py check_placeholders
+
+csp-hash: ## [GLOBAL] 🔐 Print the CSP sha256 of the inline theme script in frontend/index.html
+	@python3 -c "import re,hashlib,base64;h=open('frontend/index.html').read();s=re.search(r'<script>(.*?)</script>',h,re.S).group(1);print('sha256-'+base64.b64encode(hashlib.sha256(s.encode()).digest()).decode())"
 
 test: test-backend test-frontend ## [GLOBAL] 🧪 Run all tests
 

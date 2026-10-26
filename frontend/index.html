@@ -23,7 +23,10 @@
         var root = document.documentElement
         var theme = 'light'
         try {
-          var saved = localStorage.getItem('theme')
+          // ?theme=light|dark overrides and remembers the choice (QA, ad previews).
+          var forced = new URLSearchParams(location.search).get('theme')
+          var saved = forced === 'light' || forced === 'dark' ? forced : localStorage.getItem('theme')
+          if (forced === saved) localStorage.setItem('theme', forced)
           theme =
             saved === 'light' || saved === 'dark'
               ? saved

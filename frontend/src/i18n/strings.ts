@@ -1,259 +1,350 @@
-import type { ExperienceKind, Language, ProjectStatus } from '../api/types'
+export type Language = 'uk' | 'en'
+export const LANGUAGES: Language[] = ['uk', 'en']
+export const DEFAULT_LANGUAGE: Language = 'uk'
 
-interface SectionCopy {
-  eyebrow: string
-  title: string
+export function isLanguage(value: string | undefined): value is Language {
+  return value === 'uk' || value === 'en'
 }
 
-export interface Dictionary {
-  skipToContent: string
-  nav: Record<'about' | 'skills' | 'experience' | 'projects' | 'contact' | 'menu' | 'close', string>
-  theme: { toLight: string; toDark: string }
-  hero: { viewProjects: string; contact: string; resume: string; scroll: string; localTime: string }
-  sections: Record<
-    | 'about'
-    | 'services'
-    | 'skills'
-    | 'experience'
-    | 'projects'
-    | 'certificates'
-    | 'testimonials'
-    | 'contact',
-    SectionCopy
-  >
-  skills: { levels: [string, string, string, string, string]; other: string; legend: string }
-  experience: {
-    tabs: { work: string; education: string }
-    present: string
-    kinds: Record<ExperienceKind, string>
-  }
-  projects: {
-    all: string
-    details: string
-    live: string
-    code: string
-    status: Record<ProjectStatus, string>
-    role: string
-    year: string
-    highlights: string
-    stack: string
-    close: string
-    prev: string
-    next: string
-  }
-  certificates: { view: string }
-  contact: {
-    write: string
-    copy: string
-    copied: string
-    socials: string
-    form: {
-      name: string
-      email: string
-      subject: string
-      message: string
-      namePlaceholder: string
-      emailPlaceholder: string
-      subjectPlaceholder: string
-      messagePlaceholder: string
-      send: string
-      sending: string
-      successTitle: string
-      successText: string
-      again: string
-      error: string
-      throttled: string
-    }
-  }
-  footer: { top: string; rights: string }
-  loading: string
-  error: { title: string; text: string; retry: string }
-  setup: { title: string; text: string; cta: string }
-  duration: { years: (n: number) => string; months: (n: number) => string }
-}
-
-const uk: Dictionary = {
+const uk = {
   skipToContent: 'Перейти до змісту',
   nav: {
-    about: 'Про мене',
-    skills: 'Навички',
-    experience: 'Досвід',
-    projects: 'Проєкти',
-    contact: 'Контакти',
+    products: 'Продукти',
+    prices: 'Прайс',
+    support: 'Підтримка',
+    about: 'Про нас',
+    contacts: 'Контакти',
     menu: 'Меню',
     close: 'Закрити',
+    home: 'Головна',
   },
   theme: { toLight: 'Увімкнути світлу тему', toDark: 'Увімкнути темну тему' },
-  hero: {
-    viewProjects: 'Переглянути роботи',
+  lang: { switchTo: 'Switch to English', label: 'Мова' },
+  testData: { badge: 'Тестові дані', title: 'Показується лише у dev і staging: у config/company.json є поля placeholder: true' },
+  cookie: {
+    text: 'Ми використовуємо cookie для аналітики та вимірювання реклами лише після вашої згоди.',
+    more: 'Cookie-політика',
+    accept: 'Прийняти',
+    reject: 'Відхилити',
+    settings: 'Налаштувати',
+    analytics: 'Аналітика (GA4)',
+    ads: 'Реклама (Google Ads)',
+    save: 'Зберегти вибір',
+    manage: 'Налаштування cookie',
+  },
+  status: { available: 'Доступний', beta: 'Бета', soon: 'Скоро' },
+  price: {
+    from: 'від',
+    example: 'приклад',
+    onRequest: 'за запитом',
+    perMonth: '/ міс',
+    perYear: '/ рік',
+    once: 'разово',
+    validUntil: 'Ціна дійсна до',
+    updated: 'Ціни оновлено',
+    refund: (days: number) => `Повернення коштів: ${days} днів з моменту оплати`,
+    recommended: 'Рекомендований',
+    included: 'Що входить',
+    notPublished: 'Ціни ще не опубліковані. Напишіть нам, і ми надішлемо умови.',
+  },
+  cta: {
+    catalog: 'Каталог продуктів',
     contact: "Зв'язатися",
-    resume: 'Резюме',
-    scroll: 'Гортайте',
-    localTime: 'Місцевий час',
-  },
-  sections: {
-    about: { eyebrow: 'Про мене', title: 'Код, дизайн і *місячне* світло' },
-    services: { eyebrow: 'Послуги', title: 'Чим я можу *допомогти*' },
-    skills: { eyebrow: 'Навички', title: 'Інструменти, якими я *творю*' },
-    experience: { eyebrow: 'Досвід', title: 'Шлях, що привів *сюди*' },
-    projects: { eyebrow: 'Проєкти', title: 'Обрані *роботи*' },
-    certificates: { eyebrow: 'Сертифікати', title: 'Підтверджені *знання*' },
-    testimonials: { eyebrow: 'Відгуки', title: 'Що кажуть *люди*' },
-    contact: { eyebrow: 'Контакти', title: 'Створімо щось *неймовірне*' },
-  },
-  skills: {
-    levels: ['Вивчаю', 'Базовий', 'Впевнений', 'Просунутий', 'Експерт'],
-    other: 'Інше',
-    legend: 'Фаза місяця — рівень володіння',
-  },
-  experience: {
-    tabs: { work: 'Робота', education: 'Освіта' },
-    present: 'досі',
-    kinds: { work: 'Робота', freelance: 'Фриланс', education: 'Освіта', volunteer: 'Волонтерство' },
-  },
-  projects: {
-    all: 'Усі',
     details: 'Детальніше',
-    live: 'Сайт',
-    code: 'Код',
-    status: { live: 'Live', in_progress: 'В розробці', completed: 'Завершено', archived: 'Архів' },
-    role: 'Роль',
-    year: 'Рік',
-    highlights: 'Ключові моменти',
-    stack: 'Технології',
-    close: 'Закрити',
-    prev: 'Попереднє зображення',
-    next: 'Наступне зображення',
+    buy: 'Купити',
+    demo: 'Запросити демо',
+    docs: 'Документація',
+    demoLink: 'Демо',
+    allPrices: 'Усі тарифи',
+    send: 'Надіслати',
+    sending: 'Надсилаю…',
+    again: 'Надіслати ще',
+    back: 'На головну',
+    allProducts: 'Увесь каталог',
+    notify: 'Повідомити мене',
   },
-  certificates: { view: 'Переглянути' },
-  contact: {
-    write: 'Напишіть мені',
-    copy: 'Копіювати email',
-    copied: 'Скопійовано',
-    socials: 'Де мене знайти',
-    form: {
-      name: "Ім'я",
-      email: 'Email',
-      subject: 'Тема',
-      message: 'Повідомлення',
-      namePlaceholder: 'Як до вас звертатися?',
-      emailPlaceholder: 'you@example.com',
-      subjectPlaceholder: 'Про що поговоримо?',
-      messagePlaceholder: 'Розкажіть про ідею чи проєкт…',
-      send: 'Надіслати',
-      sending: 'Надсилаю…',
-      successTitle: 'Повідомлення летить до місяця',
-      successText: 'Дякую! Відповім найближчим часом.',
-      again: 'Написати ще',
-      error: 'Щось пішло не так. Спробуйте ще раз або напишіть на email.',
-      throttled: 'Забагато повідомлень. Спробуйте трохи пізніше.',
+  home: {
+    eyebrow: 'MXXNLY Labs',
+    products: { eyebrow: 'Продукти', title: 'Ключові продукти' },
+    how: {
+      eyebrow: 'Як ми працюємо',
+      title: 'Розробляємо й підтримуємо',
+      lead: 'Продукт не закінчується релізом: ми відповідаємо за його роботу й оновлення.',
+      items: [
+        { title: 'Розробка', text: 'Проєктуємо, пишемо й тестуємо продукт власною командою. Кожен продукт має відкритий прайс і зрозумілі умови.' },
+        { title: 'Підтримка та оновлення', text: 'Виправлення й оновлення входять у тариф. Відповідаємо на звернення до одного робочого дня.' },
+        { title: 'Документація й навчання', text: 'До кожного продукту є документація та інструкції для запуску. За потреби проводимо коротке навчання команди.' },
+      ],
     },
+    testimonials: { eyebrow: 'Відгуки', title: 'Що кажуть клієнти' },
+    contact: { eyebrow: 'Контакти', title: 'Напишіть нам', lead: 'Запитання про продукт, демо чи співпрацю: відповідаємо впродовж робочого дня.' },
+    next: { title: 'Наступний продукт', text: 'Скоро' },
+    supportCard: { title: 'Підтримка', text: 'Відповідь до 1 робочого дня' },
   },
-  footer: { top: 'Нагору', rights: 'Усі права захищено' },
-  loading: 'Сходить місяць…',
-  error: {
-    title: 'Місяць сховався за хмарами',
-    text: 'Не вдалося завантажити дані. Перевірте з’єднання та спробуйте ще раз.',
-    retry: 'Спробувати ще',
+  catalog: {
+    title: 'Каталог продуктів',
+    lead: 'Кожен продукт має відкриту ціну, статус і посилання на купівлю або демо.',
+    filters: { all: 'Усі', available: 'Доступні', beta: 'Бета', soon: 'Скоро' },
+    nextTitle: 'Наступний продукт у розробці',
+    nextText: "З'явиться тут із ціною і умовами, щойно буде готовий до публікації.",
+    empty: 'У цій категорії поки немає продуктів.',
+    category: 'Категорія',
   },
-  setup: {
-    title: 'Портфоліо майже готове',
-    text: 'Заповніть профіль в адмінці — і сайт оживе.',
-    cta: 'Відкрити адмінку',
+  product: {
+    features: { eyebrow: 'Можливості', title: 'Що вміє' },
+    audience: { eyebrow: 'Для кого', title: 'Кому підходить' },
+    plans: { eyebrow: 'Тарифи', title: 'Прозорі тарифи' },
+    faq: { eyebrow: 'FAQ', title: 'Поширені запитання' },
+    support: { eyebrow: 'Підтримка', title: 'Умови підтримки' },
+    links: 'Посилання',
+    notFound: 'Такого продукту немає або він ще не опублікований.',
   },
-  duration: { years: (n) => `${n} р.`, months: (n) => `${n} міс.` },
+  prices: {
+    title: 'Прайс-лист',
+    lead: 'Усі тарифи всіх продуктів на одній сторінці. Біля кожної ціни вказано, що входить, термін дії та умови повернення.',
+    taxes: 'Податки',
+    refund: 'Повернення',
+    validity: 'Термін дії',
+    payment: 'Оплата',
+    paymentText: (provider: string) => `Оплата через зовнішній платіжний сервіс (${provider}). Дані карток на сайті не обробляються й не зберігаються.`,
+  },
+  support: {
+    title: 'Підтримка',
+    lead: 'Опишіть проблему, і ми відповімо на email. Для термінових питань є Telegram.',
+    sla: 'Рівень обслуговування',
+    channels: 'Канали',
+    hours: 'Години роботи',
+    faq: 'Поширені запитання',
+    form: { subject: 'Тема звернення', product: 'Продукт', productAny: 'Не стосується конкретного продукту' },
+    faqItems: [
+      { q: 'Як швидко ви відповідаєте?', a: 'Протягом одного робочого дня (Пн–Пт). Звернення, отримані у вихідні, обробляємо в понеділок.' },
+      { q: 'Чи входять оновлення в тариф?', a: 'Так. Виправлення й оновлення продукту входять у вартість підписки.' },
+      { q: 'Як скасувати підписку?', a: 'Напишіть на email або в Telegram з назвою продукту. Підписка припиняється з наступного періоду; умови повернення описані в політиці повернення.' },
+      { q: 'Де документація?', a: 'Посилання на документацію є на сторінці кожного продукту.' },
+    ],
+  },
+  about: {
+    title: 'Про нас',
+    lead: 'Коротко й чесно: хто ми і як працюємо.',
+    placeholderNote: 'Текст-заглушка: замінити справжнім описом перед запуском.',
+    seller: 'Продавець',
+    tradeName: 'Торгова назва',
+  },
+  contacts: {
+    title: 'Контакти',
+    lead: 'Напишіть через форму або напряму. Відповідаємо впродовж робочого дня.',
+    requisites: 'Реквізити продавця',
+    email: 'Email',
+    phone: 'Телефон',
+    telegram: 'Telegram',
+    address: 'Адреса',
+    taxId: 'РНОКПП / номер запису',
+    hours: 'Графік',
+  },
+  form: {
+    name: "Ім'я",
+    email: 'Email',
+    message: 'Повідомлення',
+    topic: 'Тема',
+    topics: { general: 'Загальне питання', sales: 'Купівля / ціни', partnership: 'Співпраця' },
+    namePlaceholder: 'Як до вас звертатися?',
+    emailPlaceholder: 'you@example.com',
+    messagePlaceholder: 'Коротко опишіть запит',
+    consent: 'Надсилаючи форму, ви погоджуєтесь із політикою конфіденційності. Ми зберігаємо мінімум даних.',
+    successTitle: 'Повідомлення надіслано',
+    successText: 'Дякуємо! Відповімо на вказаний email впродовж робочого дня.',
+    error: 'Щось пішло не так. Спробуйте ще раз або напишіть на email.',
+    throttled: 'Забагато повідомлень. Спробуйте трохи пізніше.',
+    invalidName: "Вкажіть ім'я (мінімум 2 символи)",
+    invalidEmail: 'Вкажіть коректний email',
+    invalidMessage: 'Повідомлення має містити принаймні 10 символів',
+    invalidSubject: 'Вкажіть тему (мінімум 3 символи)',
+  },
+  legal: {
+    draft: 'ЧЕРНЕТКА, потребує перевірки юристом',
+    enNote: 'Англійська версія готується. Юридично чинною є українська редакція нижче.',
+    docs: { offer: 'Публічна оферта', privacy: 'Політика конфіденційності', terms: 'Умови використання', refund: 'Політика повернення', cookies: 'Cookie-політика' },
+  },
+  footer: {
+    seller: 'Продавець',
+    tradeName: 'Торгова назва',
+    legal: 'Документи',
+    navigation: 'Навігація',
+    contacts: 'Контакти',
+    rights: 'Усі права захищено',
+    pricesExample: 'Усі ціни на сайті є прикладами і позначені міткою «приклад».',
+  },
+  notFound: { title: 'Сторінку не знайдено', text: 'Перевірте адресу або поверніться на головну.' },
+  error: { title: 'Щось пішло не так', text: 'Не вдалося завантажити сторінку. Спробуйте оновити її.', retry: 'Оновити' },
+  loading: 'Завантаження…',
+  landing: { pricesLink: 'Повний прайс', legalNote: 'Ціни, умови повернення і реквізити продавця вказані нижче.' },
 }
+
+export type Dictionary = typeof uk
 
 const en: Dictionary = {
   skipToContent: 'Skip to content',
-  nav: {
-    about: 'About',
-    skills: 'Skills',
-    experience: 'Experience',
-    projects: 'Work',
-    contact: 'Contact',
-    menu: 'Menu',
-    close: 'Close',
-  },
+  nav: { products: 'Products', prices: 'Pricing', support: 'Support', about: 'About', contacts: 'Contacts', menu: 'Menu', close: 'Close', home: 'Home' },
   theme: { toLight: 'Switch to light theme', toDark: 'Switch to dark theme' },
-  hero: {
-    viewProjects: 'View my work',
-    contact: 'Get in touch',
-    resume: 'Resume',
-    scroll: 'Scroll',
-    localTime: 'Local time',
+  lang: { switchTo: 'Перейти на українську', label: 'Language' },
+  testData: { badge: 'Test data', title: 'Shown only in dev and staging: config/company.json still has placeholder fields' },
+  cookie: {
+    text: 'We use cookies for analytics and ad measurement only after your consent.',
+    more: 'Cookie policy',
+    accept: 'Accept',
+    reject: 'Reject',
+    settings: 'Settings',
+    analytics: 'Analytics (GA4)',
+    ads: 'Advertising (Google Ads)',
+    save: 'Save choice',
+    manage: 'Cookie settings',
   },
-  sections: {
-    about: { eyebrow: 'About', title: 'Code, design & *moonlight*' },
-    services: { eyebrow: 'Services', title: 'How I can *help*' },
-    skills: { eyebrow: 'Skills', title: 'Tools I *craft* with' },
-    experience: { eyebrow: 'Experience', title: 'The path that led *here*' },
-    projects: { eyebrow: 'Work', title: 'Selected *projects*' },
-    certificates: { eyebrow: 'Certificates', title: 'Proven *knowledge*' },
-    testimonials: { eyebrow: 'Testimonials', title: 'Kind *words*' },
-    contact: { eyebrow: 'Contact', title: "Let's build something *stellar*" },
+  status: { available: 'Available', beta: 'Beta', soon: 'Soon' },
+  price: {
+    from: 'from',
+    example: 'example',
+    onRequest: 'on request',
+    perMonth: '/ mo',
+    perYear: '/ yr',
+    once: 'one-time',
+    validUntil: 'Price valid until',
+    updated: 'Prices updated',
+    refund: (days: number) => `Refunds: within ${days} days of payment`,
+    recommended: 'Recommended',
+    included: 'Included',
+    notPublished: 'Prices are not published yet. Write to us and we will send the terms.',
   },
-  skills: {
-    levels: ['Learning', 'Basic', 'Confident', 'Advanced', 'Expert'],
-    other: 'Other',
-    legend: 'Moon phase — proficiency',
-  },
-  experience: {
-    tabs: { work: 'Work', education: 'Education' },
-    present: 'present',
-    kinds: { work: 'Work', freelance: 'Freelance', education: 'Education', volunteer: 'Volunteering' },
-  },
-  projects: {
-    all: 'All',
+  cta: {
+    catalog: 'Product catalog',
+    contact: 'Contact us',
     details: 'Details',
-    live: 'Live',
-    code: 'Code',
-    status: { live: 'Live', in_progress: 'In progress', completed: 'Completed', archived: 'Archived' },
-    role: 'Role',
-    year: 'Year',
-    highlights: 'Highlights',
-    stack: 'Stack',
-    close: 'Close',
-    prev: 'Previous image',
-    next: 'Next image',
+    buy: 'Buy',
+    demo: 'Request a demo',
+    docs: 'Documentation',
+    demoLink: 'Demo',
+    allPrices: 'All plans',
+    send: 'Send',
+    sending: 'Sending…',
+    again: 'Send another',
+    back: 'Back home',
+    allProducts: 'Full catalog',
+    notify: 'Notify me',
   },
-  certificates: { view: 'View' },
-  contact: {
-    write: 'Write to me',
-    copy: 'Copy email',
-    copied: 'Copied',
-    socials: 'Find me on',
-    form: {
-      name: 'Name',
-      email: 'Email',
-      subject: 'Subject',
-      message: 'Message',
-      namePlaceholder: 'How should I call you?',
-      emailPlaceholder: 'you@example.com',
-      subjectPlaceholder: 'What is it about?',
-      messagePlaceholder: 'Tell me about your idea or project…',
-      send: 'Send message',
-      sending: 'Sending…',
-      successTitle: 'Your message is flying to the moon',
-      successText: 'Thank you! I will get back to you soon.',
-      again: 'Send another',
-      error: 'Something went wrong. Please try again or email me directly.',
-      throttled: 'Too many messages. Please try again a bit later.',
+  home: {
+    eyebrow: 'MXXNLY Labs',
+    products: { eyebrow: 'Products', title: 'Key products' },
+    how: {
+      eyebrow: 'How we work',
+      title: 'We build and maintain',
+      lead: 'A product does not end with a release: we are responsible for keeping it running and up to date.',
+      items: [
+        { title: 'Development', text: 'We design, build and test each product with our own team. Every product has a public price list and clear terms.' },
+        { title: 'Support and updates', text: 'Fixes and updates are included in the plan. We answer requests within one business day.' },
+        { title: 'Documentation and onboarding', text: 'Every product ships with documentation and setup guides. We can run a short onboarding for your team.' },
+      ],
     },
+    testimonials: { eyebrow: 'Testimonials', title: 'What clients say' },
+    contact: { eyebrow: 'Contacts', title: 'Write to us', lead: 'Questions about a product, a demo or a partnership: we reply within a business day.' },
+    next: { title: 'Next product', text: 'Soon' },
+    supportCard: { title: 'Support', text: 'Reply within 1 business day' },
   },
-  footer: { top: 'Back to top', rights: 'All rights reserved' },
-  loading: 'The moon is rising…',
-  error: {
-    title: 'The moon is hiding behind the clouds',
-    text: 'Could not load the data. Check your connection and try again.',
-    retry: 'Try again',
+  catalog: {
+    title: 'Product catalog',
+    lead: 'Every product has a public price, a status and a link to buy or to request a demo.',
+    filters: { all: 'All', available: 'Available', beta: 'Beta', soon: 'Soon' },
+    nextTitle: 'Next product in development',
+    nextText: 'It will appear here with a price and terms as soon as it is ready for publication.',
+    empty: 'No products in this category yet.',
+    category: 'Category',
   },
-  setup: {
-    title: 'The portfolio is almost ready',
-    text: 'Fill in your profile in the admin panel to bring the site to life.',
-    cta: 'Open admin',
+  product: {
+    features: { eyebrow: 'Features', title: 'What it does' },
+    audience: { eyebrow: 'Audience', title: 'Who it is for' },
+    plans: { eyebrow: 'Plans', title: 'Transparent pricing' },
+    faq: { eyebrow: 'FAQ', title: 'Frequently asked questions' },
+    support: { eyebrow: 'Support', title: 'Support terms' },
+    links: 'Links',
+    notFound: 'This product does not exist or is not published yet.',
   },
-  duration: { years: (n) => `${n} yr`, months: (n) => `${n} mo` },
+  prices: {
+    title: 'Price list',
+    lead: 'All plans of all products on one page. Next to each price: what is included, validity and refund terms.',
+    taxes: 'Taxes',
+    refund: 'Refunds',
+    validity: 'Validity',
+    payment: 'Payment',
+    paymentText: (provider: string) => `Payment goes through an external payment service (${provider}). Card data is never processed or stored on this site.`,
+  },
+  support: {
+    title: 'Support',
+    lead: 'Describe the problem and we will reply by email. For urgent matters there is Telegram.',
+    sla: 'Service level',
+    channels: 'Channels',
+    hours: 'Business hours',
+    faq: 'Frequently asked questions',
+    form: { subject: 'Subject', product: 'Product', productAny: 'Not related to a specific product' },
+    faqItems: [
+      { q: 'How fast do you reply?', a: 'Within one business day (Mon–Fri). Requests received on weekends are handled on Monday.' },
+      { q: 'Are updates included?', a: 'Yes. Fixes and product updates are included in the subscription.' },
+      { q: 'How do I cancel?', a: 'Write to us by email or Telegram with the product name. The subscription stops from the next period; refunds follow the refund policy.' },
+      { q: 'Where is the documentation?', a: 'Each product page links to its documentation.' },
+    ],
+  },
+  about: {
+    title: 'About us',
+    lead: 'Short and honest: who we are and how we work.',
+    placeholderNote: 'Placeholder text: replace with the real description before launch.',
+    seller: 'Seller',
+    tradeName: 'Trade name',
+  },
+  contacts: {
+    title: 'Contacts',
+    lead: 'Use the form or write directly. We reply within a business day.',
+    requisites: 'Seller details',
+    email: 'Email',
+    phone: 'Phone',
+    telegram: 'Telegram',
+    address: 'Address',
+    taxId: 'Tax ID / registration number',
+    hours: 'Hours',
+  },
+  form: {
+    name: 'Name',
+    email: 'Email',
+    message: 'Message',
+    topic: 'Topic',
+    topics: { general: 'General question', sales: 'Purchase / pricing', partnership: 'Partnership' },
+    namePlaceholder: 'How should we address you?',
+    emailPlaceholder: 'you@example.com',
+    messagePlaceholder: 'Briefly describe your request',
+    consent: 'By sending the form you agree to the privacy policy. We store the minimum of data.',
+    successTitle: 'Message sent',
+    successText: 'Thank you! We will reply to your email within a business day.',
+    error: 'Something went wrong. Please try again or email us directly.',
+    throttled: 'Too many messages. Please try again a bit later.',
+    invalidName: 'Enter your name (at least 2 characters)',
+    invalidEmail: 'Enter a valid email',
+    invalidMessage: 'The message must be at least 10 characters',
+    invalidSubject: 'Enter a subject (at least 3 characters)',
+  },
+  legal: {
+    draft: 'DRAFT, pending legal review',
+    enNote: 'The English version is being prepared. The Ukrainian text below is the legally binding one.',
+    docs: { offer: 'Public offer', privacy: 'Privacy policy', terms: 'Terms of use', refund: 'Refund policy', cookies: 'Cookie policy' },
+  },
+  footer: {
+    seller: 'Seller',
+    tradeName: 'Trade name',
+    legal: 'Documents',
+    navigation: 'Navigation',
+    contacts: 'Contacts',
+    rights: 'All rights reserved',
+    pricesExample: 'All prices on this site are examples and carry the «example» label.',
+  },
+  notFound: { title: 'Page not found', text: 'Check the address or go back to the home page.' },
+  error: { title: 'Something went wrong', text: 'The page could not be loaded. Try reloading it.', retry: 'Reload' },
+  loading: 'Loading…',
+  landing: { pricesLink: 'Full price list', legalNote: 'Prices, refund terms and seller details are listed below.' },
 }
 
-export const dictionaries: Record<Language, Dictionary> = { en, uk }
+export const dictionaries: Record<Language, Dictionary> = { uk, en }

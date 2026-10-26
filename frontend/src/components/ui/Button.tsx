@@ -1,104 +1,81 @@
-import { motion, useMotionValue, useReducedMotion, useSpring } from 'motion/react'
-import type { MouseEvent, PointerEvent, ReactNode } from 'react'
+import type { ComponentProps, ReactNode } from 'react'
+import { Link } from 'react-router'
 
 import { cn } from '../../lib/cn'
 
+type Variant = 'primary' | 'secondary' | 'ghost' | 'link'
+type Size = 'md' | 'sm'
+
 interface ButtonProps {
   children: ReactNode
-  variant?: 'primary' | 'ghost'
+  variant?: Variant
+  size?: Size
+  /** Internal route (rendered with <Link>) */
+  to?: string
+  /** External URL (rendered with <a target=_blank>) */
   href?: string
-  onClick?: (event: MouseEvent<HTMLElement>) => void
-  icon?: ReactNode
-  external?: boolean
-  download?: boolean
+  onClick?: ComponentProps<'button'>['onClick'] & ComponentProps<'a'>['onClick']
   type?: 'button' | 'submit'
   disabled?: boolean
   className?: string
+  icon?: ReactNode
+  ariaLabel?: string
 }
 
-const VARIANTS = {
-  primary:
-    'bg-fg text-bg shadow-[0_10px_40px_-12px_var(--glow)] hover:shadow-[0_14px_50px_-10px_var(--glow)]',
-  ghost: 'glass text-fg hover:bg-card-hover hover:border-line-strong',
+const VARIANTS: Record<Variant, string> = {
+  primary: 'bg-primary text-primary-ink hover:brightness-110 active:brightness-95',
+  secondary: 'bg-primary-soft text-ink hover:brightness-95 dark:hover:brightness-125',
+  ghost: 'bg-transparent text-ink border border-line hover:bg-surface',
+  link: 'bg-transparent text-primary font-bold underline-offset-4 hover:underline px-0 h-auto',
 }
 
-/** Pill button that leans towards the cursor ("magnetic"); renders a link when `href` is set. */
+const SIZES: Record<Size, string> = {
+  md: 'h-12 px-6 text-[0.95rem]',
+  sm: 'h-10 px-4 text-sm',
+}
+
 export function Button({
   children,
   variant = 'primary',
+  size = 'md',
+  to,
   href,
   onClick,
-  icon,
-  external,
-  download,
   type = 'button',
   disabled,
   className,
+  icon,
+  ariaLabel,
 }: ButtonProps) {
-  const reduceMotion = useReducedMotion()
-  const x = useSpring(useMotionValue(0), { stiffness: 220, damping: 18, mass: 0.4 })
-  const y = useSpring(useMotionValue(0), { stiffness: 220, damping: 18, mass: 0.4 })
-
-  const onPointerMove = (event: PointerEvent<HTMLElement>) => {
-    if (reduceMotion || event.pointerType !== 'mouse') return
-    const rect = event.currentTarget.getBoundingClientRect()
-    x.set((event.clientX - rect.left - rect.width / 2) * 0.22)
-    y.set((event.clientY - rect.top - rect.height / 2) * 0.3)
-  }
-  const reset = () => {
-    x.set(0)
-    y.set(0)
-  }
-
   const classes = cn(
-    'group/button relative inline-flex h-12 items-center justify-center gap-2.5 overflow-hidden rounded-full px-6 text-[0.95rem] font-semibold tracking-tight transition-[background-color,border-color,box-shadow] duration-300 disabled:pointer-events-none disabled:opacity-60',
+    'inline-flex items-center justify-center gap-2 rounded-full font-bold tracking-tight transition-[filter,background-color] duration-200 disabled:pointer-events-none disabled:opacity-60',
     VARIANTS[variant],
+    variant !== 'link' && SIZES[size],
     className,
   )
-
   const content = (
     <>
-      {variant === 'primary' && (
-        <span
-          aria-hidden
-          className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/40 to-transparent opacity-0 transition-all duration-700 group-hover/button:left-[120%] group-hover/button:opacity-100 light:via-white/25"
-        />
-      )}
-      <span className="relative">{children}</span>
-      {icon && (
-        <span className="relative transition-transform duration-300 group-hover/button:translate-x-0.5">
-          {icon}
-        </span>
-      )}
+      <span>{children}</span>
+      {icon && <span aria-hidden>{icon}</span>}
     </>
   )
-
-  const motionProps = {
-    style: { x, y },
-    onPointerMove,
-    onPointerLeave: reset,
-    className: classes,
-    whileTap: { scale: 0.97 },
-  }
-
-  if (href) {
+  if (to) {
     return (
-      <motion.a
-        {...motionProps}
-        href={href}
-        onClick={onClick}
-        download={download || undefined}
-        target={external ? '_blank' : undefined}
-        rel={external ? 'noopener noreferrer' : undefined}
-      >
+      <Link to={to} className={classes} onClick={onClick} aria-label={ariaLabel}>
         {content}
-      </motion.a>
+      </Link>
     )
   }
-
+  if (href) {
+    return (
+      <a href={href} className={classes} onClick={onClick} target="_blank" rel="noopener noreferrer" aria-label={ariaLabel}>
+        {content}
+      </a>
+    )
+  }
   return (
-    <motion.button {...motionProps} type={type} onClick={onClick} disabled={disabled}>
+    <button type={type} className={classes} onClick={onClick} disabled={disabled} aria-label={ariaLabel}>
       {content}
-    </motion.button>
+    </button>
   )
 }

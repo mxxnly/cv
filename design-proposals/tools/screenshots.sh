@@ -27,7 +27,7 @@ HTML
   shot "file://$wrapper" 430,884 "$2"
 }
 
-for design in 01-ledger 02-workshop 03-soft; do
+for design in 01-ledger 02-workshop 03-soft 04-soft-violet; do
   for page in home catalog product; do
     for theme in light dark; do
       url="file://$PWD/designs/$design/$page.html?theme=$theme"

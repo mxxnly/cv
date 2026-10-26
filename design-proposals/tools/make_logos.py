@@ -196,6 +196,8 @@ DIRECTIONS = {
     "01-lattice": (lattice, "#141210", "#F6F3EC", "#C8381B", "#ECE7DC", "#141210", "#E8603F"),
     "02-stitch": (stitch, "#1E2A26", "#F7F8F6", "#176B5A", "#E6EBE8", "#141A18", "#7FD1B9"),
     "03-plate": (plate, "#1B1D1F", "#EDEDEA", "#F2B705", "#E8E6E1", "#121415", "#F2B705"),
+    # Chosen combination: Lattice recoloured for the violet Soft palette (stage 2 decision).
+    "04-lattice-violet": (lattice, "#1F1B2E", "#F8F7FB", "#5B3FD1", "#ECE9F5", "#15121F", "#B9A6FF"),
 }
 
 

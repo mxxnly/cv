@@ -216,7 +216,7 @@ shell-prod: $(ENV_FILE) ## [PROD] 🐚 Shell in a container (CONTAINER=backend)
 	@$(PROD) exec --user appuser $(CONTAINER) sh
 
 migrate-prod: $(ENV_FILE) ## [PROD] 🗄️  Apply migrations
-	@$(PROD) exec -T backend python manage.py migrate --noinput
+	@$(PROD) exec -T --user appuser backend python manage.py migrate --noinput
 
 createsuperuser-prod: $(ENV_FILE) ## [PROD] 👤 Create a Django superuser
 	@$(PROD) exec --user appuser backend python manage.py createsuperuser

@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 
@@ -69,7 +70,16 @@ function companyPlugin(): Plugin {
     },
     transformIndexHtml(html) {
       const lang = site.default_language
+      // Version the OG image URL by content so link-preview caches (Telegram, Slack, Facebook)
+      // pick up a new picture instead of the one they cached.
+      let ogVersion = 'v1'
+      try {
+        ogVersion = createHash('sha256').update(readFileSync(resolve(__dirname, 'public/og-image.png'))).digest('hex').slice(0, 10)
+      } catch {
+        /* image missing: keep a static version */
+      }
       return html
+        .replaceAll('%OG_IMAGE_VERSION%', ogVersion)
         .replaceAll('%COMPANY_NAME%', brand.name)
         .replaceAll('%COMPANY_TAGLINE%', brand.tagline[lang])
         .replaceAll('%COMPANY_DESCRIPTION%', brand.description[lang])

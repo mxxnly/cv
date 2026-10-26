@@ -261,6 +261,9 @@ push у main ─► CI (ruff, pytest на Postgres, eslint, tsc, vitest, vite bu
 Ручний запуск: **Actions → 🚀 Production CI/CD → Run workflow** (можна перебрати один образ).
 
 На сервері: Traefik (HTTPS від Let's Encrypt, `www` → основний домен) → nginx → Django / SPA.
+Домен mxxnly.com обслуговується через Cloudflare (проксі увімкнено): у `.env` задано `TRUSTED_PROXY_IPS`
+з діапазонами Cloudflare, щоб Django бачив реальні IP відвідувачів (ліміти форм, хеш IP). Режим SSL у
+Cloudflare має бути **Full (strict)**, сертифікат на сервері видає Let's Encrypt.
 Міграції застосовуються при старті бекенду. Без домену: `docker/production-ip.yml` (nginx на `:80`).
 
 **Підготовка сервера (один раз):** `curl -fsSL https://get.docker.com | sh`, `apt-get install -y make`,

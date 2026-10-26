@@ -44,10 +44,7 @@
     }
   },
   "site": {
-    "domain": {
-      "value": "mxxnly.example",
-      "placeholder": true
-    },
+    "domain": "mxxnly.com",
     "default_language": "uk",
     "languages": [
       "uk",

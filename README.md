@@ -104,7 +104,7 @@ make seed    # продукти (VPN, Selene, Khonsu, Lunaflow); ціни-при
 - [ ] `seller.tax_id`: РНОКПП або номер запису в ЄДР (зараз приховано як `********`)
 - [ ] `seller.address`, `seller.address_en`: вказати номер будинку замість `***` (с. Липівці, вул. Юліана Ковальського)
 - [x] `contacts.email`, `contacts.telegram`, `contacts.phone`: заповнено 26.10.2026
-- [ ] `site.domain` (`mxxnly.example`) і такий самий `DOMAIN` у production-`.env`
+- [x] `site.domain` = mxxnly.com, `DOMAIN` у production-`.env`: заповнено 26.10.2026
 - [ ] `payment.provider` (`TBD`), `payment.link_base` (`https://example.com/pay/`); або `buy_url` у кожному тарифі
 - [ ] `pricing.tax_note`: підтвердити у бухгалтера формулювання про ПДВ і прибрати `tax_note_placeholder`
 - [ ] `analytics.ga4_measurement_id`, `analytics.ads_conversion_id`, `analytics.ads_conversion_labels.*`

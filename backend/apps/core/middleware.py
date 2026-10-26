@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import connection
 from django.http import HttpRequest, JsonResponse
 
@@ -22,3 +23,20 @@ class HealthCheckMiddleware:
                 return JsonResponse({"status": "error", "database": "unavailable"}, status=503)
             return JsonResponse({"status": "ok"})
         return self.get_response(request)
+
+
+class PlaceholderNoindexMiddleware:
+    """Adds `X-Robots-Tag: noindex, nofollow` to every response while company.json has placeholders.
+
+    Search engines must not index a site whose seller details, prices and legal texts are drafts.
+    Remove the placeholders (not this middleware) to lift the restriction.
+    """
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request: HttpRequest):
+        response = self.get_response(request)
+        if settings.COMPANY.has_placeholders or settings.SITE_ENV != "production":
+            response["X-Robots-Tag"] = "noindex, nofollow"
+        return response

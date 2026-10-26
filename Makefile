@@ -50,7 +50,7 @@ TAG_ERROR  := $(FG_RED)[ERROR]$(RESET)
 TAG_INIT   := $(FG_YELLOW)[INIT]$(RESET)
 TAG_OK     := $(FG_GREEN)[OK]$(RESET)
 
-.PHONY: help env check test lint format \
+.PHONY: help env check check-placeholders test lint format \
         up down build rebuild nuke ps logs restart shell dbshell \
         migrate makemigrations createsuperuser seed \
         test-backend test-frontend lint-backend lint-frontend \
@@ -86,6 +86,9 @@ env: $(ENV_FILE) ## [GLOBAL] 🔑 Create .env from .env.example (if missing)
 
 # ========== QUALITY (inside the running DEV stack) ==========
 check: lint test ## [GLOBAL] ✅ Lint + tests for backend and frontend
+
+check-placeholders: $(ENV_FILE) ## [GLOBAL] 🧾 List placeholder fields in config/company.json (fails for production)
+	@$(DEV) exec backend python manage.py check_placeholders
 
 test: test-backend test-frontend ## [GLOBAL] 🧪 Run all tests
 
@@ -189,10 +192,10 @@ deploy-prod: $(ENV_FILE) ## [PROD] 🚢 Deploy: pull from GHCR (domain) or build
 	@printf "$(TAG_OK) PROD deploy finished\n"
 
 build-prod: ## [PROD] 🔨 Build PROD images locally (REGISTRY=…, IMAGE_TAG=…)
-	@printf "$(TAG_PROD) 🔨 Building PROD images as $(REGISTRY)/portfolio-*:$(IMAGE_TAG)...\n"
-	@docker build -f docker/Dockerfile.backend --target production -t $(REGISTRY)/portfolio-backend:$(IMAGE_TAG) .
-	@docker build -f docker/Dockerfile.frontend --target production -t $(REGISTRY)/portfolio-frontend:$(IMAGE_TAG) .
-	@docker build -f docker/Dockerfile.nginx -t $(REGISTRY)/portfolio-nginx:$(IMAGE_TAG) .
+	@printf "$(TAG_PROD) 🔨 Building PROD images as $(REGISTRY)/mxxnly-labs-*:$(IMAGE_TAG)...\n"
+	@docker build -f docker/Dockerfile.backend --target production -t $(REGISTRY)/mxxnly-labs-backend:$(IMAGE_TAG) .
+	@docker build -f docker/Dockerfile.frontend --target production -t $(REGISTRY)/mxxnly-labs-frontend:$(IMAGE_TAG) .
+	@docker build -f docker/Dockerfile.nginx -t $(REGISTRY)/mxxnly-labs-nginx:$(IMAGE_TAG) .
 
 restart-prod: $(ENV_FILE) ## [PROD] ♻️  Restart containers
 	@$(PROD) restart
@@ -214,7 +217,7 @@ createsuperuser-prod: $(ENV_FILE) ## [PROD] 👤 Create a Django superuser
 
 backup-prod: $(ENV_FILE) ## [PROD] 💾 Dump the database to backups/
 	@mkdir -p $(BACKUP_DIR)
-	@file="$(BACKUP_DIR)/portfolio_$$(date +%Y-%m-%d_%H-%M).sql.gz"; \
+	@file="$(BACKUP_DIR)/mxxnly-labs_$$(date +%Y-%m-%d_%H-%M).sql.gz"; \
 	$(PROD) exec -T postgres sh -c 'pg_dump -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"' | gzip > "$$file" && \
 	printf "$(TAG_OK) Saved $$file\n"
 

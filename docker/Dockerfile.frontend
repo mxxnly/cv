@@ -12,6 +12,7 @@ RUN npm ci --no-audit --no-fund
 FROM dependencies AS development
 
 COPY frontend/ .
+COPY config/ /config/
 
 ENV VITE_PORT=8080
 EXPOSE 8080
@@ -22,6 +23,11 @@ CMD ["npm", "run", "dev"]
 FROM dependencies AS build
 
 COPY frontend/ .
+COPY config/ /config/
+# NODE_ENV=production makes the build fail while config/company.json has placeholders
+# (ALLOW_PLACEHOLDERS=1 only for staging).
+ARG ALLOW_PLACEHOLDERS=0
+ENV NODE_ENV=production ALLOW_PLACEHOLDERS=$ALLOW_PLACEHOLDERS
 RUN npm run build
 
 # ========== PRODUCTION ==========

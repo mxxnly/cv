@@ -1,4 +1,4 @@
-"""Gunicorn configuration for the portfolio backend."""
+"""Gunicorn configuration for the MXXNLY Labs backend."""
 
 import os
 
@@ -16,4 +16,4 @@ accesslog = "-"
 errorlog = "-"
 loglevel = os.getenv("GUNICORN_LOG_LEVEL", "info")
 access_log_format = '%(h)s "%(r)s" %(s)s %(b)s %(D)sµs'
-proc_name = "portfolio"
+proc_name = "mxxnly-labs"

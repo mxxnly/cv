@@ -5,7 +5,7 @@ services:
     restart: unless-stopped
 
   backend:
-    image: portfolio-backend:prod
+    image: mxxnly-labs-backend:prod
     build:
       context: .
       dockerfile: docker/Dockerfile.backend
@@ -19,7 +19,7 @@ services:
     restart: unless-stopped
 
   frontend:
-    image: portfolio-frontend:prod
+    image: mxxnly-labs-frontend:prod
     build:
       context: .
       dockerfile: docker/Dockerfile.frontend
@@ -27,7 +27,7 @@ services:
     restart: unless-stopped
 
   nginx:
-    image: portfolio-nginx:prod
+    image: mxxnly-labs-nginx:prod
     build:
       context: .
       dockerfile: docker/Dockerfile.nginx

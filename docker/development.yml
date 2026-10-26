@@ -5,7 +5,7 @@ services:
       - "${POSTGRES_PORT_HOST:-5432}:5432"
 
   backend:
-    image: portfolio-backend:dev
+    image: mxxnly-labs-backend:dev
     build:
       context: .
       dockerfile: docker/Dockerfile.backend
@@ -16,13 +16,14 @@ services:
       NUM_PROXIES: "1"
     volumes:
       - ./backend:/app
+      - ./config:/config:ro
     ports:
       - "8000:8000"
     stdin_open: true
     tty: true
 
   frontend:
-    image: portfolio-frontend:dev
+    image: mxxnly-labs-frontend:dev
     build:
       context: .
       dockerfile: docker/Dockerfile.frontend
@@ -34,6 +35,7 @@ services:
       VITE_USE_POLLING: "true"
     volumes:
       - ./frontend:/app
+      - ./config:/config:ro
       - /app/node_modules
 
   nginx:

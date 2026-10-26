@@ -1,7 +1,8 @@
 """
-Django settings for the portfolio project.
+Django settings for the MXXNLY Labs site.
 
-All environment-specific values come from environment variables (see `.env.example`).
+All environment-specific values come from environment variables (see `.env.example`);
+all company data comes from config/company.json (see `apps.core.company`).
 """
 
 import os
@@ -10,6 +11,8 @@ from pathlib import Path
 
 from django.core.exceptions import ImproperlyConfigured
 from django.urls import reverse_lazy
+
+from apps.core.company import load_company
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -32,6 +35,15 @@ SECRET_KEY = env("SECRET_KEY", "dev-insecure-secret-key" if DEBUG else "")
 if not SECRET_KEY:
     raise ImproperlyConfigured("SECRET_KEY must be set when DEBUG is off.")
 
+# development | staging | production. Controls the «Тестові дані» badge and the placeholder gate.
+SITE_ENV = env("SITE_ENV", "development" if DEBUG else "production")
+ALLOW_PLACEHOLDERS = env_bool("ALLOW_PLACEHOLDERS", False)
+
+# ========== COMPANY ==========
+# Single source of company data (brand, seller, contacts, analytics ids). Never hard-code these.
+COMPANY = load_company(env("COMPANY_CONFIG") or None)
+SITE_NAME = COMPANY.get("brand.name", "MXXNLY Labs")
+
 ALLOWED_HOSTS = env_list("ALLOWED_HOSTS", "localhost,127.0.0.1")
 CSRF_TRUSTED_ORIGINS = env_list("CSRF_TRUSTED_ORIGINS", "http://localhost,http://127.0.0.1")
 
@@ -46,12 +58,13 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "apps.core",
     "apps.portfolio",
     "django_cleanup.apps.CleanupConfig",
 ]
 
 MIDDLEWARE = [
-    "apps.portfolio.middleware.HealthCheckMiddleware",
+    "apps.core.middleware.HealthCheckMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -61,6 +74,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # noindex for the whole site while placeholder data remains (see config/company.json).
+    "apps.core.middleware.PlaceholderNoindexMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -108,7 +123,7 @@ else:
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
-        "LOCATION": Path(tempfile.gettempdir()) / "portfolio-cache",
+        "LOCATION": Path(tempfile.gettempdir()) / "mxxnly-labs-cache",
     }
 }
 
@@ -183,7 +198,7 @@ EMAIL_PORT = int(env("EMAIL_PORT", "587"))
 EMAIL_HOST_USER = env("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 EMAIL_USE_TLS = env_bool("EMAIL_USE_TLS", True)
-DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", EMAIL_HOST_USER or "portfolio@localhost")
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", EMAIL_HOST_USER or f"noreply@{COMPANY.get('site.domain', 'localhost')}")
 CONTACT_NOTIFY_EMAIL = env("CONTACT_NOTIFY_EMAIL")
 TELEGRAM_BOT_TOKEN = env("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = env("TELEGRAM_CHAT_ID")
@@ -192,7 +207,7 @@ TELEGRAM_CHAT_ID = env("TELEGRAM_CHAT_ID")
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
-    "formatters": {"simple": {"format": "[{asctime}] {levelname} {name}: {message}", "style": "{"}},
+    "formatters": {"simple": {"format": "[{asctime}] mxxnly-labs {levelname} {name}: {message}", "style": "{"}},
     "handlers": {"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
     "root": {"handlers": ["console"], "level": env("LOG_LEVEL", "INFO")},
     "loggers": {"django.db.backends": {"level": "WARNING"}},
@@ -201,14 +216,15 @@ LOGGING = {
 
 # ========== ADMIN (Unfold) ==========
 def environment_callback(request):
-    return ["Development", "warning"] if DEBUG else ["Production", "success"]
+    colors = {"development": "warning", "staging": "info", "production": "success"}
+    return [SITE_ENV.capitalize(), colors.get(SITE_ENV, "warning")]
 
 
 UNFOLD = {
-    "SITE_TITLE": "Portfolio",
-    "SITE_HEADER": "Portfolio",
-    "SITE_SUBHEADER": "Moonlit admin",
-    "SITE_SYMBOL": "dark_mode",
+    "SITE_TITLE": SITE_NAME,
+    "SITE_HEADER": SITE_NAME,
+    "SITE_SUBHEADER": "Адмінка продуктів і цін",
+    "SITE_SYMBOL": "science",
     "SITE_URL": "/",
     "SHOW_HISTORY": True,
     "SHOW_VIEW_ON_SITE": True,

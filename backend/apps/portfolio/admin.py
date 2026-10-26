@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import admin, messages
 from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
@@ -26,9 +27,9 @@ from .models import (
     Testimonial,
 )
 
-admin.site.site_header = "Portfolio"
-admin.site.site_title = "Portfolio"
-admin.site.index_title = "Portfolio management"
+admin.site.site_header = settings.SITE_NAME
+admin.site.site_title = settings.SITE_NAME
+admin.site.index_title = "Керування сайтом"
 
 
 def unread_messages_badge(request: HttpRequest) -> int | None:

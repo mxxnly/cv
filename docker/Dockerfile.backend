@@ -21,6 +21,8 @@ COPY backend/requirements-dev.txt .
 RUN pip install -r requirements-dev.txt
 
 COPY backend/ .
+# Company config lives at /config/company.json (= repo-root config/ relative to /app).
+COPY config/ /config/
 
 EXPOSE 8000
 ENTRYPOINT ["sh", "/app/entrypoint.sh"]
@@ -30,9 +32,14 @@ CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 FROM base AS production
 
 COPY backend/ .
+COPY config/ /config/
 
 # Static files are baked into the image and served by WhiteNoise.
 RUN SECRET_KEY=collectstatic-only python manage.py collectstatic --noinput
+
+# Production images must not ship placeholder company data (ALLOW_PLACEHOLDERS=1 only for staging).
+ARG ALLOW_PLACEHOLDERS=0
+RUN SECRET_KEY=build-check ALLOW_PLACEHOLDERS=$ALLOW_PLACEHOLDERS python manage.py check_placeholders
 
 RUN useradd --create-home --uid 1000 appuser \
     && mkdir -p /app/media \

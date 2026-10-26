@@ -24,13 +24,13 @@ jobs:
       postgres:
         image: postgres:17-alpine
         env:
-          POSTGRES_DB: portfolio
-          POSTGRES_USER: portfolio
-          POSTGRES_PASSWORD: portfolio
+          POSTGRES_DB: mxxnly
+          POSTGRES_USER: mxxnly
+          POSTGRES_PASSWORD: mxxnly
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U portfolio"
+          --health-cmd "pg_isready -U mxxnly"
           --health-interval 5s
           --health-timeout 5s
           --health-retries 10
@@ -39,9 +39,9 @@ jobs:
       SECRET_KEY: ci-secret-key
       POSTGRES_HOST: localhost
       POSTGRES_PORT: "5432"
-      POSTGRES_DB: portfolio
-      POSTGRES_USER: portfolio
-      POSTGRES_PASSWORD: portfolio
+      POSTGRES_DB: mxxnly
+      POSTGRES_USER: mxxnly
+      POSTGRES_PASSWORD: mxxnly
 
     defaults:
       run:
@@ -73,10 +73,17 @@ jobs:
       - name: 🧪 Pytest | Run tests
         run: pytest
 
+      - name: 🧾 Company | List placeholders (informational)
+        run: ALLOW_PLACEHOLDERS=1 python manage.py check_placeholders
+
   frontend:
     name: ⚛️ Frontend | Lint, test & build
     runs-on: ubuntu-latest
     timeout-minutes: 15
+
+    env:
+      # CI builds are never production deploys; the gate runs in deploy.yml and in the Docker build.
+      ALLOW_PLACEHOLDERS: "1"
 
     defaults:
       run:
@@ -144,4 +151,5 @@ jobs:
           file: ${{ matrix.dockerfile }}
           target: ${{ matrix.target }}
           push: false
+          build-args: ALLOW_PLACEHOLDERS=1
           cache-from: type=gha,scope=${{ matrix.component }}

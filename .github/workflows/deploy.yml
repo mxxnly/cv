@@ -87,12 +87,12 @@ jobs:
         id: meta
         uses: docker/metadata-action@v6
         with:
-          images: ${{ env.REGISTRY }}/portfolio-${{ matrix.component }}
+          images: ${{ env.REGISTRY }}/mxxnly-labs-${{ matrix.component }}
           tags: |
             type=sha,prefix=prod-
             type=raw,value=latest
           labels: |
-            org.opencontainers.image.title=Portfolio ${{ matrix.component }}
+            org.opencontainers.image.title=MXXNLY Labs ${{ matrix.component }}
 
       - name: 🧱 Image | Build & push
         if: steps.pick.outputs.build == 'true'
@@ -104,6 +104,9 @@ jobs:
           push: true
           platforms: linux/amd64
           provenance: false
+          # The build fails while config/company.json has placeholders. Set the repository
+          # variable ALLOW_PLACEHOLDERS=1 only for a staging server.
+          build-args: ALLOW_PLACEHOLDERS=${{ vars.ALLOW_PLACEHOLDERS || '0' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha,scope=${{ matrix.component }}
@@ -137,7 +140,7 @@ jobs:
       - name: 🧪 Trivy | Scan image (report only)
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
-          image-ref: ${{ env.REGISTRY }}/portfolio-${{ matrix.component }}:latest
+          image-ref: ${{ env.REGISTRY }}/mxxnly-labs-${{ matrix.component }}:latest
           format: sarif
           output: trivy-${{ matrix.component }}.sarif
           ignore-unfixed: true
@@ -162,7 +165,7 @@ jobs:
       url: https://${{ vars.DOMAIN }}
 
     env:
-      PROJECT_DIR: ${{ vars.PROD_PROJECT_DIR || '/opt/portfolio' }}
+      PROJECT_DIR: ${{ vars.PROD_PROJECT_DIR || '/opt/mxxnly-labs' }}
       PROD_ENV_FILE: ${{ secrets.PROD_ENV_FILE }}
 
     steps:
@@ -248,6 +251,6 @@ jobs:
       - name: 🧹 GHCR | Delete old versions
         uses: actions/delete-package-versions@v5
         with:
-          package-name: portfolio-${{ matrix.component }}
+          package-name: mxxnly-labs-${{ matrix.component }}
           package-type: container
           min-versions-to-keep: 15

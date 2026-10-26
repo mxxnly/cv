@@ -25,7 +25,7 @@ services:
     restart: unless-stopped
 
   backend:
-    image: ${REGISTRY:-ghcr.io/mxxnly}/portfolio-backend:${IMAGE_TAG:-latest}
+    image: ${REGISTRY:-ghcr.io/mxxnly}/mxxnly-labs-backend:${IMAGE_TAG:-latest}
     environment:
       DEBUG: "0"
       DJANGO_SECURE: "1"
@@ -36,23 +36,23 @@ services:
     restart: unless-stopped
 
   frontend:
-    image: ${REGISTRY:-ghcr.io/mxxnly}/portfolio-frontend:${IMAGE_TAG:-latest}
+    image: ${REGISTRY:-ghcr.io/mxxnly}/mxxnly-labs-frontend:${IMAGE_TAG:-latest}
     restart: unless-stopped
 
   nginx:
-    image: ${REGISTRY:-ghcr.io/mxxnly}/portfolio-nginx:${IMAGE_TAG:-latest}
+    image: ${REGISTRY:-ghcr.io/mxxnly}/mxxnly-labs-nginx:${IMAGE_TAG:-latest}
     volumes:
       - media_data:/app/media:ro
     labels:
       - traefik.enable=true
-      - traefik.http.routers.portfolio.rule=Host(`${DOMAIN:?set DOMAIN in .env}`) || Host(`www.${DOMAIN}`)
-      - traefik.http.routers.portfolio.entrypoints=websecure
-      - traefik.http.routers.portfolio.tls.certresolver=letsencrypt
-      - traefik.http.routers.portfolio.middlewares=portfolio-www
-      - traefik.http.middlewares.portfolio-www.redirectregex.regex=^https://www\.(.+)
-      - traefik.http.middlewares.portfolio-www.redirectregex.replacement=https://$${1}
-      - traefik.http.middlewares.portfolio-www.redirectregex.permanent=true
-      - traefik.http.services.portfolio.loadbalancer.server.port=80
+      - traefik.http.routers.site.rule=Host(`${DOMAIN:?set DOMAIN in .env}`) || Host(`www.${DOMAIN}`)
+      - traefik.http.routers.site.entrypoints=websecure
+      - traefik.http.routers.site.tls.certresolver=letsencrypt
+      - traefik.http.routers.site.middlewares=site-www
+      - traefik.http.middlewares.site-www.redirectregex.regex=^https://www\.(.+)
+      - traefik.http.middlewares.site-www.redirectregex.replacement=https://$${1}
+      - traefik.http.middlewares.site-www.redirectregex.permanent=true
+      - traefik.http.services.site.loadbalancer.server.port=80
     restart: unless-stopped
 
 volumes:

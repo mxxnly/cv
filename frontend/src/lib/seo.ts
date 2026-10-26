@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 
+import { useSiteFlags } from '../api/queries'
 import { company, siteOrigin } from '../company'
 import { useI18n } from '../i18n/context'
 import { LANGUAGES, type Language } from '../i18n/strings'
@@ -67,8 +68,12 @@ export function organizationJsonLd(lang: Language) {
   }
 }
 
-export function useSeo({ title, description, path, type = 'website', jsonLd, noindex }: SeoProps) {
+export function useSeo({ title, description, path, type = 'website', jsonLd, noindex: noindexProp }: SeoProps) {
   const { lang } = useI18n()
+  // The SPA is served by nginx, so the backend's X-Robots-Tag never reaches these pages:
+  // mirror the backend's decision (staging or placeholders → noindex) from /api/company/.
+  const flags = useSiteFlags()
+  const noindex = noindexProp || (flags.data ? !flags.data.indexable : false)
   const fullTitle = title === company.brand.name ? title : `${title} · ${company.brand.name}`
   const desc = description ?? company.brand.description[lang]
   const jsonLdText = JSON.stringify(jsonLd ?? organizationJsonLd(lang))

@@ -3,6 +3,7 @@ import { Link } from 'react-router'
 import { company, isPlaceholder } from '../../company'
 import { useI18n } from '../../i18n/context'
 import { cn } from '../../lib/cn'
+import { useTestDataMode } from '../../lib/testData'
 import { openCookieSettings } from '../../lib/cookieSettings'
 import { Logo } from './Logo'
 
@@ -11,8 +12,9 @@ const NAV = ['products', 'prices', 'support', 'about', 'contacts'] as const
 
 function Placeholder({ path, children }: { path: string; children: React.ReactNode }) {
   const { t } = useI18n()
+  const marked = useTestDataMode() && isPlaceholder(path)
   return (
-    <span className={cn(isPlaceholder(path) && 'underline decoration-dotted decoration-warning-ink/60 underline-offset-4')} title={isPlaceholder(path) ? t.testData.badge : undefined}>
+    <span className={cn(marked && 'underline decoration-dotted decoration-warning-ink/60 underline-offset-4')} title={marked ? t.testData.badge : undefined}>
       {children}
     </span>
   )

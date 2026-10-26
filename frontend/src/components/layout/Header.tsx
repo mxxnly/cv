@@ -2,9 +2,10 @@ import { Menu, Moon, Sun, X } from 'lucide-react'
 import { useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router'
 
-import { company, showTestDataBadge } from '../../company'
+import { company } from '../../company'
 import { useI18n } from '../../i18n/context'
 import { cn } from '../../lib/cn'
+import { useTestDataMode } from '../../lib/testData'
 import { useTheme } from '../../theme/context'
 import { Logo } from './Logo'
 
@@ -15,6 +16,7 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
   const { theme, toggleTheme } = useTheme()
   const location = useLocation()
   const [open, setOpen] = useState(false)
+  const showTestDataBadge = useTestDataMode()
 
   const otherLang = lang === 'uk' ? 'en' : 'uk'
   const otherPath = location.pathname.replace(/^\/(uk|en)(?=\/|$)/, `/${otherLang}`)

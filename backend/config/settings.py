@@ -46,6 +46,14 @@ SITE_NAME = COMPANY.get("brand.name", "MXXNLY Labs")
 
 ALLOWED_HOSTS = env_list("ALLOWED_HOSTS", "localhost,127.0.0.1")
 CSRF_TRUSTED_ORIGINS = env_list("CSRF_TRUSTED_ORIGINS", "http://localhost,http://127.0.0.1")
+if DEBUG:
+    # Local stack: the gateway and the direct Django/Vite ports from .env are trusted automatically,
+    # so changing HTTP_PORT does not break the admin login.
+    for port in {env("HTTP_PORT", "80"), env("BACKEND_PORT_HOST", "8000"), "5173"}:
+        for host in ("localhost", "127.0.0.1"):
+            origin = f"http://{host}" if port == "80" else f"http://{host}:{port}"
+            if origin not in CSRF_TRUSTED_ORIGINS:
+                CSRF_TRUSTED_ORIGINS.append(origin)
 
 INSTALLED_APPS = [
     "unfold",

@@ -19,9 +19,8 @@ export function LanguageRoot() {
 }
 
 export function RootRedirect() {
-  // Visitors without a language prefix go to the default language; the Accept-Language hint is
-  // respected only for English to keep Ukrainian as the primary entry point.
-  const prefersEnglish = typeof navigator !== 'undefined' && (navigator.language || '').toLowerCase().startsWith('en')
-  return <Navigate to={prefersEnglish ? '/en' : `/${DEFAULT_LANGUAGE}`} replace />
+  // English is the primary entry point; browsers that prefer Ukrainian land on /uk.
+  const prefersUkrainian = typeof navigator !== 'undefined' && (navigator.language || '').toLowerCase().startsWith('uk')
+  return <Navigate to={prefersUkrainian ? '/uk' : `/${DEFAULT_LANGUAGE}`} replace />
 }
 

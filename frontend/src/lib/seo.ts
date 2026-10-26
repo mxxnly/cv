@@ -5,7 +5,7 @@ import { useEffect } from 'react'
 import { useSiteFlags } from '../api/queries'
 import { company, siteOrigin } from '../company'
 import { useI18n } from '../i18n/context'
-import { LANGUAGES, type Language } from '../i18n/strings'
+import { DEFAULT_LANGUAGE, LANGUAGES, type Language } from '../i18n/strings'
 
 export interface SeoProps {
   title: string
@@ -89,7 +89,7 @@ export function useSeo({ title, description, path, type = 'website', jsonLd, noi
     setMeta('property', 'og:locale', lang === 'uk' ? 'uk_UA' : 'en_US')
     setLink('canonical', localizedUrl(path, lang))
     for (const alternate of LANGUAGES) setLink('alternate', localizedUrl(path, alternate), alternate)
-    setLink('alternate', localizedUrl(path, 'uk'), 'x-default')
+    setLink('alternate', localizedUrl(path, DEFAULT_LANGUAGE), 'x-default')
     if (noindex) setMeta('name', 'robots', 'noindex, nofollow')
     else document.head.querySelector('meta[name="robots"]')?.remove()
 

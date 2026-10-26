@@ -1,6 +1,6 @@
 export type Language = 'uk' | 'en'
-export const LANGUAGES: Language[] = ['uk', 'en']
-export const DEFAULT_LANGUAGE: Language = 'uk'
+export const LANGUAGES: Language[] = ['en', 'uk']
+export const DEFAULT_LANGUAGE: Language = 'en'
 
 export function isLanguage(value: string | undefined): value is Language {
   return value === 'uk' || value === 'en'

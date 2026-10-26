@@ -37,6 +37,8 @@ PRODUCTS = [
         "support_terms_uk": "Відповідь протягом 1 робочого дня через email або Telegram. Оновлення входять у тариф.",
         "support_terms_en": "Reply within 1 business day via email or Telegram. Updates are included in the plan.",
         "seo_title_uk": "MXXNLY VPN: шифроване з'єднання для команд",
+        "seo_title_en": "MXXNLY VPN: encrypted connection for teams",
+        "seo_description_en": "Encrypted connection on public networks for freelancers and small teams. Plans from 5 USD per month (example).",
         "seo_description_uk": "Шифроване з'єднання у публічних мережах для фрілансерів і невеликих команд. Плани від 5 USD на місяць (приклад).",
         "plans": [
             (
@@ -117,6 +119,8 @@ PRODUCTS = [
         "support_terms_uk": "Відповідь протягом 1 робочого дня. У бета-версії можливі зміни інтерфейсу; оновлення входять у тариф.",
         "support_terms_en": "Reply within 1 business day. Interface may change during beta; updates are included.",
         "seo_title_uk": "MXXNLY Selene: парсер паперових накладних",
+        "seo_title_en": "MXXNLY Selene: paper invoice parser",
+        "seo_description_en": "Recognition of paper invoices with reference-book validation. Plans from 49 USD per month (example).",
         "seo_description_uk": "Розпізнавання паперових накладних із перевіркою за довідниками. Тарифи від 49 USD на місяць (приклад).",
         "plans": [
             (
@@ -190,6 +194,8 @@ PRODUCTS = [
             "page after the announcement.\n\nLeave your contact through the form and we will let you know first."
         ),
         "seo_title_uk": "MXXNLY Khonsu: скоро",
+        "seo_title_en": "MXXNLY Khonsu: coming soon",
+        "seo_description_en": "A new MXXNLY Labs product in development. Details after the announcement.",
         "seo_description_uk": "Новий продукт MXXNLY Labs у розробці. Деталі після анонсу.",
         "plans": [],
         "links": [],
@@ -214,6 +220,8 @@ PRODUCTS = [
             "page after the announcement.\n\nLeave your contact through the form and we will let you know first."
         ),
         "seo_title_uk": "MXXNLY Lunaflow: скоро",
+        "seo_title_en": "MXXNLY Lunaflow: coming soon",
+        "seo_description_en": "A new MXXNLY Labs product in development. Details after the announcement.",
         "seo_description_uk": "Новий продукт MXXNLY Labs у розробці. Деталі після анонсу.",
         "plans": [],
         "links": [],

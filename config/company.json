@@ -45,10 +45,10 @@
   },
   "site": {
     "domain": "mxxnly.com",
-    "default_language": "uk",
+    "default_language": "en",
     "languages": [
-      "uk",
-      "en"
+      "en",
+      "uk"
     ],
     "launch_year": 2026
   },

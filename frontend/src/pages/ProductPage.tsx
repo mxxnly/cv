@@ -10,6 +10,7 @@ import { PriceFrom, PrimaryCta } from '../components/ProductCard'
 import { Button } from '../components/ui/Button'
 import { Card, FAQList, ProductIconMark, Section, Skeleton, StatusBadge } from '../components/ui/primitives'
 import { tintBg, tintInk } from '../lib/tint'
+import { Reveal } from '../components/ui/Reveal'
 import { useI18n } from '../i18n/context'
 import { cn } from '../lib/cn'
 import { localizedUrl, organizationJsonLd, useSeo } from '../lib/seo'
@@ -135,7 +136,11 @@ export function ProductPage() {
       <Section id="plans" eyebrow={t.product.plans.eyebrow} title={t.product.plans.title}>
         {product.plans.length > 0 ? (
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {product.plans.map((plan) => <PlanCard key={plan.id} plan={plan} product={product} />)}
+            {product.plans.map((plan, index) => (
+              <Reveal key={plan.id} delay={index * 80} className="h-full">
+                <PlanCard plan={plan} product={product} />
+              </Reveal>
+            ))}
           </div>
         ) : (
           <p className="text-muted">{t.price.notPublished}</p>

@@ -8,6 +8,7 @@ import { SellerBlock } from '../components/layout/Footer'
 import { Button } from '../components/ui/Button'
 import { Card, FAQList, ProductIconMark, Skeleton, StatusBadge } from '../components/ui/primitives'
 import { tintBg, tintInk } from '../lib/tint'
+import { Reveal } from '../components/ui/Reveal'
 import { useI18n } from '../i18n/context'
 import { cn } from '../lib/cn'
 import { useSeo } from '../lib/seo'
@@ -58,7 +59,11 @@ export function LandingPage() {
         <h2 className="mb-6 text-3xl">{t.product.plans.title}</h2>
         {product.plans.length > 0 ? (
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {product.plans.map((plan) => <PlanCard key={plan.id} plan={plan} product={product} />)}
+            {product.plans.map((plan, index) => (
+              <Reveal key={plan.id} delay={index * 80} className="h-full">
+                <PlanCard plan={plan} product={product} />
+              </Reveal>
+            ))}
           </div>
         ) : (
           <p className="text-muted">{t.price.notPublished}</p>

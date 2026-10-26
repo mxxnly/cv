@@ -13,7 +13,7 @@ export function PlanCard({ plan, product }: { plan: Plan; product: Product }) {
   const { t, lang, href } = useI18n()
   const onRequest = plan.price === null
   return (
-    <article className={cn('relative flex flex-col rounded-card bg-surface p-6', plan.is_recommended && 'ring-2 ring-primary')}>
+    <article className={cn('lift relative flex flex-col rounded-card bg-surface p-6', plan.is_recommended && 'ring-2 ring-primary')}>
       {plan.is_recommended && (
         <span className="absolute -top-3 left-6 rounded-full bg-primary px-3 py-1 text-xs font-bold text-primary-ink">{t.price.recommended}</span>
       )}

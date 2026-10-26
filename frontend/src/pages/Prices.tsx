@@ -4,6 +4,7 @@ import { usePrices } from '../api/queries'
 import { company } from '../company'
 import { PlanCard, PriceNotes } from '../components/PlanCard'
 import { Card, PageHeader, Skeleton, StatusBadge } from '../components/ui/primitives'
+import { Reveal } from '../components/ui/Reveal'
 import { useI18n } from '../i18n/context'
 import { formatDate } from '../lib/format'
 import { useSeo } from '../lib/seo'
@@ -33,7 +34,11 @@ export function PricesPage() {
               <Link className="text-sm font-bold text-primary" to={href(`/products/${product.slug}`)}>{t.cta.details} →</Link>
             </div>
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {product.plans.map((plan) => <PlanCard key={plan.id} plan={plan} product={product} />)}
+              {product.plans.map((plan, index) => (
+              <Reveal key={plan.id} delay={index * 80} className="h-full">
+                <PlanCard plan={plan} product={product} />
+              </Reveal>
+            ))}
             </div>
             <div className="mt-4">
               <PriceNotes taxNote={prices.data?.tax_note} refundDays={prices.data?.refund_days} updatedAt={product.prices_updated_at} note={prices.data?.note} />

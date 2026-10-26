@@ -8,6 +8,7 @@ import { ContactLinks } from '../components/layout/Footer'
 import { ProductCard } from '../components/ProductCard'
 import { Button } from '../components/ui/Button'
 import { Card, Section, Skeleton } from '../components/ui/primitives'
+import { Reveal } from '../components/ui/Reveal'
 import { useI18n } from '../i18n/context'
 import { useSeo } from '../lib/seo'
 
@@ -27,17 +28,21 @@ export function HomePage() {
       {/* ========== HERO ========== */}
       <section className="container-page grid items-center gap-10 py-14 sm:py-20 lg:grid-cols-[1.1fr_1fr]">
         <div>
-          <p className="eyebrow mb-3">{t.home.eyebrow}</p>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl">{company.brand.tagline[lang]}</h1>
-          <p className="mt-5 max-w-xl text-lg text-muted">{company.brand.description[lang]}</p>
-          <div className="mt-8 flex flex-wrap gap-3">
+          <p className="eyebrow enter enter-1 mb-3">{t.home.eyebrow}</p>
+          <h1 className="enter enter-2 text-4xl sm:text-5xl lg:text-6xl">{company.brand.tagline[lang]}</h1>
+          <p className="enter enter-3 mt-5 max-w-xl text-lg text-muted">{company.brand.description[lang]}</p>
+          <div className="enter enter-4 mt-8 flex flex-wrap gap-3">
             <Button to={href('/products')}>{t.cta.catalog}</Button>
             <Button variant="secondary" to={href('/contacts')}>{t.cta.contact}</Button>
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="enter enter-3 grid grid-cols-2 gap-3">
           {products.isPending && [0, 1, 2, 3].map((i) => <Skeleton key={i} className="h-40" />)}
-          {heroProducts.map((product) => <ProductCard key={product.slug} product={product} compact />)}
+          {heroProducts.map((product, index) => (
+            <Reveal key={product.slug} delay={index * 70}>
+              <ProductCard product={product} compact />
+            </Reveal>
+          ))}
           {products.isSuccess && heroProducts.length < 4 && (
             <Card className="h-full">
               <span aria-hidden className="grid size-11 place-items-center rounded-2xl bg-primary-soft text-primary"><LifeBuoy className="size-5" strokeWidth={1.75} /></span>
@@ -63,7 +68,11 @@ export function HomePage() {
       >
         <div className="grid gap-4 md:grid-cols-2">
           {products.isPending && [0, 1].map((i) => <Skeleton key={i} className="h-80" />)}
-          {featured.map((product) => <ProductCard key={product.slug} product={product} />)}
+          {featured.map((product, index) => (
+            <Reveal key={product.slug} delay={index * 80} className="h-full">
+              <ProductCard product={product} />
+            </Reveal>
+          ))}
         </div>
         {site.data?.settings.price_note && <p className="mt-4 text-sm text-muted">{site.data.settings.price_note}</p>}
       </Section>
@@ -72,11 +81,13 @@ export function HomePage() {
       <Section eyebrow={t.home.how.eyebrow} title={t.home.how.title} lead={t.home.how.lead}>
         <div className="grid gap-4 md:grid-cols-3">
           {t.home.how.items.map((item, index) => (
-            <Card key={item.title}>
-              <p className="eyebrow">0{index + 1}</p>
-              <h3 className="mt-3 text-xl">{item.title}</h3>
-              <p className="mt-2 text-muted">{item.text}</p>
-            </Card>
+            <Reveal key={item.title} delay={index * 90} className="h-full">
+              <Card className="lift h-full">
+                <p className="eyebrow">0{index + 1}</p>
+                <h3 className="mt-3 text-xl">{item.title}</h3>
+                <p className="mt-2 text-muted">{item.text}</p>
+              </Card>
+            </Reveal>
           ))}
         </div>
       </Section>

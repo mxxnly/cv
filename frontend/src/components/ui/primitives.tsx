@@ -5,6 +5,7 @@ import type { Availability, ProductIcon, Tint } from '../../api/types'
 import { useI18n } from '../../i18n/context'
 import { cn } from '../../lib/cn'
 import { tintInk } from '../../lib/tint'
+import { Reveal } from './Reveal'
 
 // ========== CARD ==========
 const TINTS: Record<Tint | 'surface', string> = {
@@ -81,15 +82,15 @@ interface SectionProps {
 export function Section({ id, eyebrow, title, lead, children, aside, className }: SectionProps) {
   return (
     <section id={id} className={cn('container-page py-14 sm:py-20', className)}>
-      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <Reveal className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div className="max-w-2xl">
           {eyebrow && <p className="eyebrow mb-2">{eyebrow}</p>}
           <h2 className="text-3xl sm:text-4xl">{title}</h2>
           {lead && <p className="mt-3 text-muted">{lead}</p>}
         </div>
         {aside}
-      </div>
-      {children}
+      </Reveal>
+      <Reveal delay={80}>{children}</Reveal>
     </section>
   )
 }
@@ -97,10 +98,10 @@ export function Section({ id, eyebrow, title, lead, children, aside, className }
 export function PageHeader({ eyebrow, title, lead, children }: { eyebrow?: string; title: string; lead?: string; children?: ReactNode }) {
   return (
     <header className="container-page pt-10 pb-6 sm:pt-16 sm:pb-8">
-      {eyebrow && <p className="eyebrow mb-2">{eyebrow}</p>}
-      <h1 className="text-4xl sm:text-5xl">{title}</h1>
-      {lead && <p className="mt-4 max-w-2xl text-lg text-muted">{lead}</p>}
-      {children}
+      {eyebrow && <p className="eyebrow enter enter-1 mb-2">{eyebrow}</p>}
+      <h1 className="enter enter-2 text-4xl sm:text-5xl">{title}</h1>
+      {lead && <p className="enter enter-3 mt-4 max-w-2xl text-lg text-muted">{lead}</p>}
+      {children && <div className="enter enter-4">{children}</div>}
     </header>
   )
 }
@@ -115,12 +116,14 @@ export function FAQList({ items }: { items: { question: string; answer: string }
   return (
     <div className="divide-y divide-line rounded-card bg-surface px-6">
       {items.map((item) => (
-        <details key={item.question} className="group py-4">
+        <details key={item.question} className="faq group py-4">
           <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-bold">
             {item.question}
-            <span aria-hidden className="text-primary transition-transform group-open:rotate-45">+</span>
+            <span aria-hidden className="text-primary transition-transform duration-300 group-open:rotate-45">+</span>
           </summary>
-          <p className="mt-2 max-w-3xl text-muted">{item.answer}</p>
+          <div>
+            <p className="mt-2 max-w-3xl text-muted">{item.answer}</p>
+          </div>
         </details>
       ))}
     </div>

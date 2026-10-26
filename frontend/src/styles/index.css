@@ -84,6 +84,9 @@
     min-height: 100svh;
     background: var(--bg);
     color: var(--ink);
+    transition:
+      background-color 0.35s ease,
+      color 0.35s ease;
     font-family: var(--font-sans);
     font-size: 1.0625rem;
     line-height: 1.55;
@@ -173,5 +176,96 @@
   }
   & strong {
     font-weight: 700;
+  }
+}
+
+/* ========== MOTION ========== */
+@keyframes enter-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Route change: the new page eases in. */
+.page-enter {
+  animation: enter-up 0.45s var(--ease-out-expo) both;
+}
+
+/* Hero: staggered entrance without waiting for an observer (good for LCP). */
+.enter {
+  animation: enter-up 0.6s var(--ease-out-expo) both;
+}
+.enter-1 { animation-delay: 0.05s; }
+.enter-2 { animation-delay: 0.15s; }
+.enter-3 { animation-delay: 0.25s; }
+.enter-4 { animation-delay: 0.35s; }
+
+/* Scroll reveal (see components/ui/Reveal.tsx). */
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.6s var(--ease-out-expo),
+    transform 0.7s var(--ease-out-expo);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+/* Interactive surfaces. */
+.lift {
+  transition:
+    transform 0.3s var(--ease-out-expo),
+    box-shadow 0.3s var(--ease-out-expo),
+    filter 0.3s ease;
+}
+.lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 40px -24px color-mix(in oklab, var(--primary) 45%, transparent);
+}
+
+.banner-enter {
+  animation: slide-up 0.5s var(--ease-out-expo) both;
+  animation-delay: 0.4s;
+}
+
+details.faq > div {
+  animation: enter-up 0.3s var(--ease-out-expo) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-enter,
+  .enter,
+  .banner-enter,
+  details.faq > div {
+    animation: none;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .lift,
+  .lift:hover {
+    transform: none;
+    transition: none;
   }
 }

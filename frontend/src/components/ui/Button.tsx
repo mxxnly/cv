@@ -23,7 +23,7 @@ interface ButtonProps {
 }
 
 const VARIANTS: Record<Variant, string> = {
-  primary: 'bg-primary text-primary-ink hover:brightness-110 active:brightness-95',
+  primary: 'bg-primary text-primary-ink hover:brightness-110 hover:-translate-y-px active:brightness-95',
   secondary: 'bg-primary-soft text-ink hover:brightness-95 dark:hover:brightness-125',
   ghost: 'bg-transparent text-ink border border-line hover:bg-surface',
   link: 'bg-transparent text-primary font-bold underline-offset-4 hover:underline px-0 h-auto',
@@ -48,7 +48,7 @@ export function Button({
   ariaLabel,
 }: ButtonProps) {
   const classes = cn(
-    'inline-flex items-center justify-center gap-2 rounded-full font-bold tracking-tight transition-[filter,background-color] duration-200 disabled:pointer-events-none disabled:opacity-60',
+    'inline-flex items-center justify-center gap-2 rounded-full font-bold tracking-tight transition-[filter,background-color,transform] duration-200 active:scale-[0.97] disabled:pointer-events-none disabled:opacity-60',
     VARIANTS[variant],
     variant !== 'link' && SIZES[size],
     className,

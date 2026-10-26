@@ -56,7 +56,7 @@ export function ProductCard({ product, compact = false }: { product: ProductSumm
   if (compact) {
     return (
       <Link to={detailsHref} className="block">
-        <Card tint={product.tint} className="h-full transition-[filter] hover:brightness-[0.98] dark:hover:brightness-110">
+        <Card tint={product.tint} className="lift h-full">
           <ProductIconMark icon={product.icon} tint={product.tint} />
           <h3 className={cn('mt-5 text-lg font-bold', tintInk(product.tint))}>{product.name}</h3>
           <p className="mt-1 text-sm text-muted">
@@ -69,7 +69,7 @@ export function ProductCard({ product, compact = false }: { product: ProductSumm
   }
 
   return (
-    <Card tint={product.tint} className="flex h-full flex-col">
+    <Card tint={product.tint} className="lift flex h-full flex-col">
       <div className="flex items-start justify-between gap-3">
         <ProductIconMark icon={product.icon} tint={product.tint} />
         <StatusBadge status={product.availability} />

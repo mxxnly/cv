@@ -62,7 +62,7 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
       </div>
 
       {open && !minimal && (
-        <nav aria-label="Main" className="container-page pb-4 md:hidden">
+        <nav aria-label="Main" className="page-enter container-page pb-4 md:hidden">
           <ul className="flex flex-col gap-1 rounded-card bg-surface p-2">
             {NAV.map((key) => (
               <li key={key}>

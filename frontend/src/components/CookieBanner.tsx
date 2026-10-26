@@ -35,7 +35,7 @@ export function CookieBanner() {
   }
 
   return (
-    <div role="dialog" aria-live="polite" aria-label="Cookie" className="fixed inset-x-4 bottom-4 z-50 mx-auto max-w-3xl rounded-card border border-line bg-surface p-5 shadow-[0_20px_60px_-30px_rgb(0_0_0/0.4)] sm:p-6">
+    <div role="dialog" aria-live="polite" aria-label="Cookie" className="banner-enter fixed inset-x-4 bottom-4 z-50 mx-auto max-w-3xl rounded-card border border-line bg-surface p-5 shadow-[0_20px_60px_-30px_rgb(0_0_0/0.4)] sm:p-6">
       <p className="text-sm">
         {t.cookie.text}{' '}
         <Link className="font-bold text-primary underline-offset-4 hover:underline" to={href('/legal/cookies')}>{t.cookie.more}</Link>

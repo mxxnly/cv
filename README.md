@@ -103,8 +103,7 @@ make seed    # приклади продуктів (VPN, Invoice, приватн
 
 - [ ] `seller.tax_id`: РНОКПП або номер запису в ЄДР (зараз `0000000000`)
 - [ ] `seller.address`, `seller.address_en`: вказати номер будинку замість `***` (с. Липівці, вул. Юліана Ковальського)
-- [x] `contacts.email`, `contacts.telegram`: заповнено 26.10.2026
-- [ ] `contacts.phone` (`+380 00 000 00 00`)
+- [x] `contacts.email`, `contacts.telegram`, `contacts.phone`: заповнено 26.10.2026
 - [ ] `site.domain` (`mxxnly.example`) і такий самий `DOMAIN` у production-`.env`
 - [ ] `payment.provider` (`TBD`), `payment.link_base` (`https://example.com/pay/`); або `buy_url` у кожному тарифі
 - [ ] `pricing.tax_note`: підтвердити у бухгалтера формулювання про ПДВ і прибрати `tax_note_placeholder`

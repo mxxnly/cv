@@ -6,6 +6,9 @@ set -e
 if [ "$(id -u)" = "0" ] && id appuser >/dev/null 2>&1; then
   mkdir -p /app/media
   chown -R appuser:appuser /app/media
+  # setpriv keeps the environment, so point HOME at the unprivileged user's directory
+  # (gunicorn writes its control socket under $HOME).
+  export HOME=/home/appuser
   exec setpriv --reuid=appuser --regid=appuser --init-groups sh "$0" "$@"
 fi
 

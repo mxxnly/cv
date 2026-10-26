@@ -6,7 +6,6 @@ all company data comes from config/company.json (see `apps.core.company`).
 """
 
 import os
-import tempfile
 from pathlib import Path
 
 from django.core.exceptions import ImproperlyConfigured
@@ -128,10 +127,12 @@ else:
         }
     }
 
+# Shared between gunicorn workers (catalog version, API responses). Inside the app directory so the
+# unprivileged user owns it; override with CACHE_DIR.
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
-        "LOCATION": Path(tempfile.gettempdir()) / "mxxnly-labs-cache",
+        "LOCATION": env("CACHE_DIR") or str(BASE_DIR / "cache"),
     }
 }
 

@@ -78,7 +78,7 @@
   html {
     -webkit-text-size-adjust: 100%;
     text-rendering: optimizeLegibility;
-    scroll-behavior: smooth;
+    /* No smooth scrolling on route changes: the jump to the top must be instant. */
   }
   body {
     min-height: 100svh;
@@ -112,11 +112,6 @@
   }
   ::selection {
     background: color-mix(in oklab, var(--primary) 25%, transparent);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    html {
-      scroll-behavior: auto;
-    }
   }
 }
 

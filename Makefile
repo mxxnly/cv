@@ -213,13 +213,13 @@ logs-prod: $(ENV_FILE) ## [PROD] 📜 Tail logs (SERVICE=backend for one service
 	@$(PROD) logs -f --tail=200 $(SERVICE)
 
 shell-prod: $(ENV_FILE) ## [PROD] 🐚 Shell in a container (CONTAINER=backend)
-	@$(PROD) exec $(CONTAINER) sh
+	@$(PROD) exec --user appuser $(CONTAINER) sh
 
 migrate-prod: $(ENV_FILE) ## [PROD] 🗄️  Apply migrations
 	@$(PROD) exec -T backend python manage.py migrate --noinput
 
 createsuperuser-prod: $(ENV_FILE) ## [PROD] 👤 Create a Django superuser
-	@$(PROD) exec backend python manage.py createsuperuser
+	@$(PROD) exec --user appuser backend python manage.py createsuperuser
 
 backup-prod: $(ENV_FILE) ## [PROD] 💾 Dump the database to backups/
 	@mkdir -p $(BACKUP_DIR)

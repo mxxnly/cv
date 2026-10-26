@@ -42,7 +42,7 @@ ARG ALLOW_PLACEHOLDERS=0
 RUN SECRET_KEY=build-check ALLOW_PLACEHOLDERS=$ALLOW_PLACEHOLDERS python manage.py check_placeholders
 
 RUN useradd --create-home --uid 1000 appuser \
-    && mkdir -p /app/media \
+    && mkdir -p /app/media /app/cache \
     && chown -R appuser:appuser /app
 
 # No `USER` here on purpose: entrypoint.sh fixes media volume ownership as root

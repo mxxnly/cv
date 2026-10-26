@@ -14,9 +14,11 @@ function SkipLink() {
   )
 }
 
-/** Scrolls to the top on every navigation (or to the #hash target), restores on back/forward. */
+/** New navigation: jump to the top (or to the #hash target). Back/forward: restore the old position.
+    No custom getKey on purpose: keying by pathname would re-apply an old scroll position every time
+    the same page is opened from a link. */
 function Scroll() {
-  return <ScrollRestoration getKey={(location) => location.pathname + location.search} />
+  return <ScrollRestoration />
 }
 
 export function SiteLayout() {

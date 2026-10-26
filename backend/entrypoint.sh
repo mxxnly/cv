@@ -4,8 +4,8 @@ set -e
 # Production image starts as root only to hand the media volume to appuser
 # (a fresh named volume is root-owned), then re-executes itself unprivileged.
 if [ "$(id -u)" = "0" ] && id appuser >/dev/null 2>&1; then
-  mkdir -p /app/media
-  chown -R appuser:appuser /app/media
+  mkdir -p /app/media /app/cache
+  chown -R appuser:appuser /app/media /app/cache
   # setpriv keeps the environment, so point HOME at the unprivileged user's directory
   # (gunicorn writes its control socket under $HOME).
   export HOME=/home/appuser

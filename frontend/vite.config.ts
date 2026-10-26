@@ -91,6 +91,8 @@ export default defineConfig({
     host: true,
     port: Number(process.env.VITE_PORT ?? 5173),
     strictPort: true,
+    // Extra hostnames allowed to reach the dev server (e.g. a phone on the LAN or a test container).
+    allowedHosts: process.env.VITE_ALLOWED_HOSTS ? process.env.VITE_ALLOWED_HOSTS.split(',') : undefined,
     hmr: hmrClientPort ? { clientPort: hmrClientPort } : undefined,
     watch: process.env.VITE_USE_POLLING === 'true' ? { usePolling: true, interval: 300 } : undefined,
     proxy: Object.fromEntries(

@@ -101,7 +101,7 @@ make seed    # приклади продуктів (VPN, Invoice, приватн
 
 `config/company.json`:
 
-- [ ] `seller.tax_id`: РНОКПП або номер запису в ЄДР (зараз `0000000000`)
+- [ ] `seller.tax_id`: РНОКПП або номер запису в ЄДР (зараз приховано як `********`)
 - [ ] `seller.address`, `seller.address_en`: вказати номер будинку замість `***` (с. Липівці, вул. Юліана Ковальського)
 - [x] `contacts.email`, `contacts.telegram`, `contacts.phone`: заповнено 26.10.2026
 - [ ] `site.domain` (`mxxnly.example`) і такий самий `DOMAIN` у production-`.env`

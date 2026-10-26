@@ -18,9 +18,9 @@
     "legal_name": "ФОП Складан М. Я.",
     "legal_name_en": "Sole proprietor Skladan M. Ya.",
     "tax_id": {
-      "value": "0000000000",
+      "value": "********",
       "placeholder": true,
-      "note": "РНОКПП або номер запису в ЄДР"
+      "note": "РНОКПП або номер запису в ЄДР; приховано до запуску"
     },
     "address": {
       "value": "с. Липівці, вул. Юліана Ковальського, ***",

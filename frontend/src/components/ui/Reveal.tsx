@@ -24,7 +24,12 @@ export function Reveal({ children, delay = 0, className }: { children: ReactNode
       { rootMargin: '0px 0px -8% 0px' },
     )
     observer.observe(element)
-    return () => observer.disconnect()
+    // Safety net: never leave content hidden if the observer does not fire (odd viewports, crawlers).
+    const fallback = window.setTimeout(() => setVisible(true), 1500)
+    return () => {
+      observer.disconnect()
+      window.clearTimeout(fallback)
+    }
   }, [visible])
 
   return (

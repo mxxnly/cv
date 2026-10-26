@@ -30,19 +30,25 @@ def test_products_empty(client):
 
 def test_products_hide_drafts_and_private(client, seeded):
     slugs = {p["slug"] for p in client.get(reverse("products")).json()}
-    assert slugs == {"vpn", "invoice"}  # khonsu is private and a draft
+    assert slugs == {"vpn", "selene", "khonsu", "lunaflow"}
 
     vpn = Product.objects.get(slug="vpn")
     vpn.publish_status = Product.PublishStatus.DRAFT
     vpn.save()
     slugs = {p["slug"] for p in client.get(reverse("products")).json()}
-    assert slugs == {"invoice"}
+    assert slugs == {"selene", "khonsu", "lunaflow"}
 
 
 def test_private_product_is_never_public(client, seeded):
-    Product.objects.filter(slug="khonsu").update(publish_status=Product.PublishStatus.PUBLISHED)
-    assert "khonsu" not in {p["slug"] for p in client.get(reverse("products")).json()}
-    assert client.get(reverse("product-detail", args=["khonsu"])).status_code == 404
+    Product.objects.create(
+        name="MXXNLY Secret",
+        slug="secret",
+        tagline_uk="x",
+        publish_status=Product.PublishStatus.PUBLISHED,
+        is_private=True,
+    )
+    assert "secret" not in {p["slug"] for p in client.get(reverse("products")).json()}
+    assert client.get(reverse("product-detail", args=["secret"])).status_code == 404
 
 
 def test_product_list_min_price_and_example_label(client, seeded):
@@ -56,15 +62,15 @@ def test_product_list_min_price_and_example_label(client, seeded):
 
 
 def test_product_detail_localised(client, seeded):
-    uk = client.get(reverse("product-detail", args=["invoice"]), {"lang": "uk"}).json()
-    en = client.get(reverse("product-detail", args=["invoice"]), {"lang": "en"}).json()
+    uk = client.get(reverse("product-detail", args=["selene"]), {"lang": "uk"}).json()
+    en = client.get(reverse("product-detail", args=["selene"]), {"lang": "en"}).json()
     assert uk["tagline"].startswith("Парсер")
     assert en["tagline"].startswith("Parser")
     assert len(uk["plans"]) == 3
     assert uk["plans"][2]["price"] is None and uk["plans"][2]["period"] == "on_request"
-    assert uk["plans"][0]["buy_url"].endswith("/invoice/starter")
+    assert uk["plans"][0]["buy_url"].endswith("/selene/starter")
     assert len(uk["faq"]) == 2 and len(uk["features"]) == 6
-    assert uk["seo"]["title"].startswith("MXXNLY Invoice")
+    assert uk["seo"]["title"].startswith("MXXNLY Selene")
 
 
 def test_unpublished_plans_are_hidden(client, seeded):
@@ -92,7 +98,7 @@ def test_prices_endpoint(client, seeded):
     data = client.get(reverse("prices"), {"lang": "en"}).json()
     assert data["currency"] == "USD"
     assert data["refund_days"] == 14
-    assert {p["slug"] for p in data["products"]} == {"vpn", "invoice"}
+    assert {p["slug"] for p in data["products"]} == {"vpn", "selene"}  # only products with plans
     assert all(plan["is_example"] for p in data["products"] for plan in p["plans"])
 
 
@@ -150,13 +156,13 @@ def test_support_request(client, seeded):
         "email": "olena@example.com",
         "subject": "Не розпізнає скан",
         "message": "Скан PDF не розпізнається, помилка 500.",
-        "product": "invoice",
+        "product": "selene",
     }
     response = client.post(reverse("support"), payload, format="json")
     assert response.status_code == 201
     request = SupportRequest.objects.get()
     assert request.status == SupportRequest.Status.NEW
-    assert request.product.slug == "invoice"
+    assert request.product.slug == "selene"
 
 
 def test_forms_are_throttled(client, monkeypatch):
@@ -208,8 +214,12 @@ def test_robots_disallows_everything_while_placeholders_remain(client):
 def test_sitemap_lists_products_in_both_languages(client, seeded):
     body = client.get("/sitemap.xml").content.decode()
     assert "/uk/products/vpn</loc>" in body
-    assert "/en/products/invoice</loc>" in body
-    assert "khonsu" not in body
+    assert "/en/products/selene</loc>" in body
+    assert "/uk/products/khonsu</loc>" in body
+    Product.objects.create(
+        name="Secret", slug="secret", tagline_uk="x", publish_status="published", is_private=True
+    )
+    assert "secret" not in client.get("/sitemap.xml").content.decode()
     assert 'hreflang="x-default"' in body
 
 

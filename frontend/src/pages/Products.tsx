@@ -19,6 +19,7 @@ export function ProductsPage() {
   useSeo({ title: t.catalog.title, description: t.catalog.lead, path: '/products' })
 
   const visible = (products.data ?? []).filter((p) => filter === 'all' || p.availability === filter)
+  const hasSoon = (products.data ?? []).some((p) => p.availability === 'soon')
 
   return (
     <>
@@ -42,7 +43,7 @@ export function ProductsPage() {
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {products.isPending && [0, 1, 2].map((i) => <Skeleton key={i} className="h-96" />)}
           {visible.map((product) => <ProductCard key={product.slug} product={product} />)}
-          {products.isSuccess && (filter === 'all' || filter === 'soon') && (
+          {products.isSuccess && !hasSoon && (filter === 'all' || filter === 'soon') && (
             <div className="flex min-h-64 flex-col justify-center rounded-card border-2 border-dashed border-line p-6 sm:p-7">
               <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-mauve px-2.5 py-1 text-xs font-bold text-mauve-ink">{t.status.soon}</span>
               <h3 className="mt-4 text-2xl text-muted">{t.catalog.nextTitle}</h3>
@@ -51,7 +52,7 @@ export function ProductsPage() {
             </div>
           )}
         </div>
-        {products.isSuccess && visible.length === 0 && filter !== 'soon' && <p className="mt-6 text-muted">{t.catalog.empty}</p>}
+        {products.isSuccess && visible.length === 0 && (hasSoon || filter !== 'soon') && <p className="mt-6 text-muted">{t.catalog.empty}</p>}
         <div className="mt-6">
           <PriceNotes />
         </div>

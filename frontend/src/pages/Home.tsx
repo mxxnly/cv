@@ -17,7 +17,9 @@ export function HomePage() {
   const site = useSiteContent()
   useSeo({ title: company.brand.name, description: company.brand.description[lang], path: '/' })
 
-  const featured = products.data?.slice(0, 2) ?? []
+  const all = products.data ?? []
+  const heroProducts = all.slice(0, 4)
+  const featured = all.slice(0, 4)
   const testimonials = site.data?.testimonials ?? []
 
   return (
@@ -34,18 +36,22 @@ export function HomePage() {
           </div>
         </div>
         <div className="grid grid-cols-2 gap-3">
-          {products.isPending && [0, 1].map((i) => <Skeleton key={i} className="h-40" />)}
-          {featured.map((product) => <ProductCard key={product.slug} product={product} compact />)}
-          <Card className="h-full">
-            <span aria-hidden className="grid size-11 place-items-center rounded-2xl bg-primary-soft text-primary"><LifeBuoy className="size-5" strokeWidth={1.75} /></span>
-            <h3 className="mt-5 text-lg font-bold">{t.home.supportCard.title}</h3>
-            <p className="mt-1 text-sm text-muted">{site.data?.settings.support_sla ?? t.home.supportCard.text}</p>
-          </Card>
-          <Card tint="mauve" className="h-full">
-            <span aria-hidden className="grid size-11 place-items-center rounded-2xl bg-surface/80 text-mauve-ink"><Clock className="size-5" strokeWidth={1.75} /></span>
-            <h3 className="mt-5 text-lg font-bold text-mauve-ink">{t.home.next.title}</h3>
-            <p className="mt-1 text-sm text-muted">{t.home.next.text}</p>
-          </Card>
+          {products.isPending && [0, 1, 2, 3].map((i) => <Skeleton key={i} className="h-40" />)}
+          {heroProducts.map((product) => <ProductCard key={product.slug} product={product} compact />)}
+          {products.isSuccess && heroProducts.length < 4 && (
+            <Card className="h-full">
+              <span aria-hidden className="grid size-11 place-items-center rounded-2xl bg-primary-soft text-primary"><LifeBuoy className="size-5" strokeWidth={1.75} /></span>
+              <h3 className="mt-5 text-lg font-bold">{t.home.supportCard.title}</h3>
+              <p className="mt-1 text-sm text-muted">{site.data?.settings.support_sla ?? t.home.supportCard.text}</p>
+            </Card>
+          )}
+          {products.isSuccess && heroProducts.length < 3 && (
+            <Card tint="mauve" className="h-full">
+              <span aria-hidden className="grid size-11 place-items-center rounded-2xl bg-surface/80 text-mauve-ink"><Clock className="size-5" strokeWidth={1.75} /></span>
+              <h3 className="mt-5 text-lg font-bold text-mauve-ink">{t.home.next.title}</h3>
+              <p className="mt-1 text-sm text-muted">{t.home.next.text}</p>
+            </Card>
+          )}
         </div>
       </section>
 

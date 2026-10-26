@@ -92,8 +92,10 @@ export function ProductPage() {
             </div>
             <Card className="lg:justify-self-end">
               <PriceFrom price={product.min_price} size="lg" />
-              <p className="mt-3 text-sm text-muted">{t.price.updated}: {product.prices_updated_at ? new Date(product.prices_updated_at).toLocaleDateString(lang === 'uk' ? 'uk-UA' : 'en-US') : '—'}</p>
-              <Button className="mt-4" variant="link" to="#plans">{t.cta.allPrices} ↓</Button>
+              {product.prices_updated_at && (
+                <p className="mt-3 text-sm text-muted">{t.price.updated}: {new Date(product.prices_updated_at).toLocaleDateString(lang === 'uk' ? 'uk-UA' : 'en-US')}</p>
+              )}
+              {product.plans.length > 0 && <Button className="mt-4" variant="link" to="#plans">{t.cta.allPrices} ↓</Button>}
             </Card>
           </div>
         </div>

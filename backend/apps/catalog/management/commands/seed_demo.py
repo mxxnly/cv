@@ -1,4 +1,4 @@
-"""Example products with example prices. Everything created here is marked «приклад»."""
+"""The company products. Prices created here are examples and marked «приклад»."""
 
 from datetime import date
 
@@ -91,8 +91,8 @@ PRODUCTS = [
         ],
     },
     {
-        "name": "MXXNLY Invoice",
-        "slug": "invoice",
+        "name": "MXXNLY Selene",
+        "slug": "selene",
         "category": "documents",
         "availability": Product.Availability.BETA,
         "tint": Product.Tint.LAVENDER,
@@ -116,7 +116,7 @@ PRODUCTS = [
         "audience_en": "Small shops and warehouses\nAccounting firms\nDistributors with several receiving points",
         "support_terms_uk": "Відповідь протягом 1 робочого дня. У бета-версії можливі зміни інтерфейсу; оновлення входять у тариф.",
         "support_terms_en": "Reply within 1 business day. Interface may change during beta; updates are included.",
-        "seo_title_uk": "MXXNLY Invoice: парсер паперових накладних",
+        "seo_title_uk": "MXXNLY Selene: парсер паперових накладних",
         "seo_description_uk": "Розпізнавання паперових накладних із перевіркою за довідниками. Тарифи від 49 USD на місяць (приклад).",
         "plans": [
             (
@@ -148,12 +148,12 @@ PRODUCTS = [
             ),
         ],
         "links": [
-            (ProductLink.Kind.DEMO, "Демо", "Demo", "https://example.com/demo/invoice"),
+            (ProductLink.Kind.DEMO, "Демо", "Demo", "https://example.com/demo/selene"),
             (
                 ProductLink.Kind.DOCS,
                 "Документація",
                 "Documentation",
-                "https://example.com/docs/invoice",
+                "https://example.com/docs/selene",
             ),
         ],
         "faq": [
@@ -172,7 +172,6 @@ PRODUCTS = [
         ],
     },
     {
-        # Private project: draft, never shown on the site.
         "name": "MXXNLY Khonsu",
         "slug": "khonsu",
         "category": None,
@@ -180,9 +179,42 @@ PRODUCTS = [
         "tint": Product.Tint.MAUVE,
         "icon": Product.Icon.BOX,
         "cta": Product.Cta.CONTACT,
-        "is_private": True,
-        "tagline_uk": "Приватний проєкт (чернетка, не показується на сайті)",
-        "tagline_en": "Private project (draft, hidden from the site)",
+        "tagline_uk": "Готуємо до анонсу",
+        "tagline_en": "Getting ready for the announcement",
+        "description_uk": (
+            "MXXNLY Khonsu зараз у розробці. Опис можливостей, тарифи й дата запуску з'являться на цій "
+            "сторінці після анонсу.\n\nЗалиште контакт через форму, і ми повідомимо першими."
+        ),
+        "description_en": (
+            "MXXNLY Khonsu is in development. Features, pricing and the launch date will appear on this "
+            "page after the announcement.\n\nLeave your contact through the form and we will let you know first."
+        ),
+        "seo_title_uk": "MXXNLY Khonsu: скоро",
+        "seo_description_uk": "Новий продукт MXXNLY Labs у розробці. Деталі після анонсу.",
+        "plans": [],
+        "links": [],
+        "faq": [],
+    },
+    {
+        "name": "MXXNLY Lunaflow",
+        "slug": "lunaflow",
+        "category": None,
+        "availability": Product.Availability.SOON,
+        "tint": Product.Tint.LAVENDER,
+        "icon": Product.Icon.CHART,
+        "cta": Product.Cta.CONTACT,
+        "tagline_uk": "Готуємо до анонсу",
+        "tagline_en": "Getting ready for the announcement",
+        "description_uk": (
+            "MXXNLY Lunaflow зараз у розробці. Опис можливостей, тарифи й дата запуску з'являться на цій "
+            "сторінці після анонсу.\n\nЗалиште контакт через форму, і ми повідомимо першими."
+        ),
+        "description_en": (
+            "MXXNLY Lunaflow is in development. Features, pricing and the launch date will appear on this "
+            "page after the announcement.\n\nLeave your contact through the form and we will let you know first."
+        ),
+        "seo_title_uk": "MXXNLY Lunaflow: скоро",
+        "seo_description_uk": "Новий продукт MXXNLY Labs у розробці. Деталі після анонсу.",
         "plans": [],
         "links": [],
         "faq": [],
@@ -191,7 +223,7 @@ PRODUCTS = [
 
 
 class Command(BaseCommand):
-    help = "Create the example products (VPN, Invoice, private Khonsu draft) with example prices."
+    help = "Create the company products (VPN, Selene, Khonsu, Lunaflow) with example prices."
 
     def add_arguments(self, parser):
         parser.add_argument("--force", action="store_true", help="Delete existing products first.")
@@ -297,6 +329,4 @@ class Command(BaseCommand):
             if publish
             else "drafts (use --publish to show them on the site)"
         )
-        self.stdout.write(
-            self.style.SUCCESS(f"Example products created as {state}. Edit them at /admin/.")
-        )
+        self.stdout.write(self.style.SUCCESS(f"Products created as {state}. Edit them at /admin/."))

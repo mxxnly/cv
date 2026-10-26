@@ -32,6 +32,9 @@ BACKUP_DIR := backups
 CONTAINER ?= backend
 REGISTRY  ?= ghcr.io/mxxnly
 IMAGE_TAG ?= latest
+# Placeholder gate for local production builds: taken from .env (1 only for staging).
+ALLOW_PLACEHOLDERS ?= $(shell grep -E '^ALLOW_PLACEHOLDERS=' .env 2>/dev/null | cut -d= -f2)
+BUILD_ARGS := --build-arg ALLOW_PLACEHOLDERS=$(or $(ALLOW_PLACEHOLDERS),0)
 
 # ========== COLORS & TAGS ==========
 RESET      := \033[0m
@@ -196,8 +199,8 @@ deploy-prod: $(ENV_FILE) ## [PROD] 🚢 Deploy: pull from GHCR (domain) or build
 
 build-prod: ## [PROD] 🔨 Build PROD images locally (REGISTRY=…, IMAGE_TAG=…)
 	@printf "$(TAG_PROD) 🔨 Building PROD images as $(REGISTRY)/mxxnly-labs-*:$(IMAGE_TAG)...\n"
-	@docker build -f docker/Dockerfile.backend --target production -t $(REGISTRY)/mxxnly-labs-backend:$(IMAGE_TAG) .
-	@docker build -f docker/Dockerfile.frontend --target production -t $(REGISTRY)/mxxnly-labs-frontend:$(IMAGE_TAG) .
+	@docker build $(BUILD_ARGS) -f docker/Dockerfile.backend --target production -t $(REGISTRY)/mxxnly-labs-backend:$(IMAGE_TAG) .
+	@docker build $(BUILD_ARGS) -f docker/Dockerfile.frontend --target production -t $(REGISTRY)/mxxnly-labs-frontend:$(IMAGE_TAG) .
 	@docker build -f docker/Dockerfile.nginx -t $(REGISTRY)/mxxnly-labs-nginx:$(IMAGE_TAG) .
 
 restart-prod: $(ENV_FILE) ## [PROD] ♻️  Restart containers

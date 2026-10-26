@@ -17,29 +17,57 @@
     "legal_form": "ФОП",
     "legal_name": "ФОП Складан М. Я.",
     "legal_name_en": "Sole proprietor Skladan M. Ya.",
-    "tax_id": { "value": "0000000000", "placeholder": true, "note": "РНОКПП або номер запису в ЄДР" },
-    "address": { "value": "м. Львів, вул. Приклад, 1", "placeholder": true },
-    "address_en": { "value": "1 Pryklad St, Lviv, Ukraine", "placeholder": true },
+    "tax_id": {
+      "value": "0000000000",
+      "placeholder": true,
+      "note": "РНОКПП або номер запису в ЄДР"
+    },
+    "address": {
+      "value": "с. Липівці, вул. Юліана Ковальського, ***",
+      "placeholder": true,
+      "note": "Вказати номер будинку замість *** і зняти placeholder"
+    },
+    "address_en": {
+      "value": "Yuliana Kovalskoho St, ***, Lypivtsi village, Ukraine",
+      "placeholder": true,
+      "note": "House number pending"
+    },
     "country": "UA"
   },
   "contacts": {
-    "email": { "value": "hello@example.com", "placeholder": true },
-    "phone": { "value": "+380 00 000 00 00", "placeholder": true },
-    "telegram": { "value": "@mxxnly_placeholder", "placeholder": true },
+    "email": "maksskladan@gmail.com",
+    "phone": {
+      "value": "+380 00 000 00 00",
+      "placeholder": true
+    },
+    "telegram": "@whataboutsleep",
     "support_hours": {
       "uk": "Пн–Пт, 10:00–18:00 (Київ)",
       "en": "Mon–Fri, 10:00–18:00 (Kyiv time)"
     }
   },
   "site": {
-    "domain": { "value": "mxxnly.example", "placeholder": true },
+    "domain": {
+      "value": "mxxnly.example",
+      "placeholder": true
+    },
     "default_language": "uk",
-    "languages": ["uk", "en"],
+    "languages": [
+      "uk",
+      "en"
+    ],
     "launch_year": 2026
   },
   "payment": {
-    "provider": { "value": "TBD", "placeholder": true, "note": "Назва платіжного провайдера; оплата лише за зовнішнім посиланням, дані карток на сайті не обробляються" },
-    "link_base": { "value": "https://example.com/pay/", "placeholder": true },
+    "provider": {
+      "value": "TBD",
+      "placeholder": true,
+      "note": "Назва платіжного провайдера; оплата лише за зовнішнім посиланням, дані карток на сайті не обробляються"
+    },
+    "link_base": {
+      "value": "https://example.com/pay/",
+      "placeholder": true
+    },
     "cards_processed_on_site": false
   },
   "pricing": {
@@ -52,12 +80,27 @@
     "tax_note_placeholder": true
   },
   "analytics": {
-    "ga4_measurement_id": { "value": "G-PLACEHOLDER0", "placeholder": true },
-    "ads_conversion_id": { "value": "AW-0000000000", "placeholder": true },
+    "ga4_measurement_id": {
+      "value": "G-PLACEHOLDER0",
+      "placeholder": true
+    },
+    "ads_conversion_id": {
+      "value": "AW-0000000000",
+      "placeholder": true
+    },
     "ads_conversion_labels": {
-      "lead": { "value": "LEAD_PLACEHOLDER", "placeholder": true },
-      "checkout": { "value": "CHECKOUT_PLACEHOLDER", "placeholder": true },
-      "purchase": { "value": "PURCHASE_PLACEHOLDER", "placeholder": true }
+      "lead": {
+        "value": "LEAD_PLACEHOLDER",
+        "placeholder": true
+      },
+      "checkout": {
+        "value": "CHECKOUT_PLACEHOLDER",
+        "placeholder": true
+      },
+      "purchase": {
+        "value": "PURCHASE_PLACEHOLDER",
+        "placeholder": true
+      }
     }
   },
   "legal": {

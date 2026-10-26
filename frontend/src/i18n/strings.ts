@@ -162,7 +162,6 @@ const uk = {
   },
   legal: {
     draft: 'ЧЕРНЕТКА, потребує перевірки юристом',
-    enNote: 'Англійська версія готується. Юридично чинною є українська редакція нижче.',
     docs: { offer: 'Публічна оферта', privacy: 'Політика конфіденційності', terms: 'Умови використання', refund: 'Політика повернення', cookies: 'Cookie-політика' },
   },
   footer: {
@@ -329,7 +328,6 @@ const en: Dictionary = {
   },
   legal: {
     draft: 'DRAFT, pending legal review',
-    enNote: 'The English version is being prepared. The Ukrainian text below is the legally binding one.',
     docs: { offer: 'Public offer', privacy: 'Privacy policy', terms: 'Terms of use', refund: 'Refund policy', cookies: 'Cookie policy' },
   },
   footer: {

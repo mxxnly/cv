@@ -8,13 +8,25 @@ import { fillTokens } from '../lib/format'
 import { useSeo } from '../lib/seo'
 import { NotFoundPage } from './NotFound'
 
-import cookies from '../content/legal/cookies.uk.md?raw'
-import offer from '../content/legal/offer.uk.md?raw'
-import privacy from '../content/legal/privacy.uk.md?raw'
-import refund from '../content/legal/refund.uk.md?raw'
-import terms from '../content/legal/terms.uk.md?raw'
+import cookiesEn from '../content/legal/cookies.en.md?raw'
+import cookiesUk from '../content/legal/cookies.uk.md?raw'
+import offerEn from '../content/legal/offer.en.md?raw'
+import offerUk from '../content/legal/offer.uk.md?raw'
+import privacyEn from '../content/legal/privacy.en.md?raw'
+import privacyUk from '../content/legal/privacy.uk.md?raw'
+import refundEn from '../content/legal/refund.en.md?raw'
+import refundUk from '../content/legal/refund.uk.md?raw'
+import termsEn from '../content/legal/terms.en.md?raw'
+import termsUk from '../content/legal/terms.uk.md?raw'
 
-const DOCS = { offer, privacy, terms, refund, cookies } as const
+/* Ukrainian is the legally binding version; English files are courtesy translations. */
+const DOCS = {
+  offer: { uk: offerUk, en: offerEn },
+  privacy: { uk: privacyUk, en: privacyEn },
+  terms: { uk: termsUk, en: termsEn },
+  refund: { uk: refundUk, en: refundEn },
+  cookies: { uk: cookiesUk, en: cookiesEn },
+} as const
 export type LegalDoc = keyof typeof DOCS
 const ORDER: LegalDoc[] = ['offer', 'privacy', 'terms', 'refund', 'cookies']
 
@@ -22,7 +34,7 @@ function isLegalDoc(value: string | undefined): value is LegalDoc {
   return value !== undefined && value in DOCS
 }
 
-/** Legal texts are Ukrainian drafts; company data is filled from config/company.json tokens. */
+/** Legal drafts in both languages; company data is filled from config/company.json tokens. */
 export function LegalPage() {
   const { doc } = useParams()
   const { t, lang, href } = useI18n()
@@ -32,9 +44,9 @@ export function LegalPage() {
 
   const html = useMemo(() => {
     if (!valid) return ''
-    const text = fillTokens(DOCS[doc], companyValue)
+    const text = fillTokens(DOCS[doc][lang] || DOCS[doc].uk, companyValue)
     return marked.parse(text, { async: false }) as string
-  }, [doc, valid])
+  }, [doc, lang, valid])
 
   if (!valid) return <NotFoundPage />
 
@@ -53,9 +65,8 @@ export function LegalPage() {
       </nav>
       <article className="max-w-3xl">
         <p className="mb-6 inline-block rounded-full bg-warning px-3 py-1 text-xs font-bold tracking-wide text-warning-ink uppercase">{t.legal.draft}</p>
-        {lang === 'en' && <p className="mb-6 rounded-card-sm bg-lavender px-4 py-3 text-sm text-lavender-ink">{t.legal.enNote}</p>}
-        <div lang="uk" className="prose-legal" dangerouslySetInnerHTML={{ __html: html }} />
-        <p className="mt-10 text-sm text-muted">{company.brand.name} · {company.seller.legal_name}</p>
+        <div lang={lang} className="prose-legal" dangerouslySetInnerHTML={{ __html: html }} />
+        <p className="mt-10 text-sm text-muted">{company.brand.name} · {lang === 'uk' ? company.seller.legal_name : company.seller.legal_name_en}</p>
       </article>
     </div>
   )

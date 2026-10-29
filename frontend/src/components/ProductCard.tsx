@@ -79,7 +79,7 @@ export function ProductCard({ product, compact = false }: { product: ProductSumm
       <div className="mt-6">
         <PriceFrom price={product.min_price} />
       </div>
-      <div className="mt-6 flex flex-wrap gap-2">
+      <div className="mt-6 flex flex-wrap gap-3">
         <PrimaryCta product={product} />
         <Button variant="secondary" to={detailsHref} icon={<ArrowRight className="size-4" />}>{t.cta.details}</Button>
       </div>

@@ -2,11 +2,13 @@
 
 @custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
 
-/* ========== DESIGN TOKENS (design-proposals/designs/04-soft-violet) ========== */
+/* ========== DESIGN TOKENS (Riso: two-colour overprint, design-proposals/round-2) ========== */
 @theme {
-  --font-sans: 'Manrope Variable', 'Avenir Next', ui-sans-serif, system-ui, sans-serif;
-  --radius-card: 1.375rem;
-  --radius-card-sm: 0.875rem;
+  /* Bricolage has no Cyrillic: Onest takes over for those glyphs. */
+  --font-sans: 'Bricolage Grotesque Variable', 'Onest Variable', 'Avenir Next', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --radius-card: 0.25rem;
+  --radius-card-sm: 0.1875rem;
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -19,6 +21,8 @@
   --color-primary-ink: var(--primary-ink);
   --color-primary-soft: var(--primary-soft);
   --color-line: var(--line);
+  --color-pink: var(--pink);
+  --color-pink-ink: var(--pink-ink);
   --color-lavender: var(--lavender);
   --color-lavender-ink: var(--lavender-ink);
   --color-periwinkle: var(--periwinkle);
@@ -30,47 +34,55 @@
   --color-danger: var(--danger);
 }
 
+/* Paper, ink, cobalt (primary) and fluorescent pink. The tint names are kept from the previous
+   palette: lavender = pink wash, periwinkle = cobalt wash, mauve = the overprint of both. */
 :root,
 [data-theme='light'] {
   color-scheme: light;
-  --bg: #f8f7fb;
-  --surface: #ffffff;
-  --ink: #1f1b2e;
-  --muted: #645e78;
-  --primary: #5b3fd1;
+  --riso-blend: multiply;
+  --bg: #ecedf3;
+  --surface: #f8f8fc;
+  --ink: #1b1d4a;
+  --muted: #484b78;
+  --primary: #2f45e0;
   --primary-ink: #ffffff;
-  --primary-soft: #ece8f8;
-  --line: #d9d4e8;
-  --lavender: #ece8f8;
-  --lavender-ink: #3f2c8f;
-  --periwinkle: #e6e9fa;
-  --periwinkle-ink: #2f3f8c;
-  --mauve: #f4e8f1;
-  --mauve-ink: #7a3b6a;
-  --warning: #fff1c2;
-  --warning-ink: #5c4300;
-  --danger: #b3261e;
+  --primary-soft: #dadffa;
+  --line: #b6b9d9;
+  --pink: #ff4fa0;
+  --pink-ink: #c0186e;
+  --lavender: #ffd1e5;
+  --lavender-ink: #8c1a55;
+  --periwinkle: #d3d9fb;
+  --periwinkle-ink: #1f2fa6;
+  --mauve: #d9c8f2;
+  --mauve-ink: #4a2a8c;
+  --warning: #ffe94d;
+  --warning-ink: #4a3e00;
+  --danger: #c0143c;
 }
 
 [data-theme='dark'] {
   color-scheme: dark;
-  --bg: #15121f;
-  --surface: #1d1929;
-  --ink: #ece9f5;
-  --muted: #a49dbd;
-  --primary: #b9a6ff;
-  --primary-ink: #15102a;
-  --primary-soft: #2b2542;
-  --line: #322b47;
-  --lavender: #241e36;
-  --lavender-ink: #c9bbff;
-  --periwinkle: #211f3a;
-  --periwinkle-ink: #b4bdff;
-  --mauve: #2a1f33;
-  --mauve-ink: #e6b7d9;
-  --warning: #3d3312;
-  --warning-ink: #f3d77a;
-  --danger: #ff8a80;
+  --riso-blend: screen;
+  --bg: #14153a;
+  --surface: #1c1e4c;
+  --ink: #ecedf3;
+  --muted: #a9acd6;
+  --primary: #8b98ff;
+  --primary-ink: #0f1033;
+  --primary-soft: #282b66;
+  --line: #373b78;
+  --pink: #ff6eb2;
+  --pink-ink: #ff9ccb;
+  --lavender: #4a1d46;
+  --lavender-ink: #ffa6d0;
+  --periwinkle: #212874;
+  --periwinkle-ink: #b4beff;
+  --mauve: #3a2872;
+  --mauve-ink: #d6bdff;
+  --warning: #4a4410;
+  --warning-ink: #ffe94d;
+  --danger: #ff7a90;
 }
 
 /* ========== BASE ========== */
@@ -81,6 +93,7 @@
     /* No smooth scrolling on route changes: the jump to the top must be instant. */
   }
   body {
+    position: relative;
     min-height: 100svh;
     background: var(--bg);
     color: var(--ink);
@@ -94,25 +107,50 @@
     -moz-osx-font-smoothing: grayscale;
     overflow-x: clip;
   }
+  /* Halftone field in the top corner of every page: pink dots fading out, like a screen-print proof. */
+  body::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    right: 0;
+    width: min(34rem, 90vw);
+    aspect-ratio: 1;
+    pointer-events: none;
+    background: radial-gradient(var(--pink) 27%, transparent 29%) 0 0 / 0.95rem 0.95rem;
+    mix-blend-mode: var(--riso-blend);
+    opacity: 0.55;
+    -webkit-mask-image: radial-gradient(circle at 78% 22%, #000 8%, transparent 62%);
+    mask-image: radial-gradient(circle at 78% 22%, #000 8%, transparent 62%);
+  }
+  [data-theme='dark'] body::before {
+    mix-blend-mode: normal;
+    opacity: 0.22;
+  }
   h1,
   h2,
   h3 {
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1.1;
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    line-height: 1.02;
     text-wrap: balance;
   }
   p {
     text-wrap: pretty;
   }
   :focus-visible {
-    outline: 2px solid var(--primary);
+    outline: 3px solid var(--primary);
     outline-offset: 3px;
-    border-radius: 6px;
+    border-radius: 2px;
   }
   ::selection {
-    background: color-mix(in oklab, var(--primary) 25%, transparent);
+    background: color-mix(in oklab, var(--pink) 45%, transparent);
   }
+}
+
+/* Overprint blend for the logo's two inks (set per theme through --riso-blend). */
+.riso-ink {
+  mix-blend-mode: var(--riso-blend);
 }
 
 /* ========== UTILITIES ========== */
@@ -130,11 +168,17 @@
 }
 
 @utility eyebrow {
+  font-family: var(--font-mono);
   font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
+  font-weight: 600;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--primary);
+  color: var(--pink-ink);
+}
+
+/* Misregistered second ink under a headline (pink printed slightly off the first colour). */
+@utility riso-title {
+  text-shadow: 0.045em 0.04em 0 var(--pink);
 }
 
 @utility card {
@@ -168,6 +212,7 @@
   & a {
     color: var(--primary);
     text-decoration: underline;
+    text-underline-offset: 3px;
   }
   & strong {
     font-weight: 700;
@@ -232,9 +277,10 @@
     box-shadow 0.3s var(--ease-out-expo),
     filter 0.3s ease;
 }
+/* Hover shifts the card off its "plate" like a print out of register. */
 .lift:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 18px 40px -24px color-mix(in oklab, var(--primary) 45%, transparent);
+  transform: translate(-3px, -3px);
+  box-shadow: 5px 5px 0 var(--pink);
 }
 
 .banner-enter {

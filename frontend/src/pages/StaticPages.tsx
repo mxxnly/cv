@@ -51,7 +51,7 @@ export function AboutPage() {
       <section className="container-page grid gap-6 pb-16 lg:grid-cols-[1.5fr_1fr]">
         <div className="space-y-4 text-lg">
           {site.data?.settings.about_is_placeholder && (
-            <p className="inline-block rounded-full bg-warning px-3 py-1 text-xs font-bold text-warning-ink">{t.about.placeholderNote}</p>
+            <p className="inline-block rounded-sm bg-warning px-3 py-1 text-xs font-bold text-warning-ink">{t.about.placeholderNote}</p>
           )}
           {about.length > 0 ? about.map((p) => <p key={p}>{p}</p>) : <p className="text-muted">{company.brand.description[lang]}</p>}
         </div>
@@ -112,7 +112,7 @@ export function ErrorPage() {
       <section className="container-page py-24 text-center">
         <p className="eyebrow mb-3">404</p>
         <h1 className="text-4xl">{lang === 'en' ? 'Page not found' : 'Сторінку не знайдено'}</h1>
-        <Link className="mt-8 inline-flex h-12 items-center rounded-full bg-primary px-6 font-bold text-primary-ink" to={`/${lang}`}>{copy.home}</Link>
+        <Link className="mt-8 inline-flex h-12 items-center rounded-sm bg-primary px-6 font-bold text-primary-ink" to={`/${lang}`}>{copy.home}</Link>
       </section>
     )
   }
@@ -122,8 +122,8 @@ export function ErrorPage() {
       <h1 className="text-4xl">{copy.title}</h1>
       <p className="mt-3 text-muted">{copy.text}</p>
       <div className="mt-8 flex justify-center gap-3">
-        <button type="button" className="inline-flex h-12 items-center rounded-full bg-primary px-6 font-bold text-primary-ink" onClick={() => location.reload()}>{copy.retry}</button>
-        <Link className="inline-flex h-12 items-center rounded-full bg-primary-soft px-6 font-bold" to={`/${lang}`}>{copy.home}</Link>
+        <button type="button" className="inline-flex h-12 items-center rounded-sm bg-primary px-6 font-bold text-primary-ink" onClick={() => location.reload()}>{copy.retry}</button>
+        <Link className="inline-flex h-12 items-center rounded-sm bg-primary-soft px-6 font-bold" to={`/${lang}`}>{copy.home}</Link>
       </div>
     </section>
   )

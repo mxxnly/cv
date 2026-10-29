@@ -4,8 +4,8 @@
   "description": "We build and maintain software products",
   "start_url": "/en",
   "display": "browser",
-  "background_color": "#F8F7FB",
-  "theme_color": "#5B3FD1",
+  "background_color": "#ECEDF3",
+  "theme_color": "#2F45E0",
   "icons": [
     {
       "src": "/icon-192.png",

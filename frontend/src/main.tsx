@@ -1,4 +1,7 @@
-import '@fontsource-variable/manrope'
+import '@fontsource-variable/bricolage-grotesque'
+import '@fontsource-variable/onest'
+import '@fontsource/ibm-plex-mono/500.css'
+import '@fontsource/ibm-plex-mono/600.css'
 import './styles/index.css'
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'

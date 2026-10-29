@@ -31,7 +31,7 @@ export function LandingPage() {
 
   return (
     <>
-      <section className={cn('rounded-b-[2rem]', tintBg(product.tint))}>
+      <section className={cn('border-b border-line', tintBg(product.tint))}>
         <div className="container-page grid gap-8 py-14 sm:py-20 lg:grid-cols-[1.3fr_1fr] lg:items-center">
           <div>
             <div className="flex items-center gap-3">

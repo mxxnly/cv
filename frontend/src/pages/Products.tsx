@@ -32,7 +32,7 @@ export function ProductsPage() {
               type="button"
               onClick={() => setFilter(key)}
               aria-pressed={filter === key}
-              className={cn('h-11 rounded-full px-5 text-sm font-bold transition-colors', filter === key ? 'bg-primary text-primary-ink' : 'bg-primary-soft text-ink')}
+              className={cn('h-11 rounded-sm px-5 text-sm font-bold transition-colors', filter === key ? 'bg-primary text-primary-ink' : 'bg-primary-soft text-ink')}
             >
               {t.catalog.filters[key]}
             </button>
@@ -50,7 +50,7 @@ export function ProductsPage() {
           ))}
           {products.isSuccess && !hasSoon && (filter === 'all' || filter === 'soon') && (
             <div className="flex min-h-64 flex-col justify-center rounded-card border-2 border-dashed border-line p-6 sm:p-7">
-              <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-mauve px-2.5 py-1 text-xs font-bold text-mauve-ink">{t.status.soon}</span>
+              <span className="inline-flex w-fit items-center gap-1.5 rounded-sm bg-mauve px-2.5 py-1 text-xs font-bold text-mauve-ink">{t.status.soon}</span>
               <h3 className="mt-4 text-2xl text-muted">{t.catalog.nextTitle}</h3>
               <p className="mt-2 text-muted">{t.catalog.nextText}</p>
               <Link className="mt-4 font-bold text-primary" to={`${href('/contacts')}?topic=general`}>{t.cta.notify} →</Link>

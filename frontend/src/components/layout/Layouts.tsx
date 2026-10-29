@@ -8,7 +8,7 @@ import { Header } from './Header'
 function SkipLink() {
   const { t } = useI18n()
   return (
-    <a href="#main" className="fixed top-3 left-3 z-[100] -translate-y-24 rounded-full bg-surface px-4 py-2 text-sm font-bold transition-transform focus:translate-y-0">
+    <a href="#main" className="fixed top-3 left-3 z-[100] -translate-y-24 rounded-sm bg-surface px-4 py-2 text-sm font-bold transition-transform focus:translate-y-0">
       {t.skipToContent}
     </a>
   )

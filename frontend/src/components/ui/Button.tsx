@@ -23,14 +23,15 @@ interface ButtonProps {
 }
 
 const VARIANTS: Record<Variant, string> = {
-  primary: 'bg-primary text-primary-ink hover:brightness-110 hover:-translate-y-px active:brightness-95',
-  secondary: 'bg-primary-soft text-ink hover:brightness-95 dark:hover:brightness-125',
+  primary:
+    'bg-primary text-primary-ink shadow-[3px_3px_0_var(--pink)] hover:-translate-x-px hover:-translate-y-px hover:shadow-[4px_4px_0_var(--pink)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none',
+  secondary: 'border-2 border-ink bg-transparent text-ink hover:bg-ink hover:text-bg',
   ghost: 'bg-transparent text-ink border border-line hover:bg-surface',
-  link: 'bg-transparent text-primary font-bold underline-offset-4 hover:underline px-0 h-auto',
+  link: 'h-auto justify-start bg-transparent px-0 font-bold text-primary underline-offset-4 hover:underline',
 }
 
 const SIZES: Record<Size, string> = {
-  md: 'h-12 px-6 text-[0.95rem]',
+  md: 'h-12 px-6 text-base',
   sm: 'h-10 px-4 text-sm',
 }
 
@@ -48,7 +49,7 @@ export function Button({
   ariaLabel,
 }: ButtonProps) {
   const classes = cn(
-    'inline-flex items-center justify-center gap-2 rounded-full font-bold tracking-tight transition-[filter,background-color,transform] duration-200 active:scale-[0.97] disabled:pointer-events-none disabled:opacity-60',
+    'inline-flex items-center justify-center gap-2 rounded-sm font-bold tracking-tight transition-[background-color,color,transform,box-shadow] duration-150 disabled:pointer-events-none disabled:opacity-60',
     VARIANTS[variant],
     variant !== 'link' && SIZES[size],
     className,

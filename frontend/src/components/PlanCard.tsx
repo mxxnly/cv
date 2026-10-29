@@ -15,7 +15,7 @@ export function PlanCard({ plan, product }: { plan: Plan; product: Product }) {
   return (
     <article className={cn('lift relative flex flex-col rounded-card bg-surface p-6', plan.is_recommended && 'ring-2 ring-primary')}>
       {plan.is_recommended && (
-        <span className="absolute -top-3 left-6 rounded-full bg-primary px-3 py-1 text-xs font-bold text-primary-ink">{t.price.recommended}</span>
+        <span className="absolute -top-3 left-6 rounded-sm bg-primary px-3 py-1 text-xs font-bold text-primary-ink">{t.price.recommended}</span>
       )}
       <h3 className="text-xl">{plan.name}</h3>
       {plan.limit && <p className="mt-1 text-sm text-muted">{plan.limit}</p>}

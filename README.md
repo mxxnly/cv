@@ -228,7 +228,7 @@ make seed    # продукти (VPN, Selene, Khonsu, Lunaflow); ціни-при
 - Сторінка `/lp/:slug` має `noindex`: вона для реклами, канонічна версія є на `/products/:slug`.
 - Сайт є SPA: Google рендерить JavaScript, але для максимальної швидкості індексації можна додати
   попередній рендер (prerender) пізніше; дані завантажуються одним малим запитом, LCP є текстом.
-- Швидкість: один шрифт (Manrope, самохостинг), без анімаційних бібліотек, без розмиття, CSS ~10 кБ gzip,
+- Швидкість: шрифти самохостяться (Bricolage Grotesque + Onest для кирилиці, IBM Plex Mono для міток), без анімаційних бібліотек, без розмиття, CSS ~10 кБ gzip,
   JS ~150 кБ gzip (React + router + query).
 
 ## Безпека і персональні дані
@@ -330,7 +330,7 @@ frontend/
     pages/                  Home, Products, ProductPage, Prices, StaticPages, Legal, Landing
     content/legal/          чернетки юридичних текстів (uk, markdown)
   public/                   favicon.svg, icon-*.png, apple-touch-icon.png, og-image.png, site.webmanifest
-design-proposals/           етап 2: варіанти логотипа й дизайну; обрано 04-soft-violet + 04-lattice-violet
+design-proposals/           етап 2: варіанти логотипа й дизайну; раунд 1 (не обрано), раунд 2: round-2/, обрано 01 Riso (двофарбний друк: папір, чорнило, кобальт, рожевий)
 docs/google-ads-vpn-policy.md   перевірка політик Google Ads щодо VPN
 docker/, nginx/             образи, compose-оверлеї, шлюз (robots/sitemap → Django)
 .github/workflows/          ci.yml, deploy.yml

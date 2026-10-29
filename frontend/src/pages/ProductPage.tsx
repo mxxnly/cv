@@ -72,7 +72,7 @@ export function ProductPage() {
 
   return (
     <>
-      <section className={cn('rounded-b-[2rem]', tintBg(product.tint))}>
+      <section className={cn('border-b border-line', tintBg(product.tint))}>
         <div className="container-page py-12 sm:py-16">
           <nav aria-label="Breadcrumb" className="mb-6 text-sm text-muted">
             <Link to={href('/')} className="hover:text-ink">{t.nav.home}</Link> / <Link to={href('/products')} className="hover:text-ink">{t.nav.products}</Link> / <span className="text-ink">{product.name}</span>

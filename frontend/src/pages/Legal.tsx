@@ -56,7 +56,7 @@ export function LegalPage() {
         <ul className="flex flex-wrap gap-2 lg:flex-col">
           {ORDER.map((key) => (
             <li key={key}>
-              <Link to={href(`/legal/${key}`)} aria-current={key === doc ? 'page' : undefined} className={key === doc ? 'inline-block rounded-full bg-primary-soft px-4 py-2 text-sm font-bold' : 'inline-block rounded-full px-4 py-2 text-sm font-semibold text-muted hover:text-ink'}>
+              <Link to={href(`/legal/${key}`)} aria-current={key === doc ? 'page' : undefined} className={key === doc ? 'inline-block rounded-sm bg-primary-soft px-4 py-2 text-sm font-bold' : 'inline-block rounded-sm px-4 py-2 text-sm font-semibold text-muted hover:text-ink'}>
                 {t.legal.docs[key]}
               </Link>
             </li>
@@ -64,7 +64,7 @@ export function LegalPage() {
         </ul>
       </nav>
       <article className="max-w-3xl">
-        <p className="mb-6 inline-block rounded-full bg-warning px-3 py-1 text-xs font-bold tracking-wide text-warning-ink uppercase">{t.legal.draft}</p>
+        <p className="mb-6 inline-block rounded-sm bg-warning px-3 py-1 text-xs font-bold tracking-wide text-warning-ink uppercase">{t.legal.draft}</p>
         <div lang={lang} className="prose-legal" dangerouslySetInnerHTML={{ __html: html }} />
         <p className="mt-10 text-sm text-muted">{company.brand.name} · {lang === 'uk' ? company.seller.legal_name : company.seller.legal_name_en}</p>
       </article>

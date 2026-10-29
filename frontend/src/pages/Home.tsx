@@ -29,7 +29,7 @@ export function HomePage() {
       <section className="container-page grid items-center gap-10 py-14 sm:py-20 lg:grid-cols-[1.1fr_1fr]">
         <div>
           <p className="eyebrow enter enter-1 mb-3">{t.home.eyebrow}</p>
-          <h1 className="enter enter-2 text-4xl sm:text-5xl lg:text-6xl">{company.brand.tagline[lang]}</h1>
+          <h1 className="enter enter-2 riso-title text-[2.6rem] sm:text-6xl">{company.brand.tagline[lang]}</h1>
           <p className="enter enter-3 mt-5 max-w-xl text-lg text-muted">{company.brand.description[lang]}</p>
           <div className="enter enter-4 mt-8 flex flex-wrap gap-3">
             <Button to={href('/products')}>{t.cta.catalog}</Button>
@@ -45,14 +45,14 @@ export function HomePage() {
           ))}
           {products.isSuccess && heroProducts.length < 4 && (
             <Card className="h-full">
-              <span aria-hidden className="grid size-11 place-items-center rounded-2xl bg-primary-soft text-primary"><LifeBuoy className="size-5" strokeWidth={1.75} /></span>
+              <span aria-hidden className="grid size-11 place-items-center rounded-sm border border-current/30 bg-primary-soft text-primary"><LifeBuoy className="size-5" strokeWidth={1.75} /></span>
               <h3 className="mt-5 text-lg font-bold">{t.home.supportCard.title}</h3>
               <p className="mt-1 text-sm text-muted">{site.data?.settings.support_sla ?? t.home.supportCard.text}</p>
             </Card>
           )}
           {products.isSuccess && heroProducts.length < 3 && (
             <Card tint="mauve" className="h-full">
-              <span aria-hidden className="grid size-11 place-items-center rounded-2xl bg-surface/80 text-mauve-ink"><Clock className="size-5" strokeWidth={1.75} /></span>
+              <span aria-hidden className="grid size-11 place-items-center rounded-sm bg-surface/80 text-mauve-ink"><Clock className="size-5" strokeWidth={1.75} /></span>
               <h3 className="mt-5 text-lg font-bold text-mauve-ink">{t.home.next.title}</h3>
               <p className="mt-1 text-sm text-muted">{t.home.next.text}</p>
             </Card>

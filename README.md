@@ -6,7 +6,7 @@
 
 **Стек:** Django 5.2 · DRF · Unfold · PostgreSQL 17 · React 19 · TypeScript · Vite · Tailwind CSS 4 ·
 react-router · Docker · nginx · Traefik · GitHub Actions.
-
+.
 > **Стан:** усі заглушки ще на місці (див. «Замінити перед запуском»). Поки вони є, production-збірка
 > навмисно падає, а сайт закритий від індексації.
 

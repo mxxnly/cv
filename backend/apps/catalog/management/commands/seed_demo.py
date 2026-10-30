@@ -1,4 +1,5 @@
-"""The company products. Prices created here are examples and marked «приклад»."""
+"""The company products. Prices created here are examples and marked «приклад», except Khonsu's
+(real prices from khonsu.cc, see _seed_portfolio.py)."""
 
 from datetime import date
 
@@ -6,6 +7,8 @@ from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
 
 from apps.catalog.models import Category, Plan, Product, ProductFAQ, ProductLink, SiteSettings
+
+from ._seed_portfolio import CATEGORIES, PORTFOLIO
 
 PRODUCTS = [
     {
@@ -175,63 +178,12 @@ PRODUCTS = [
             ),
         ],
     },
-    {
-        "name": "MXXNLY Khonsu",
-        "slug": "khonsu",
-        "category": None,
-        "availability": Product.Availability.SOON,
-        "tint": Product.Tint.MAUVE,
-        "icon": Product.Icon.BOX,
-        "cta": Product.Cta.CONTACT,
-        "tagline_uk": "Готуємо до анонсу",
-        "tagline_en": "Getting ready for the announcement",
-        "description_uk": (
-            "MXXNLY Khonsu зараз у розробці. Опис можливостей, тарифи й дата запуску з'являться на цій "
-            "сторінці після анонсу.\n\nЗалиште контакт через форму, і ми повідомимо першими."
-        ),
-        "description_en": (
-            "MXXNLY Khonsu is in development. Features, pricing and the launch date will appear on this "
-            "page after the announcement.\n\nLeave your contact through the form and we will let you know first."
-        ),
-        "seo_title_uk": "MXXNLY Khonsu: скоро",
-        "seo_title_en": "MXXNLY Khonsu: coming soon",
-        "seo_description_en": "A new MXXNLY Labs product in development. Details after the announcement.",
-        "seo_description_uk": "Новий продукт MXXNLY Labs у розробці. Деталі після анонсу.",
-        "plans": [],
-        "links": [],
-        "faq": [],
-    },
-    {
-        "name": "MXXNLY Lunaflow",
-        "slug": "lunaflow",
-        "category": None,
-        "availability": Product.Availability.SOON,
-        "tint": Product.Tint.LAVENDER,
-        "icon": Product.Icon.CHART,
-        "cta": Product.Cta.CONTACT,
-        "tagline_uk": "Готуємо до анонсу",
-        "tagline_en": "Getting ready for the announcement",
-        "description_uk": (
-            "MXXNLY Lunaflow зараз у розробці. Опис можливостей, тарифи й дата запуску з'являться на цій "
-            "сторінці після анонсу.\n\nЗалиште контакт через форму, і ми повідомимо першими."
-        ),
-        "description_en": (
-            "MXXNLY Lunaflow is in development. Features, pricing and the launch date will appear on this "
-            "page after the announcement.\n\nLeave your contact through the form and we will let you know first."
-        ),
-        "seo_title_uk": "MXXNLY Lunaflow: скоро",
-        "seo_title_en": "MXXNLY Lunaflow: coming soon",
-        "seo_description_en": "A new MXXNLY Labs product in development. Details after the announcement.",
-        "seo_description_uk": "Новий продукт MXXNLY Labs у розробці. Деталі після анонсу.",
-        "plans": [],
-        "links": [],
-        "faq": [],
-    },
 ]
+PRODUCTS += PORTFOLIO
 
 
 class Command(BaseCommand):
-    help = "Create the company products (VPN, Selene, Khonsu, Lunaflow) with example prices."
+    help = "Create the company portfolio (VPN, Selene, Khonsu and the rest) with prices."
 
     def add_arguments(self, parser):
         parser.add_argument("--force", action="store_true", help="Delete existing products first.")
@@ -252,12 +204,8 @@ class Command(BaseCommand):
             Category.objects.all().delete()
 
         categories = {
-            "network": Category.objects.create(
-                slug="network", name_uk="Мережа", name_en="Network", order=0
-            ),
-            "documents": Category.objects.create(
-                slug="documents", name_uk="Документообіг", name_en="Documents", order=1
-            ),
+            slug: Category.objects.create(slug=slug, name_uk=name_uk, name_en=name_en, order=order)
+            for order, (slug, name_uk, name_en) in enumerate(CATEGORIES)
         }
         publish_status = Product.PublishStatus.PUBLISHED if publish else Product.PublishStatus.DRAFT
 
@@ -281,21 +229,29 @@ class Command(BaseCommand):
                 inc_uk,
                 inc_en,
                 recommended,
+                *extra,
             ) in enumerate(plans):
+                opts = extra[0] if extra else {}
+                is_example = opts.get("is_example", True)
+                if "period" in opts:
+                    period = opts["period"]
+                else:
+                    period = Plan.Period.MONTH if price is not None else Plan.Period.ON_REQUEST
                 Plan.objects.create(
                     product=product,
                     name=name,
                     price=price,
                     currency="USD",
-                    period=Plan.Period.MONTH if price is not None else Plan.Period.ON_REQUEST,
+                    period=period,
                     limit_uk=limit_uk,
                     limit_en=limit_en,
                     includes_uk=inc_uk,
                     includes_en=inc_en,
-                    is_example=True,
+                    is_example=is_example,
                     is_published=publish,
                     is_recommended=recommended,
-                    valid_until=date(2026, 12, 31),
+                    valid_until=date(2026, 12, 31) if is_example else None,
+                    buy_url=opts.get("buy_url", ""),
                     order=p_order,
                 )
             for l_order, (kind, label_uk, label_en, url) in enumerate(links):

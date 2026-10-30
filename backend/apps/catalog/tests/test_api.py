@@ -30,13 +30,15 @@ def test_products_empty(client):
 
 def test_products_hide_drafts_and_private(client, seeded):
     slugs = {p["slug"] for p in client.get(reverse("products")).json()}
-    assert slugs == {"vpn", "selene", "khonsu", "lunaflow"}
+    assert len(slugs) == 18
+    assert {"vpn", "selene", "khonsu", "lunaflow"} <= slugs
 
     vpn = Product.objects.get(slug="vpn")
     vpn.publish_status = Product.PublishStatus.DRAFT
     vpn.save()
     slugs = {p["slug"] for p in client.get(reverse("products")).json()}
-    assert slugs == {"selene", "khonsu", "lunaflow"}
+    assert "vpn" not in slugs
+    assert len(slugs) == 17
 
 
 def test_private_product_is_never_public(client, seeded):
@@ -98,8 +100,14 @@ def test_prices_endpoint(client, seeded):
     data = client.get(reverse("prices"), {"lang": "en"}).json()
     assert data["currency"] == "USD"
     assert data["refund_days"] == 14
-    assert {p["slug"] for p in data["products"]} == {"vpn", "selene"}  # only products with plans
-    assert all(plan["is_example"] for p in data["products"] for plan in p["plans"])
+    priced = {p["slug"]: p for p in data["products"]}  # only products with plans
+    assert {"vpn", "selene", "khonsu", "lunaflow"} <= set(priced)
+    assert "haven" not in priced  # ad-funded portal, no plans
+    # Khonsu prices are the real ones from khonsu.cc; every other price is an example.
+    assert not any(plan["is_example"] for plan in priced["khonsu"]["plans"])
+    assert all(
+        plan["is_example"] for slug, p in priced.items() if slug != "khonsu" for plan in p["plans"]
+    )
 
 
 def test_site_content(client, seeded):

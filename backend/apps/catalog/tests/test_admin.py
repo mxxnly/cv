@@ -73,4 +73,6 @@ def test_seed_defaults_to_drafts():
 
     assert not Product.objects.filter(publish_status=Product.PublishStatus.PUBLISHED).exists()
     assert not Plan.objects.filter(is_published=True).exists()
-    assert Plan.objects.filter(is_example=True).count() == Plan.objects.count()
+    # Khonsu carries the real prices from khonsu.cc; everything else is an example.
+    assert not Plan.objects.filter(is_example=False).exclude(product__slug="khonsu").exists()
+    assert Plan.objects.filter(product__slug="khonsu", is_example=False).count() == 5

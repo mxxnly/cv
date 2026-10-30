@@ -1,0 +1,26 @@
+<!doctype html><html lang="uk"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MXXNLY Labs — раунд 2: 5 дизайнів і 5 логотипів</title>
+<style>
+body{margin:0;font:16px/1.55 system-ui,sans-serif;background:#ecebe8;color:#161616}
+.w{max-width:1200px;margin:0 auto;padding:32px 24px 64px}h1{font-size:30px;margin:0 0 6px}p.s{margin:0 0 32px;color:#555;max-width:70ch}
+.g{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:22px}
+.c{background:#fff;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 1px 0 #0001}
+.c .lg{display:grid;place-items:center;padding:26px 16px;height:96px}.c .lg img{max-height:44px;max-width:90%}
+.c .sh{height:240px;overflow:hidden;border-block:1px solid #0001}.c .sh img{width:100%;display:block}
+.c .t{padding:18px 20px 22px}.c h2{margin:0 0 4px;font-size:19px}.c p{margin:0 0 12px;color:#555;font-size:14.5px}
+.sw{display:flex;gap:6px;margin-bottom:14px}.sw i{width:26px;height:26px;border-radius:50%;border:1px solid #0002}
+.c a{display:inline-block;margin-right:8px;padding:8px 14px;border-radius:99px;background:#161616;color:#fff;text-decoration:none;font-size:14px;font-weight:600}.c a.o{background:#eee;color:#161616}
+.hint{margin-top:30px;font-size:14px;color:#555}
+</style></head><body><div class="w"><h1>MXXNLY Labs — раунд 2</h1>
+<p class="s">П'ять незалежних напрямків: логотип + дизайн сайту. Нічого не успадковано від поточного UI/UX, крім назви. Контент у макетах умовний (ціни позначені «приклад»).</p>
+<div class="g" id="g"></div>
+<p class="hint"><a href="logos/sheet.html">Усі логотипи на одній сторінці →</a> · регенерація: <code>python3 design-proposals/round-2/tools/make_logos.py</code></p></div>
+<script>
+[["01-prompt","Prompt","Термінал / dev-first. Темний, моно-шрифт, лайм-акцент. Продукти як `ls -l`.","#0A0F0B","#B6F24A","#DCE8DA","#1E2A21","#0A0F0B","dark"],
+["02-orb","Orb","Aurora / сучасний SaaS. Скло, градієнти, bento-сітка, pill-кнопки.","#0C0B24","#8E78FF","#35D6E8","#EEF0FF","#1a1838","dark"],
+["03-block","Block","Швейцарський плакат. Гігантський напис, жорсткі лінійки, червоно-помаранчевий.","#F2F0EA","#FF4B1F","#0C0C0C","#6C6A64","#fff","light"],
+["04-draft","Draft","Креслення / блупринт. Синя сітка, штамп-рамки аркушів, жовтий акцент.","#12308F","#FFC53D","#DCE8FF","#0B1E5B","#fff","dark"],
+["05-flask","Flask","Тепла лабораторія. Глина, пастельні картки, округлі форми, колба.","#F6ECDD","#C4552D","#3B2417","#F7D9A0","#DDE6C9","light"]
+].forEach(function(d){var n=d[0],bg=d[8]=="dark"?"#111":"#fff",lg=d[8]=="dark"?"logo-on-dark":"logo-on-light";
+document.getElementById("g").insertAdjacentHTML("beforeend",'<article class="c"><div class="lg" style="background:'+d[3]+'"><img src="logos/'+n+'/'+lg+'.svg" alt=""></div><div class="sh"><img src="screenshots/'+n+'-home-desktop.png" alt=""></div><div class="t"><h2>'+n.slice(0,2)+' · '+d[1]+'</h2><p>'+d[2]+'</p><div class="sw"><i style="background:'+d[3]+'"></i><i style="background:'+d[4]+'"></i><i style="background:'+d[5]+'"></i></div><a href="designs/'+n+'/home.html">Макет</a><a class="o" href="logos/'+n+'/logo-on-light.svg">Логотип</a></div></article>')});
+</script></body></html>

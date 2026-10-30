@@ -335,6 +335,43 @@ class Testimonial(OrderedModel):
         return f"{self.author}: {self.text[:40]}"
 
 
+# ========== TEAM ==========
+MAX_PHOTO_BYTES = 3 * 1024 * 1024
+
+
+def validate_photo_size(file) -> None:
+    if file.size > MAX_PHOTO_BYTES:
+        raise ValidationError("Фото більше 3 МБ: стисніть його перед завантаженням.")
+
+
+class TeamMember(LocalizedMixin, OrderedModel):
+    """A person shown on the «Про нас» page; filled in through the admin."""
+
+    name = models.CharField("Ім'я", max_length=100, help_text="Одне написання для обох мов")
+    role_uk = models.CharField("Посада (uk)", max_length=120)
+    role_en = models.CharField("Role (en)", max_length=120, blank=True)
+    bio_uk = models.TextField("Про людину (uk)", max_length=600, blank=True)
+    bio_en = models.TextField("About (en)", max_length=600, blank=True)
+    photo = models.ImageField(
+        "Фото",
+        upload_to="team/",
+        blank=True,
+        validators=[validate_photo_size],
+        help_text="Квадратне фото від 600×600 px, до 3 МБ. Без фото показуються ініціали.",
+    )
+    telegram = models.CharField("Telegram", max_length=64, blank=True, help_text="Напр.: @nickname")
+    github = models.URLField("GitHub", blank=True)
+    linkedin = models.URLField("LinkedIn", blank=True)
+    is_visible = models.BooleanField("Показувати", default=True)
+
+    class Meta(OrderedModel.Meta):
+        verbose_name = "Член команди"
+        verbose_name_plural = "Команда"
+
+    def __str__(self) -> str:
+        return self.name
+
+
 # ========== INBOX ==========
 ATTRIBUTION_KEYS = (
     "utm_source",

@@ -5,7 +5,8 @@ import { company } from '../company'
 import { InquiryForm } from '../components/InquiryForm'
 import { ContactLinks, SellerBlock } from '../components/layout/Footer'
 import { Button } from '../components/ui/Button'
-import { Card, FAQList, PageHeader } from '../components/ui/primitives'
+import { TeamCard } from '../components/TeamCard'
+import { Card, FAQList, PageHeader, Section } from '../components/ui/primitives'
 import { useI18n } from '../i18n/context'
 import { useSeo } from '../lib/seo'
 
@@ -45,6 +46,7 @@ export function AboutPage() {
   const site = useSiteContent()
   useSeo({ title: t.about.title, description: t.about.lead, path: '/about' })
   const about = site.data?.settings.about ?? []
+  const team = site.data?.team ?? []
   return (
     <>
       <PageHeader eyebrow={t.nav.about} title={t.about.title} lead={t.about.lead} />
@@ -60,6 +62,15 @@ export function AboutPage() {
           <SellerBlock compact />
         </Card>
       </section>
+      {team.length > 0 && (
+        <Section eyebrow={t.about.team.eyebrow} title={t.about.team.title} className="pt-0 sm:pt-4">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {team.map((member) => (
+              <TeamCard key={member.id} member={member} />
+            ))}
+          </div>
+        </Section>
+      )}
     </>
   )
 }

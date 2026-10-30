@@ -18,6 +18,7 @@ class CatalogConfig(AppConfig):
                 models.ProductLink,
                 models.ProductFAQ,
                 models.Testimonial,
+                models.TeamMember,
                 models.SiteSettings,
             )
         )

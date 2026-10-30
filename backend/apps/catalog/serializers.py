@@ -15,6 +15,7 @@ from .models import (
     ProductLink,
     SiteSettings,
     SupportRequest,
+    TeamMember,
     Testimonial,
     split_lines,
     split_paragraphs,
@@ -203,6 +204,25 @@ class TestimonialSerializer(serializers.ModelSerializer):
     class Meta:
         model = Testimonial
         fields = ("id", "author", "role", "company", "text", "language", "url", "product")
+
+
+class TeamMemberSerializer(LocalizedSerializer):
+    role = serializers.SerializerMethodField()
+    bio = serializers.SerializerMethodField()
+    photo = serializers.SerializerMethodField()
+
+    class Meta:
+        model = TeamMember
+        fields = ("id", "name", "role", "bio", "photo", "telegram", "github", "linkedin")
+
+    def get_role(self, obj):
+        return self.text(obj, "role")
+
+    def get_bio(self, obj):
+        return self.text(obj, "bio")
+
+    def get_photo(self, obj) -> str:
+        return obj.photo.url if obj.photo else ""
 
 
 class SiteSettingsSerializer(LocalizedSerializer):

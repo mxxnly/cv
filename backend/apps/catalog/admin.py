@@ -21,6 +21,7 @@ from .models import (
     ProductLink,
     SiteSettings,
     SupportRequest,
+    TeamMember,
     Testimonial,
 )
 from .versioning import bump_catalog_version
@@ -278,6 +279,29 @@ class TestimonialAdmin(ModelAdmin):
     list_display = ("author", "company", "product", "language", "is_visible", "order")
     list_editable = ("is_visible", "order")
     list_filter = ("is_visible", "language", "product")
+
+
+@admin.register(TeamMember)
+class TeamMemberAdmin(ModelAdmin):
+    list_display = ("photo_preview", "name", "role_uk", "is_visible", "order")
+    list_display_links = ("photo_preview", "name")
+    list_editable = ("is_visible", "order")
+    list_filter = ("is_visible",)
+    search_fields = ("name", "role_uk", "role_en")
+    fieldsets = (
+        (None, {"fields": ("name", "photo", "is_visible", "order")}),
+        ("Посада й опис", {"fields": (("role_uk", "role_en"), ("bio_uk", "bio_en"))}),
+        ("Посилання", {"fields": ("telegram", "github", "linkedin")}),
+    )
+
+    @display(description="Фото")
+    def photo_preview(self, obj: TeamMember):
+        if not obj.photo:
+            return "—"
+        return format_html(
+            '<img src="{}" alt="" style="width:40px;height:40px;object-fit:cover;border-radius:2px">',
+            obj.photo.url,
+        )
 
 
 # ========== INBOX ==========

@@ -14,7 +14,7 @@ from rest_framework.response import Response
 from rest_framework.throttling import ScopedRateThrottle
 from rest_framework.views import APIView
 
-from .models import Plan, Product, SiteSettings, Testimonial
+from .models import Plan, Product, SiteSettings, TeamMember, Testimonial
 from .notifications import notify_new_entry
 from .serializers import (
     ContactMessageSerializer,
@@ -22,6 +22,7 @@ from .serializers import (
     ProductListSerializer,
     SiteSettingsSerializer,
     SupportRequestSerializer,
+    TeamMemberSerializer,
     TestimonialSerializer,
 )
 from .turnstile import verify_turnstile
@@ -117,7 +118,7 @@ class PriceListView(CachedReadView):
 
 
 class SiteContentView(CachedReadView):
-    """Editable texts (SLA, notes, about) plus visible testimonials for the home page."""
+    """Editable texts (SLA, notes, about), the team and visible testimonials."""
 
     cache_name = "site"
 
@@ -131,6 +132,9 @@ class SiteContentView(CachedReadView):
         return {
             "settings": SiteSettingsSerializer(settings_obj, context={"lang": lang}).data,
             "testimonials": TestimonialSerializer(testimonials, many=True).data,
+            "team": TeamMemberSerializer(
+                TeamMember.objects.filter(is_visible=True), many=True, context={"lang": lang}
+            ).data,
         }
 
 

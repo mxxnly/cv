@@ -129,6 +129,7 @@ const uk = {
     placeholderNote: 'Текст-заглушка: замінити справжнім описом перед запуском.',
     seller: 'Продавець',
     tradeName: 'Торгова назва',
+    team: { eyebrow: 'Команда', title: 'Люди за MXXNLY Labs', photo: 'Фото' },
   },
   contacts: {
     title: 'Контакти',
@@ -295,6 +296,7 @@ const en: Dictionary = {
     placeholderNote: 'Placeholder text: replace with the real description before launch.',
     seller: 'Seller',
     tradeName: 'Trade name',
+    team: { eyebrow: 'Team', title: 'The people behind MXXNLY Labs', photo: 'Photo' },
   },
   contacts: {
     title: 'Contacts',

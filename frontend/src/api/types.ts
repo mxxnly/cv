@@ -80,6 +80,18 @@ export interface Testimonial {
   product: string | null
 }
 
+export interface TeamMember {
+  id: number
+  name: string
+  role: string
+  bio: string
+  /** Relative URL of the uploaded photo, empty when there is none */
+  photo: string
+  telegram: string
+  github: string
+  linkedin: string
+}
+
 export interface SiteContent {
   settings: {
     support_sla: string
@@ -89,6 +101,7 @@ export interface SiteContent {
     testimonials_enabled: boolean
   }
   testimonials: Testimonial[]
+  team: TeamMember[]
 }
 
 export interface SiteFlags {

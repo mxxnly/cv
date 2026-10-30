@@ -4,7 +4,7 @@ from django.urls import reverse
 from rest_framework.test import APIClient
 from rest_framework.throttling import ScopedRateThrottle
 
-from apps.catalog.models import ContactMessage, Plan, Product, SupportRequest
+from apps.catalog.models import ContactMessage, Plan, Product, SupportRequest, TeamMember
 
 pytestmark = pytest.mark.django_db
 
@@ -114,6 +114,24 @@ def test_site_content(client, seeded):
     data = client.get(reverse("site-content")).json()
     assert "support_sla" in data["settings"]
     assert data["testimonials"] == []  # none are visible by default
+
+
+def test_site_content_team(client, seeded):
+    assert client.get(reverse("site-content")).json()["team"] == []  # nobody added yet
+
+    TeamMember.objects.create(
+        name="Анна", role_uk="Дизайнерка", role_en="Designer", bio_uk="Малює", order=2
+    )
+    TeamMember.objects.create(name="Олег", role_uk="Розробник", order=1)
+    TeamMember.objects.create(name="Прихований", role_uk="X", is_visible=False)
+
+    uk = client.get(reverse("site-content"), {"lang": "uk"}).json()["team"]
+    assert [m["name"] for m in uk] == ["Олег", "Анна"]  # ordered, hidden one excluded
+    assert uk[1]["role"] == "Дизайнерка" and uk[1]["bio"] == "Малює" and uk[1]["photo"] == ""
+
+    en = client.get(reverse("site-content"), {"lang": "en"}).json()["team"]
+    assert en[0]["role"] == "Розробник"  # no English role: falls back to Ukrainian
+    assert en[1]["role"] == "Designer"
 
 
 # ========== FORMS ==========

@@ -327,6 +327,11 @@ UNFOLD = {
                 "separator": True,
                 "items": [
                     {
+                        "title": "Команда",
+                        "icon": "groups",
+                        "link": reverse_lazy("admin:catalog_teammember_changelist"),
+                    },
+                    {
                         "title": "Відгуки",
                         "icon": "format_quote",
                         "link": reverse_lazy("admin:catalog_testimonial_changelist"),
